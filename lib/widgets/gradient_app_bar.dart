@@ -19,8 +19,9 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showLogo;
   final VoidCallback? onBack;
 
+  /// Total bar height below the status bar (content + vertical padding).
   @override
-  Size get preferredSize => const Size.fromHeight(72);
+  Size get preferredSize => const Size.fromHeight(80);
 
   @override
   Widget build(BuildContext context) {
@@ -35,42 +36,46 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-          child: Row(
-            children: [
-              if (onBack != null) ...[
-                _BackButton(onTap: onBack!),
-                const SizedBox(width: 12),
-              ],
-              if (showLogo && onBack == null) ...[
-                SvgPicture.asset(
-                  'assets/svg/crescent_mark.svg',
-                  width: 34,
-                  height: 34,
-                  colorFilter: const ColorFilter.mode(
-                    AppColors.gold,
-                    BlendMode.srcIn,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (onBack != null) ...[
+                  _BackButton(onTap: onBack!),
+                  const SizedBox(width: 12),
+                ],
+                if (showLogo && onBack == null) ...[
+                  SvgPicture.asset(
+                    'assets/svg/crescent_mark.svg',
+                    width: 34,
+                    height: 34,
+                    colorFilter: const ColorFilter.mode(
+                      AppColors.gold,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                ],
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: AppTextStyles.appTitle),
+                      if (subtitle != null)
+                        Text(
+                          subtitle!,
+                          style: AppTextStyles.meta.copyWith(
+                            color: Colors.white54,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 10),
               ],
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: AppTextStyles.appTitle),
-                    if (subtitle != null)
-                      Text(
-                        subtitle!,
-                        style: AppTextStyles.meta.copyWith(
-                          color: Colors.white54,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
