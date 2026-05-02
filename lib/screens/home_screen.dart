@@ -71,50 +71,64 @@ class _HomeGradientAppBar extends ConsumerWidget
   }
 }
 
-class _HomeBody extends ConsumerWidget {
+class _HomeBody extends ConsumerStatefulWidget {
   const _HomeBody({required this.surahs, required this.pool});
 
   final List<Surah> surahs;
   final List<SurahPoolEntry> pool;
 
-  static MonthPlan? _effectivePlan(MonthPlan? plan, DateTime now) {
-    if (plan == null) return null;
-    if (plan.isStaleAt(now)) return null;
-    return plan;
+  @override
+  ConsumerState<_HomeBody> createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends ConsumerState<_HomeBody> {
+  late Map<int, Surah> _masterById;
+
+  @override
+  void initState() {
+    super.initState();
+    _masterById = {for (final s in widget.surahs) s.id: s};
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void didUpdateWidget(_HomeBody old) {
+    super.didUpdateWidget(old);
+    if (old.surahs != widget.surahs) {
+      _masterById = {for (final s in widget.surahs) s.id: s};
+    }
+  }
+
+  Future<void> _generate() async {
+    final ok = await ref.read(monthPlanProvider.notifier).regenerate();
+    if (!mounted) return;
+    if (!ok) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Need at least two enabled segments in the pool.'),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final now = DateTime.now();
     final plan = ref.watch(monthPlanProvider);
-    final effective = _effectivePlan(plan, now);
+    final effective = plan?.effectiveOrNull(now);
     final selectedDay = ref.watch(selectedPlanDayProvider);
-    final enabledSegments = pool.where((e) => e.enabled).toList();
-    final enabledCount = enabledSegments.length;
-    final masterById = {for (final s in surahs) s.id: s};
+    final enabledCount = widget.pool.where((e) => e.enabled).length;
 
     final daysInMonth = effective != null
         ? DateTime(effective.year, effective.month + 1, 0).day
         : DateTime(now.year, now.month + 1, 0).day;
-
-    Future<void> onGenerate() async {
-      final ok = await ref.read(monthPlanProvider.notifier).regenerate();
-      if (!context.mounted) return;
-      if (!ok) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Need at least two enabled segments in the pool.'),
-          ),
-        );
-      }
-    }
+    final clampedDay = selectedDay.clamp(1, daysInMonth);
 
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
         if (effective != null) ...[
           _DaySelectorRow(
-            selectedDay: selectedDay.clamp(1, daysInMonth),
+            selectedDay: clampedDay,
             daysInMonth: daysInMonth,
             onChanged: (d) =>
                 ref.read(selectedPlanDayProvider.notifier).state = d,
@@ -125,10 +139,10 @@ class _HomeBody extends ConsumerWidget {
               padding: const EdgeInsets.only(bottom: 12),
               child: PrayerCard(
                 prayer: prayer,
-                slot: effective
-                    .planForDay(selectedDay.clamp(1, daysInMonth))!
-                    .slotFor(prayer),
-                masterBySurahId: masterById,
+                slot:
+                    effective.planForDay(clampedDay)?.slotFor(prayer) ??
+                    PrayerSlot(),
+                masterBySurahId: _masterById,
               ),
             ),
           ),
@@ -136,7 +150,7 @@ class _HomeBody extends ConsumerWidget {
           GradientButton(
             label: 'Regenerate Plan',
             icon: Icons.auto_awesome_rounded,
-            onPressed: enabledCount >= 2 ? onGenerate : null,
+            onPressed: enabledCount >= 2 ? _generate : null,
             enabled: enabledCount >= 2,
           ),
         ] else ...[
@@ -146,7 +160,7 @@ class _HomeBody extends ConsumerWidget {
               onAction: () => ref.read(navIndexProvider.notifier).state = 2,
             )
           else
-            EmptyState(variant: EmptyStateVariant.noPlan, onAction: onGenerate),
+            EmptyState(variant: EmptyStateVariant.noPlan, onAction: _generate),
         ],
       ],
     );

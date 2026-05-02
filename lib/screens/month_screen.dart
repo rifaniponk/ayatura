@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/theme/app_text_styles.dart';
-import '../data/models/plan.dart';
 import '../providers/providers.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/gradient_app_bar.dart';
@@ -29,17 +28,11 @@ class MonthScreen extends ConsumerWidget {
     return '${months[now.month - 1]} ${now.year}';
   }
 
-  static MonthPlan? _effectivePlan(MonthPlan? plan, DateTime now) {
-    if (plan == null) return null;
-    if (plan.isStaleAt(now)) return null;
-    return plan;
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final now = DateTime.now();
     final plan = ref.watch(monthPlanProvider);
-    final effective = _effectivePlan(plan, now);
+    final effective = plan?.effectiveOrNull(now);
 
     final surahsAsync = ref.watch(surahsAsyncProvider);
     final subtitle = surahsAsync.maybeWhen(

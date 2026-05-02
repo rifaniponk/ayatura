@@ -71,10 +71,11 @@ final class _XorShift32 implements Random {
   int _state;
 
   int _next() {
-    _state ^= _state << 13;
+    _state ^= (_state << 13) & 0xFFFFFFFF;
     _state ^= _state >> 17;
-    _state ^= _state << 5;
-    return _state & 0xFFFFFFFF;
+    _state ^= (_state << 5) & 0xFFFFFFFF;
+    _state &= 0xFFFFFFFF;
+    return _state;
   }
 
   @override

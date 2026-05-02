@@ -100,6 +100,9 @@ class MonthPlan {
   /// Whether this plan is for a month/year before [at]'s calendar month.
   bool isStaleAt(DateTime at) => at.month != month || at.year != year;
 
+  /// Returns `this` if not stale at [now], otherwise `null`.
+  MonthPlan? effectiveOrNull(DateTime now) => isStaleAt(now) ? null : this;
+
   Map<String, dynamic> toJson() => {
     'month': month,
     'year': year,
