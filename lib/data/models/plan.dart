@@ -1,17 +1,17 @@
 import 'package:surah_planner/core/plan_config.dart';
 
+import 'plan_surah.dart';
 import 'prayer.dart';
-import 'surah.dart';
 
-/// Surahs assigned to one prayer slot, capped by [PlanLimits.maxSurahsPerPrayerSlot].
+/// Planned readings for one prayer slot, capped by [PlanLimits.maxSurahsPerPrayerSlot].
 class PrayerSlot {
-  final List<Surah> surahs;
+  final List<PlanSurah> surahs;
   final bool locked;
 
-  PrayerSlot({List<Surah> surahs = const [], this.locked = false})
+  PrayerSlot({List<PlanSurah> surahs = const [], this.locked = false})
     : surahs = List.unmodifiable(_validateSurahs(surahs));
 
-  static List<Surah> _validateSurahs(List<Surah> surahs) {
+  static List<PlanSurah> _validateSurahs(List<PlanSurah> surahs) {
     if (surahs.length > PlanLimits.maxSurahsPerPrayerSlot) {
       throw ArgumentError.value(
         surahs.length,
@@ -22,7 +22,7 @@ class PrayerSlot {
     return surahs;
   }
 
-  PrayerSlot copyWith({List<Surah>? surahs, bool? locked}) {
+  PrayerSlot copyWith({List<PlanSurah>? surahs, bool? locked}) {
     return PrayerSlot(
       surahs: surahs ?? this.surahs,
       locked: locked ?? this.locked,
@@ -37,7 +37,7 @@ class PrayerSlot {
   factory PrayerSlot.fromJson(Map<String, dynamic> json) {
     return PrayerSlot(
       surahs: (json['surahs'] as List<dynamic>)
-          .map((s) => Surah.fromJson(s as Map<String, dynamic>))
+          .map((s) => PlanSurah.fromJson(s as Map<String, dynamic>))
           .toList(),
       locked: json['locked'] as bool? ?? false,
     );
