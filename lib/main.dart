@@ -13,7 +13,7 @@ void main() {
   runApp(const _BootstrapApp());
 }
 
-/// Step 4: same asset bootstrap, plus domain models from bundled JSON.
+/// Temporary bootstrap: loads bundled assets and exercises domain models.
 class _BootstrapApp extends StatelessWidget {
   const _BootstrapApp();
 
@@ -40,7 +40,7 @@ class _BootstrapApp extends StatelessWidget {
 
             final sampleDay = DayPlan(
               day: 1,
-              prayers: {for (final p in Prayer.values) p: const PrayerSlot()},
+              prayers: {for (final p in Prayer.values) p: PrayerSlot()},
             );
             final fajrLabel = sampleDay.slotFor(Prayer.fajr).surahs.isEmpty
                 ? Prayer.fajr.label

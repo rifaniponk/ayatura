@@ -4,13 +4,23 @@ import 'prayer.dart';
 import 'surah.dart';
 
 /// Surahs assigned to one prayer slot, capped by [PlanLimits.maxSurahsPerPrayerSlot].
-///
-/// New assignments should respect that cap; stored rows may contain fewer.
 class PrayerSlot {
   final List<Surah> surahs;
   final bool locked;
 
-  const PrayerSlot({this.surahs = const [], this.locked = false});
+  PrayerSlot({List<Surah> surahs = const [], this.locked = false})
+    : surahs = List.unmodifiable(_validateSurahs(surahs));
+
+  static List<Surah> _validateSurahs(List<Surah> surahs) {
+    if (surahs.length > PlanLimits.maxSurahsPerPrayerSlot) {
+      throw ArgumentError.value(
+        surahs.length,
+        'surahs.length',
+        'must be <= ${PlanLimits.maxSurahsPerPrayerSlot}',
+      );
+    }
+    return surahs;
+  }
 
   PrayerSlot copyWith({List<Surah>? surahs, bool? locked}) {
     return PrayerSlot(
@@ -42,7 +52,7 @@ class DayPlan {
 
   const DayPlan({required this.day, required this.prayers});
 
-  PrayerSlot slotFor(Prayer prayer) => prayers[prayer] ?? const PrayerSlot();
+  PrayerSlot slotFor(Prayer prayer) => prayers[prayer] ?? PrayerSlot();
 
   DayPlan copyWith({int? day, Map<Prayer, PrayerSlot>? prayers}) {
     return DayPlan(day: day ?? this.day, prayers: prayers ?? this.prayers);
@@ -57,20 +67,20 @@ class DayPlan {
 
   factory DayPlan.fromJson(Map<String, dynamic> json) {
     final rawPrayers = json['prayers'] as Map<String, dynamic>;
-    return DayPlan(
-      day: json['day'] as int,
-      prayers: {
-        for (final entry in rawPrayers.entries)
-          Prayer.values.firstWhere((p) => p.name == entry.key):
-              PrayerSlot.fromJson(entry.value as Map<String, dynamic>),
-      },
-    );
+    final prayers = <Prayer, PrayerSlot>{};
+    for (final entry in rawPrayers.entries) {
+      prayers[Prayer.values.byName(entry.key)] = PrayerSlot.fromJson(
+        entry.value as Map<String, dynamic>,
+      );
+    }
+    return DayPlan(day: json['day'] as int, prayers: prayers);
   }
 }
 
 /// The full plan for an entire month.
 class MonthPlan {
-  final int month; // 1–12
+  /// Calendar month (1–12).
+  final int month;
   final int year;
   final List<DayPlan> days;
 
@@ -81,17 +91,14 @@ class MonthPlan {
   });
 
   DayPlan? planForDay(int day) {
-    try {
-      return days.firstWhere((d) => d.day == day);
-    } catch (_) {
-      return null;
+    for (final d in days) {
+      if (d.day == day) return d;
     }
+    return null;
   }
 
-  bool get isStale {
-    final now = DateTime.now();
-    return now.month != month || now.year != year;
-  }
+  /// Whether this plan is for a month/year before [at]'s calendar month.
+  bool isStaleAt(DateTime at) => at.month != month || at.year != year;
 
   Map<String, dynamic> toJson() => {
     'month': month,

@@ -13,9 +13,9 @@ class Surah {
   final String? ayatRange;
 
   /// Whether this surah is active in the pool.
-  bool enabled;
+  final bool enabled;
 
-  Surah({
+  const Surah({
     required this.id,
     required this.name,
     required this.arabicName,
@@ -70,8 +70,16 @@ class Surah {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || (other is Surah && other.id == id);
+      identical(this, other) ||
+      (other is Surah &&
+          other.id == id &&
+          other.name == name &&
+          other.arabicName == arabicName &&
+          other.ayatCount == ayatCount &&
+          other.ayatRange == ayatRange &&
+          other.enabled == enabled);
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode =>
+      Object.hash(id, name, arabicName, ayatCount, ayatRange, enabled);
 }
