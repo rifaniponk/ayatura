@@ -46,30 +46,15 @@ void main() {
     });
 
     test('copyWith replaces fields immutably', () {
-      const s = Surah(
-        id: 1,
-        name: 'A',
-        arabicName: 'ب',
-        ayatCount: 7,
-      );
+      const s = Surah(id: 1, name: 'A', arabicName: 'ب', ayatCount: 7);
       final t = s.copyWith(name: 'B');
       expect(s.name, 'A');
       expect(t.name, 'B');
     });
 
     test('equality uses value fields', () {
-      const a = Surah(
-        id: 1,
-        name: 'A',
-        arabicName: 'ب',
-        ayatCount: 7,
-      );
-      const b = Surah(
-        id: 1,
-        name: 'A',
-        arabicName: 'ب',
-        ayatCount: 8,
-      );
+      const a = Surah(id: 1, name: 'A', arabicName: 'ب', ayatCount: 7);
+      const b = Surah(id: 1, name: 'A', arabicName: 'ب', ayatCount: 8);
       expect(a, isNot(equals(b)));
     });
   });
@@ -102,11 +87,7 @@ void main() {
         arabicName: 'ب',
         ayatCount: 286,
       );
-      const full = SurahPoolEntry(
-        id: 1,
-        surahId: 2,
-        isFullSurah: true,
-      );
+      const full = SurahPoolEntry(id: 1, surahId: 2, isFullSurah: true);
       expect(full.displayLabel(master), 'Al-Baqarah');
       const partial = SurahPoolEntry(
         id: 2,
@@ -141,7 +122,10 @@ void main() {
     });
 
     test('json round-trip preserves surahs', () {
-      final slot = PrayerSlot(surahs: [_planFull(1), _planFull(2)], locked: true);
+      final slot = PrayerSlot(
+        surahs: [_planFull(1), _planFull(2)],
+        locked: true,
+      );
       final json = slot.toJson();
       final back = PrayerSlot.fromJson(json);
       expect(back.surahs.length, 2);
@@ -219,7 +203,10 @@ void main() {
       expect(back.month, original.month);
       expect(back.year, original.year);
       expect(back.days.single.day, 10);
-      expect(back.days.single.slotFor(Prayer.maghrib).surahs.single.surahId, 112);
+      expect(
+        back.days.single.slotFor(Prayer.maghrib).surahs.single.surahId,
+        112,
+      );
     });
   });
 }

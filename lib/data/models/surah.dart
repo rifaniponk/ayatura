@@ -32,12 +32,7 @@ class Surah {
   /// Short label for lists (master data has no ayat segment).
   String get displayName => name;
 
-  Surah copyWith({
-    int? id,
-    String? name,
-    String? arabicName,
-    int? ayatCount,
-  }) {
+  Surah copyWith({int? id, String? name, String? arabicName, int? ayatCount}) {
     return Surah(
       id: id ?? this.id,
       name: name ?? this.name,

@@ -30,7 +30,8 @@ class _BootstrapAppState extends State<_BootstrapApp> {
   late final Future<({List<Surah> surahs, List<SurahPoolEntry> pool})>
   _bootstrapFuture = _loadBootstrap();
 
-  Future<({List<Surah> surahs, List<SurahPoolEntry> pool})> _loadBootstrap() async {
+  Future<({List<Surah> surahs, List<SurahPoolEntry> pool})>
+  _loadBootstrap() async {
     final surahs = await widget.database.allSurahs();
     final pool = await widget.database.allPoolEntries();
     return (surahs: surahs, pool: pool);
@@ -43,9 +44,7 @@ class _BootstrapAppState extends State<_BootstrapApp> {
       theme: AppTheme.light,
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: FutureBuilder<
-          ({List<Surah> surahs, List<SurahPoolEntry> pool})
-        >(
+        body: FutureBuilder<({List<Surah> surahs, List<SurahPoolEntry> pool})>(
           future: _bootstrapFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
