@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,15 +14,6 @@ import '../widgets/empty_state.dart';
 import '../widgets/gradient_app_bar.dart';
 import '../widgets/prayer_card.dart';
 
-PrayerSlot _demoSlot(List<SurahPoolEntry> pool) {
-  if (pool.isEmpty) return PrayerSlot();
-  final mapped = pool
-      .take(PlanLimits.maxSurahsPerPrayerSlot)
-      .map(PlanSurah.fromSurahPoolEntry)
-      .toList();
-  return PrayerSlot(surahs: mapped);
-}
-
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -30,44 +22,63 @@ class HomeScreen extends ConsumerWidget {
     final surahsAsync = ref.watch(surahsAsyncProvider);
     final navIndex = ref.watch(navIndexProvider);
 
-    return surahsAsync.when(
-      loading: () =>
-          const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (err, _) => Scaffold(body: Center(child: Text('Error: $err'))),
-      data: (surahs) {
-        if (surahs.isEmpty) {
-          return const Scaffold(body: Center(child: Text('No surahs loaded')));
-        }
-
-        // Pool provider is watched only after surahs resolve — lazy second hop.
-        return Consumer(
-          builder: (context, ref, _) {
-            final poolAsync = ref.watch(poolEntriesAsyncProvider);
-            final subtitle = poolAsync.maybeWhen(
-              data: (pool) =>
-                  '${surahs.length} chapters · ${pool.length} pool segment(s)',
-              orElse: () => '${surahs.length} chapters · …',
-            );
-
-            return Scaffold(
-              appBar: GradientAppBar(
-                title: 'Surah Planner',
-                subtitle: subtitle,
-                showLogo: true,
-              ),
-              body: poolAsync.when(
+    return Scaffold(
+      appBar: const _HomeGradientAppBar(),
+      bottomNavigationBar: AppBottomNavBar(
+        currentIndex: navIndex,
+        onTap: (i) => ref.read(navIndexProvider.notifier).state = i,
+      ),
+      body: surahsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, _) => Center(child: Text('Error: $err')),
+        data: (surahs) {
+          if (surahs.isEmpty) {
+            return const Center(child: Text('No surahs loaded'));
+          }
+          return Consumer(
+            builder: (context, ref, _) {
+              final poolAsync = ref.watch(poolEntriesAsyncProvider);
+              return poolAsync.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (e, _) => Center(child: Text('Error: $e')),
                 data: (pool) => _HomeBody(surahs: surahs, pool: pool),
-              ),
-              bottomNavigationBar: AppBottomNavBar(
-                currentIndex: navIndex,
-                onTap: (i) => ref.read(navIndexProvider.notifier).state = i,
-              ),
-            );
-          },
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// Reactive header: subtitle waits on pool only once surahs have loaded.
+class _HomeGradientAppBar extends ConsumerWidget
+    implements PreferredSizeWidget {
+  const _HomeGradientAppBar();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(80);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final surahsAsync = ref.watch(surahsAsyncProvider);
+    final subtitle = surahsAsync.maybeWhen(
+      data: (surahs) {
+        if (surahs.isEmpty) return 'No surahs loaded';
+        final poolAsync = ref.watch(poolEntriesAsyncProvider);
+        return poolAsync.maybeWhen(
+          data: (pool) =>
+              '${surahs.length} chapters · ${pool.length} pool segment(s)',
+          orElse: () => '${surahs.length} chapters · …',
         );
       },
+      orElse: () => null,
+    );
+
+    return GradientAppBar(
+      title: 'Surah Planner',
+      subtitle: subtitle,
+      showLogo: true,
     );
   }
 }
@@ -77,6 +88,15 @@ class _HomeBody extends StatelessWidget {
 
   final List<Surah> surahs;
   final List<SurahPoolEntry> pool;
+
+  static PrayerSlot _demoSlot(List<SurahPoolEntry> pool) {
+    if (pool.isEmpty) return PrayerSlot();
+    final mapped = pool
+        .take(PlanLimits.maxSurahsPerPrayerSlot)
+        .map(PlanSurah.fromSurahPoolEntry)
+        .toList();
+    return PrayerSlot(surahs: mapped);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,11 +108,15 @@ class _HomeBody extends StatelessWidget {
       prayers: {for (final p in Prayer.values) p: PrayerSlot()},
     );
     final fajrSlot = sampleDay.slotFor(Prayer.fajr);
-    final fajrLabel = fajrSlot.surahs.isEmpty
+    final firstPlan = fajrSlot.surahs.firstOrNull;
+    final master = firstPlan == null
+        ? null
+        : surahs.firstWhereOrNull((s) => s.id == firstPlan.surahId);
+    final fajrLabel = firstPlan == null
         ? Prayer.fajr.label
-        : fajrSlot.surahs.first.displayLabel(
-            surahs.firstWhere((s) => s.id == fajrSlot.surahs.first.surahId),
-          );
+        : master != null
+        ? firstPlan.displayLabel(master)
+        : 'Surah ${firstPlan.surahId}';
 
     return ListView(
       padding: const EdgeInsets.all(18),
