@@ -12,8 +12,9 @@ class SelectedPlanDayNotifier extends Notifier<int> {
   void setDay(int value) => state = value;
 }
 
-final selectedPlanDayProvider =
-    NotifierProvider<SelectedPlanDayNotifier, int>(SelectedPlanDayNotifier.new);
+final selectedPlanDayProvider = NotifierProvider<SelectedPlanDayNotifier, int>(
+  SelectedPlanDayNotifier.new,
+);
 
 /// In-memory month plan for the active session (persist to Drift later).
 class MonthPlanNotifier extends Notifier<MonthPlan?> {
