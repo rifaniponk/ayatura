@@ -21,8 +21,11 @@ abstract final class AppColors {
   /// Bottom nav (and similar) inactive icon/label — was hardcoded in theme.
   static const Color bottomNavInactive = Color(0xFFBBBBBB);
 
-  /// Switch track when off.
-  static const Color switchTrackInactive = Color(0xFFDDDDDD);
+  /// Switch / toggle track when off (needs contrast on [white] cards).
+  static const Color switchTrackInactive = Color(0xFFB4BCB6);
+
+  /// Hairline on inactive toggle track so the pill reads on light surfaces.
+  static const Color switchTrackInactiveBorder = Color(0xFF9AA49C);
 
   // ── Header dark gradient stops ─────────────────────────────────────────────
   static const Color headerDark = Color(0xFF071D13);
