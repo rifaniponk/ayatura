@@ -36,67 +36,15 @@ class PlanSurah {
   }
 
   factory PlanSurah.fromJson(Map<String, dynamic> json) {
-    if (json.containsKey('isFullSurah')) {
-      return PlanSurah(
-        surahId: json['surahId'] as int? ?? json['id'] as int,
-        name: json['name'] as String,
-        arabicName: json['arabicName'] as String,
-        ayatCount: json['ayatCount'] as int,
-        isFullSurah: json['isFullSurah'] as bool,
-        startAyah: json['startAyah'] as int?,
-        endAyah: json['endAyah'] as int?,
-      );
-    }
-    return PlanSurah.fromLegacySurahJson(json);
-  }
-
-  /// Maps legacy plan JSON that used [Surah] with optional `ayatRange` string.
-  factory PlanSurah.fromLegacySurahJson(Map<String, dynamic> json) {
-    final ayatRange = json['ayatRange'] as String?;
-    final id = json['id'] as int;
-    final name = json['name'] as String;
-    final arabicName = json['arabicName'] as String;
-    final ayatCount = json['ayatCount'] as int;
-
-    if (ayatRange == null || ayatRange.isEmpty) {
-      return PlanSurah(
-        surahId: id,
-        name: name,
-        arabicName: arabicName,
-        ayatCount: ayatCount,
-        isFullSurah: true,
-      );
-    }
-
-    final parsed = _parseAyatRange(ayatRange);
     return PlanSurah(
-      surahId: id,
-      name: name,
-      arabicName: arabicName,
-      ayatCount: ayatCount,
-      isFullSurah: false,
-      startAyah: parsed.$1,
-      endAyah: parsed.$2,
+      surahId: json['surahId'] as int,
+      name: json['name'] as String,
+      arabicName: json['arabicName'] as String,
+      ayatCount: json['ayatCount'] as int,
+      isFullSurah: json['isFullSurah'] as bool,
+      startAyah: json['startAyah'] as int?,
+      endAyah: json['endAyah'] as int?,
     );
-  }
-
-  /// Best-effort parse for strings like "1-5", "2:255", "284-286".
-  static (int?, int?) _parseAyatRange(String raw) {
-    final trimmed = raw.trim();
-    final colon = trimmed.indexOf(':');
-    if (colon >= 0) {
-      final tail = trimmed.substring(colon + 1).trim();
-      final n = int.tryParse(tail);
-      return (n, n);
-    }
-    final dashIdx = trimmed.indexOf(RegExp(r'[-–—]'));
-    if (dashIdx < 0) {
-      final n = int.tryParse(trimmed);
-      return (n, n);
-    }
-    final a = int.tryParse(trimmed.substring(0, dashIdx).trim());
-    final b = int.tryParse(trimmed.substring(dashIdx + 1).trim());
-    return (a, b);
   }
 
   Map<String, dynamic> toJson() => {

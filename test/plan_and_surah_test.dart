@@ -174,29 +174,6 @@ void main() {
       expect(day.slotFor(Prayer.fajr).surahs.single.surahId, 1);
     });
 
-    test('fromJson accepts legacy Surah-shaped entries', () {
-      final json = {
-        'day': 3,
-        'prayers': {
-          'fajr': {
-            'surahs': [
-              {
-                'id': 1,
-                'name': 'Al-Fatihah',
-                'arabicName': 'الفاتحة',
-                'ayatCount': 7,
-                'ayatRange': null,
-                'enabled': true,
-              },
-            ],
-            'locked': false,
-          },
-        },
-      };
-      final day = DayPlan.fromJson(json);
-      expect(day.slotFor(Prayer.fajr).surahs.single.isFullSurah, true);
-    });
-
     test('fromJson throws on unknown prayer key', () {
       final json = {
         'day': 1,
