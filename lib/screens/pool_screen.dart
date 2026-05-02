@@ -7,6 +7,7 @@ import '../data/models/surah_pool_entry.dart';
 import '../providers/providers.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/gradient_app_bar.dart';
+import '../widgets/hifdh_intro_tip.dart';
 import '../widgets/pool_segment_editor_sheet.dart';
 
 /// Hifdh list — surahs / ayat ranges for memorization; add, edit, remove; Drift.
@@ -57,20 +58,25 @@ class _PoolScreenState extends ConsumerState<PoolScreen> {
                   p.isEmpty ? 'Nothing listed yet' : '${p.length} added',
               orElse: () => '…',
             ),
-            subtitleCaption:
-                'Hifdh is Quran memorization. What you list here is used '
-                'when you build your monthly plan.',
           ),
           Expanded(
             child: switch ((poolAsync, surahsAsync)) {
               (AsyncError(:final error), _) || (_, AsyncError(:final error)) =>
                 Center(child: Text('Error: $error')),
               (AsyncData(value: final pool), AsyncData(value: final surahs)) =>
-                _PoolBody(
-                  pool: pool,
-                  surahs: surahs,
-                  onAddSegment: _openEditor,
-                  onEditSegment: (e) => _openEditor(existing: e),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const HifdhIntroTip(),
+                    Expanded(
+                      child: _PoolBody(
+                        pool: pool,
+                        surahs: surahs,
+                        onAddSegment: _openEditor,
+                        onEditSegment: (e) => _openEditor(existing: e),
+                      ),
+                    ),
+                  ],
                 ),
               _ => const Center(child: CircularProgressIndicator()),
             },
