@@ -8,7 +8,7 @@ import '../providers/providers.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/gradient_app_bar.dart';
 
-/// Memorization pool — read-only list until toggles / add flow land.
+/// Memorization pool — toggle segments on/off (persisted in Drift).
 class PoolScreen extends ConsumerWidget {
   const PoolScreen({super.key});
 
@@ -41,14 +41,54 @@ class PoolScreen extends ConsumerWidget {
   }
 }
 
-class _PoolBody extends StatelessWidget {
+class _PoolBody extends ConsumerStatefulWidget {
   const _PoolBody({required this.pool, required this.surahs});
 
   final List<SurahPoolEntry> pool;
   final List<Surah> surahs;
 
   @override
+  ConsumerState<_PoolBody> createState() => _PoolBodyState();
+}
+
+class _PoolBodyState extends ConsumerState<_PoolBody> {
+  final Set<int> _busyIds = {};
+  late Map<int, Surah> _masterById;
+
+  @override
+  void initState() {
+    super.initState();
+    _masterById = {for (final s in widget.surahs) s.id: s};
+  }
+
+  @override
+  void didUpdateWidget(_PoolBody old) {
+    super.didUpdateWidget(old);
+    if (old.surahs != widget.surahs) {
+      _masterById = {for (final s in widget.surahs) s.id: s};
+    }
+  }
+
+  Future<void> _toggle(SurahPoolEntry entry, bool enabled) async {
+    setState(() => _busyIds.add(entry.id));
+    try {
+      await setPoolEntryEnabled(ref, entry, enabled);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to save: $e')));
+      }
+    } finally {
+      if (mounted) setState(() => _busyIds.remove(entry.id));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final pool = widget.pool;
+    final surahs = widget.surahs;
+
     if (surahs.isEmpty) {
       return const Center(child: Text('No surahs loaded'));
     }
@@ -64,7 +104,7 @@ class _PoolBody extends StatelessWidget {
       );
     }
 
-    final masterById = {for (final s in surahs) s.id: s};
+    final scheme = Theme.of(context).colorScheme;
 
     return ListView.separated(
       padding: const EdgeInsets.fromLTRB(18, 12, 18, 24),
@@ -72,38 +112,27 @@ class _PoolBody extends StatelessWidget {
       separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (context, i) {
         final entry = pool[i];
-        final master = masterById[entry.surahId];
+        final master = _masterById[entry.surahId];
         final label = master != null
             ? entry.displayLabel(master)
             : 'Surah ${entry.surahId}';
-        final meta = entry.enabled ? 'Enabled' : 'Disabled';
+        final busy = _busyIds.contains(entry.id);
+
         return Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(label, style: AppTextStyles.cardLabel),
-                      const SizedBox(height: 4),
-                      Text(meta, style: AppTextStyles.meta),
-                    ],
-                  ),
-                ),
-                Icon(
-                  entry.enabled
-                      ? Icons.check_circle_rounded
-                      : Icons.pause_circle,
-                  color: entry.enabled
-                      ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withValues(alpha: 0.4),
-                  size: 22,
-                ),
-              ],
+          child: SwitchListTile.adaptive(
+            title: Text(label, style: AppTextStyles.cardLabel),
+            subtitle: Text(
+              entry.enabled ? 'Included when generating a plan' : 'Skipped',
+              style: AppTextStyles.meta,
+            ),
+            value: entry.enabled,
+            onChanged: busy ? null : (v) => _toggle(entry, v),
+            secondary: Icon(
+              entry.enabled ? Icons.check_circle_rounded : Icons.pause_circle,
+              color: entry.enabled
+                  ? scheme.secondary
+                  : scheme.onSurface.withValues(alpha: 0.4),
+              size: 22,
             ),
           ),
         );
