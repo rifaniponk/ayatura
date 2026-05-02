@@ -43,6 +43,15 @@ class PlanSurah {
     'endAyah': endAyah,
   };
 
+  /// Inclusive verse count for this assignment (compact UI, e.g. `12v`).
+  int verseSpan(Surah master) {
+    if (isFullSurah) return master.ayatCount;
+    final a = startAyah;
+    final b = endAyah;
+    if (a != null && b != null) return b - a + 1;
+    return master.ayatCount;
+  }
+
   /// [master] must be the canonical [Surah] for [surahId] (same row as DB/asset).
   String displayLabel(Surah master) {
     if (isFullSurah) return master.displayName;

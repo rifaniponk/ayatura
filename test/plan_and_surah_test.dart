@@ -76,6 +76,14 @@ void main() {
       expect(p.startAyah, 10);
       expect(p.endAyah, 20);
     });
+
+    test('verseSpan full uses master ayatCount', () {
+      expect(_planFull(2).verseSpan(_surah(2)), 10);
+    });
+
+    test('verseSpan partial is inclusive', () {
+      expect(_planPartial(2, 1, 5).verseSpan(_surah(2)), 5);
+    });
   });
 
   group('SurahPoolEntry', () {
