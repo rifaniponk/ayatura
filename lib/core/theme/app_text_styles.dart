@@ -4,7 +4,7 @@ import 'app_colors.dart';
 /// Centralised text style catalogue for Surah Planner.
 ///
 /// Font families declared in pubspec.yaml under `flutter: fonts:`.
-/// Files live in `assets/fonts/` — see README for download instructions.
+/// Files live in `assets/fonts/` — see pubspec.yaml commented `fonts:` block.
 ///
 /// Falls back gracefully to the system serif / sans-serif if a font file
 /// has not yet been added, so the app always compiles and runs.
@@ -89,6 +89,7 @@ abstract final class AppTextStyles {
     color: AppColors.green,
   );
 
+  /// Prayer times, counts, hints — single secondary line style.
   static const TextStyle prayerTime = TextStyle(
     fontFamily: _sans,
     fontSize: 11,
@@ -96,12 +97,8 @@ abstract final class AppTextStyles {
     color: AppColors.ink3,
   );
 
-  static const TextStyle meta = TextStyle(
-    fontFamily: _sans,
-    fontSize: 11,
-    fontWeight: FontWeight.w500,
-    color: AppColors.ink3,
-  );
+  /// Same styles as [prayerTime]; kept for existing / handoff call sites.
+  static const TextStyle meta = prayerTime;
 
   static const TextStyle navLabel = TextStyle(
     fontFamily: _sans,
@@ -158,6 +155,4 @@ abstract final class AppTextStyles {
     fontWeight: FontWeight.w400,
     color: AppColors.ink2,
   );
-
-  AppTextStyles._();
 }

@@ -18,6 +18,12 @@ abstract final class AppColors {
   static const Color ink2 = Color(0xFF555555);
   static const Color ink3 = Color(0xFF888888);
 
+  /// Bottom nav (and similar) inactive icon/label — was hardcoded in theme.
+  static const Color bottomNavInactive = Color(0xFFBBBBBB);
+
+  /// Switch track when off.
+  static const Color switchTrackInactive = Color(0xFFDDDDDD);
+
   // ── Header dark gradient stops ─────────────────────────────────────────────
   static const Color headerDark = Color(0xFF071D13);
 
@@ -25,11 +31,14 @@ abstract final class AppColors {
   static const Color error = Color(0xFFC0392B);
   static const Color errorBg = Color(0x1ADC3545);
 
+  /// Transparent gold (same hue as [gold]); use instead of [Colors.transparent]
+  /// in gold fades so interpolation does not wash through RGB to black.
+  static const Color goldTransparent = Color(0x00D4AF37);
+
   // ── Gradients ─────────────────────────────────────────────────────────────
   static const LinearGradient headerGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    transform: GradientRotation(160 * 3.14159265 / 180),
     colors: [green, green2],
   );
 
@@ -42,14 +51,13 @@ abstract final class AppColors {
   static const LinearGradient sheetGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    transform: GradientRotation(160 * 3.14159265 / 180),
     colors: [green, headerDark],
   );
 
   static const LinearGradient timelineLineGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [gold, Colors.transparent],
+    colors: [gold, goldTransparent],
   );
 
   // ── Semi-transparent helpers ───────────────────────────────────────────────
@@ -59,7 +67,4 @@ abstract final class AppColors {
   static const Color white14 = Color(0x24FFFFFF); // 14%
   static const Color white10 = Color(0x1AFFFFFF); // 10%
   static const Color overlayDark = Color(0xE004120C); // modal backdrop ~88%
-
-  // Named constructor is private — use as static-only class.
-  AppColors._();
 }

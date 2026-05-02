@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'app_colors.dart';
+import 'app_text_styles.dart';
 
 /// Root Flutter [ThemeData] for Surah Planner.
 abstract final class AppTheme {
-  static ThemeData get light {
-    final base = ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.green,
-        brightness: Brightness.light,
-        primary: AppColors.green,
-        secondary: AppColors.green2,
-        tertiary: AppColors.gold,
-        surface: AppColors.background,
-        onPrimary: AppColors.white,
-        onSecondary: AppColors.white,
-        onSurface: AppColors.ink,
-      ),
-      scaffoldBackgroundColor: AppColors.background,
-      fontFamily: 'DMSans',
+  static final ThemeData light = _buildLight();
+
+  static ThemeData _buildLight() {
+    const colorScheme = ColorScheme(
+      brightness: Brightness.light,
+      primary: AppColors.green,
+      onPrimary: AppColors.white,
+      secondary: AppColors.green2,
+      onSecondary: AppColors.white,
+      tertiary: AppColors.gold,
+      onTertiary: AppColors.ink,
+      error: AppColors.error,
+      onError: AppColors.white,
+      surface: AppColors.background,
+      onSurface: AppColors.ink,
     );
 
-    return base.copyWith(
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: AppColors.background,
+      fontFamily: AppTextStyles.buttonLabel.fontFamily,
+    ).copyWith(
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.green,
         foregroundColor: AppColors.white,
@@ -36,7 +41,7 @@ abstract final class AppTheme {
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.white,
         selectedItemColor: AppColors.green,
-        unselectedItemColor: Color(0xFFBBBBBB),
+        unselectedItemColor: AppColors.bottomNavInactive,
         elevation: 0,
         type: BottomNavigationBarType.fixed,
       ),
@@ -58,11 +63,7 @@ abstract final class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          textStyle: const TextStyle(
-            fontFamily: 'DMSans',
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-          ),
+          textStyle: AppTextStyles.buttonLabel,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -76,13 +77,17 @@ abstract final class AppTheme {
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: AppColors.border, width: 1.5),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.border, width: 1.5),
-        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: AppColors.green2, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: AppColors.error, width: 1.5),
         ),
       ),
       dividerTheme: const DividerThemeData(
@@ -96,11 +101,9 @@ abstract final class AppTheme {
           if (states.contains(WidgetState.selected)) {
             return AppColors.green2;
           }
-          return const Color(0xFFDDDDDD);
+          return AppColors.switchTrackInactive;
         }),
       ),
     );
   }
-
-  AppTheme._();
 }
