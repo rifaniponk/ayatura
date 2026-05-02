@@ -21,8 +21,8 @@ final surahsAsyncProvider = FutureProvider<List<Surah>>((ref) async {
   return db.allSurahs();
 });
 
-/// Pool rows — same seed prerequisite; independent future so widgets can watch
-/// it only when they need pool data (e.g. after surahs are ready).
+/// Hifdh-list rows — same seed prerequisite; independent future so widgets
+/// can watch it only when they need list data (e.g. after surahs are ready).
 final poolEntriesAsyncProvider = FutureProvider<List<SurahPoolEntry>>((
   ref,
 ) async {

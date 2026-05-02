@@ -12,7 +12,7 @@ void _invalidatePoolAndPlan(WidgetRef ref) {
   ref.invalidate(monthPlanProvider);
 }
 
-/// Persists pool segment enabled flag and refreshes pool data.
+/// Persists whether a hifdh-list row is included and refreshes list data.
 ///
 /// Does not clear [monthPlanProvider] — toggling inclusion alone keeps an
 /// existing plan readable until the user regenerates.
@@ -36,7 +36,7 @@ Future<void> insertPoolSegment({
 }) async {
   assert(
     isFullSurah || (startAyah != null && endAyah != null),
-    'startAyah and endAyah are required for partial segments',
+    'startAyah and endAyah are required for partial (ayat range) rows',
   );
   final db = ref.read(appDatabaseProvider);
   await db.insertPoolEntry(

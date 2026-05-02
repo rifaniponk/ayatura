@@ -44,8 +44,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Text('About', style: AppTextStyles.sectionHeadingSerif),
               const SizedBox(height: 12),
               Text(
-                'Surah Planner links memorization segments to prayers across '
-                'the month. Monthly assignment storage is coming next.',
+                'Surah Planner spreads what you list for hifdh—full surahs or '
+                'ayat ranges—across prayers through the month. Saving plans '
+                'to your device is coming next.',
                 style: AppTextStyles.body.copyWith(
                   color: Theme.of(
                     context,

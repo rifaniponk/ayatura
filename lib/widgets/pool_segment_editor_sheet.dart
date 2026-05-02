@@ -150,7 +150,7 @@ class _PoolSegmentEditorSheetState
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                widget.existing == null ? 'Add segment' : 'Edit segment',
+                widget.existing == null ? 'Add surah or ayat' : 'Edit entry',
                 style: AppTextStyles.sectionHeadingSerif,
               ),
               const SizedBox(height: 16),
@@ -183,7 +183,7 @@ class _PoolSegmentEditorSheetState
                 title: const Text('Entire surah'),
                 subtitle: Text(
                   _fullSurah
-                      ? 'This segment covers all ayat.'
+                      ? 'The entire surah is on your hifdh list.'
                       : 'Only the ayat range below is included.',
                   style: AppTextStyles.meta,
                 ),
@@ -240,7 +240,7 @@ class _PoolSegmentEditorSheetState
               ],
               const SizedBox(height: 24),
               GradientButton(
-                label: widget.existing == null ? 'Add to pool' : 'Save changes',
+                label: widget.existing == null ? 'Add to hifdh list' : 'Save',
                 enabled: !_saving,
                 onPressed: _saving ? null : _submit,
               ),

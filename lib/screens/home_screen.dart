@@ -56,7 +56,7 @@ class _HomeGradientAppBar extends ConsumerWidget
         final poolAsync = ref.watch(poolEntriesAsyncProvider);
         return poolAsync.maybeWhen(
           data: (pool) =>
-              '${surahs.length} chapters · ${pool.length} pool segment(s)',
+              '${surahs.length} chapters · ${pool.length} in hifdh list',
           orElse: () => '${surahs.length} chapters · …',
         );
       },
@@ -104,7 +104,9 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
     if (!ok) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Need at least two enabled segments in the pool.'),
+          content: Text(
+            'Need at least two items turned on in your hifdh list.',
+          ),
         ),
       );
     }
@@ -156,7 +158,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
         ] else ...[
           if (enabledCount < 2)
             EmptyState(
-              variant: EmptyStateVariant.poolTooSmall,
+              variant: EmptyStateVariant.hifdhListTooSmall,
               onAction: () => ref.read(navIndexProvider.notifier).state = 2,
             )
           else

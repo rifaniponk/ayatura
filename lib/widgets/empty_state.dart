@@ -5,7 +5,7 @@ import '../core/theme/app_text_styles.dart';
 import 'gradient_button.dart';
 
 /// Three variants of the empty state component.
-enum EmptyStateVariant { noPlan, poolTooSmall, emptyPool }
+enum EmptyStateVariant { noPlan, hifdhListTooSmall, hifdhListEmpty }
 
 class EmptyState extends StatelessWidget {
   const EmptyState({super.key, required this.variant, this.onAction});
@@ -72,19 +72,23 @@ class EmptyState extends StatelessWidget {
           subtitle: 'Generate a plan to assign readings across the month.',
           actionLabel: 'Generate Plan',
         );
-      case EmptyStateVariant.poolTooSmall:
+      case EmptyStateVariant.hifdhListTooSmall:
         return const _EmptyStateSpec(
           icon: Icons.warning_amber_rounded,
-          title: 'Pool too small',
-          subtitle: 'Enable at least 2 items in your pool to generate a plan.',
-          actionLabel: 'Go to Pool',
+          title: 'Need more for a plan',
+          subtitle:
+              'Include at least two surahs or ayat ranges in your hifdh list '
+              '(with the switch on), then generate a plan.',
+          actionLabel: 'Open Hifdh',
         );
-      case EmptyStateVariant.emptyPool:
+      case EmptyStateVariant.hifdhListEmpty:
         return const _EmptyStateSpec(
           icon: Icons.library_add_rounded,
-          title: 'Empty pool',
-          subtitle: 'Add memorization segments to your pool to get started.',
-          actionLabel: 'Add Surah',
+          title: 'Start your hifdh list',
+          subtitle:
+              'Add full surahs or ayat ranges you are memorizing. '
+              'Your monthly plan will draw from this list.',
+          actionLabel: 'Add surah or ayat',
         );
     }
   }

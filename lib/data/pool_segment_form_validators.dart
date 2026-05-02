@@ -3,7 +3,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 
 import 'models/surah.dart';
 
-/// [FormBuilderValidators]-based rules for pool ayah fields (partial segments).
+/// [FormBuilderValidators]-based rules for ayat-range fields on the hifdh list.
 abstract final class PoolSegmentFormValidators {
   static List<FormFieldValidator<String>> _ayahInSurah(Surah master) => [
     FormBuilderValidators.required<String>(),

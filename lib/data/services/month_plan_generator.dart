@@ -7,7 +7,7 @@ import '../models/plan_surah.dart';
 import '../models/prayer.dart';
 import '../models/surah_pool_entry.dart';
 
-/// Deterministic [MonthPlan] from enabled pool segments (XorShift per slot).
+/// Deterministic [MonthPlan] from enabled hifdh-list rows (XorShift per slot).
 abstract final class MonthPlanGenerator {
   /// Builds a plan for [month]/[year]. Slots marked [PrayerSlot.locked] in
   /// [existingPlan] for the same calendar day/prayer are copied verbatim.

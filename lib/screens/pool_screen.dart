@@ -9,7 +9,7 @@ import '../widgets/empty_state.dart';
 import '../widgets/gradient_app_bar.dart';
 import '../widgets/pool_segment_editor_sheet.dart';
 
-/// Memorization pool — add, edit, remove segments; toggle enabled (Drift).
+/// Hifdh list — surahs / ayat ranges for memorization; add, edit, remove; Drift.
 class PoolScreen extends ConsumerStatefulWidget {
   const PoolScreen({super.key});
 
@@ -51,9 +51,10 @@ class _PoolScreenState extends ConsumerState<PoolScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           GradientAppBar(
-            title: 'Pool',
+            title: 'Hifdh',
             subtitle: poolAsync.maybeWhen(
-              data: (p) => '${p.length} segment(s)',
+              data: (p) =>
+                  p.isEmpty ? 'Nothing listed yet' : '${p.length} added',
               orElse: () => null,
             ),
           ),
@@ -136,10 +137,10 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Remove segment?'),
+        title: const Text('Remove from hifdh list?'),
         content: Text(
-          '$label will be removed from your pool. '
-          'Your current month plan will be cleared until you generate again.',
+          '$label will be removed from your hifdh list. '
+          'Your current month plan will be cleared until you generate a new one.',
         ),
         actions: [
           TextButton(
@@ -182,7 +183,7 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: EmptyState(
-            variant: EmptyStateVariant.emptyPool,
+            variant: EmptyStateVariant.hifdhListEmpty,
             onAction: widget.onAddSegment,
           ),
         ),
@@ -234,8 +235,8 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
                       Text(label, style: AppTextStyles.cardLabel),
                       Text(
                         entry.enabled
-                            ? 'Included when generating a plan'
-                            : 'Skipped',
+                            ? 'Included when you generate a plan'
+                            : 'Paused — not used in plans',
                         style: AppTextStyles.meta,
                       ),
                     ],

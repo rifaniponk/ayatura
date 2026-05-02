@@ -1,6 +1,6 @@
 import 'surah.dart';
 
-/// A user memorization segment: one row per surah (full or partial), pool-specific.
+/// One row on the user's hifdh list: a full surah or a specific ayat range.
 ///
 /// When [isFullSurah] is true, [startAyah] and [endAyah] are ignored (may be null).
 /// When false, both should be set to the inclusive ayat span.

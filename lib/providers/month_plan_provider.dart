@@ -12,7 +12,7 @@ class MonthPlanNotifier extends Notifier<MonthPlan?> {
   @override
   MonthPlan? build() => null;
 
-  /// Returns `false` when fewer than two enabled pool segments exist.
+  /// Returns `false` when fewer than two enabled hifdh-list rows exist.
   Future<bool> regenerate() async {
     final pool = await ref.read(poolEntriesAsyncProvider.future);
     final enabled = pool.where((e) => e.enabled).toList();

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_text_styles.dart';
 
-/// Bottom navigation: Home, Month, Pool, More (Settings).
+/// Bottom navigation: Home, Month, Hifdh (memorization list), More (Settings).
 class AppBottomNavBar extends StatelessWidget {
   const AppBottomNavBar({
     super.key,
@@ -17,7 +17,7 @@ class AppBottomNavBar extends StatelessWidget {
   static const _items = [
     _NavItem(icon: Icons.home_rounded, label: 'Home'),
     _NavItem(icon: Icons.calendar_month_rounded, label: 'Month'),
-    _NavItem(icon: Icons.library_books_rounded, label: 'Pool'),
+    _NavItem(icon: Icons.menu_book_rounded, label: 'Hifdh'),
     _NavItem(icon: Icons.more_horiz_rounded, label: 'More'),
   ];
 

@@ -8,7 +8,7 @@ import 'month_screen.dart';
 import 'pool_screen.dart';
 import 'settings_screen.dart';
 
-/// Root shell: bottom navigation + one visible tab via [IndexedStack].
+/// Root shell: Home, Month, Hifdh list, Settings via [IndexedStack] + bottom nav.
 ///
 /// Tab widgets manage their own headers and scrollable bodies; state comes
 /// from Riverpod ([navIndexProvider], data providers per screen).
