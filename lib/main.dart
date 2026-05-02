@@ -6,6 +6,7 @@ import 'data/local/app_database.dart';
 import 'data/models/plan.dart';
 import 'data/models/prayer.dart';
 import 'data/models/surah.dart';
+import 'data/models/surah_pool_entry.dart';
 import 'data/services/surah_seed_service.dart';
 
 Future<void> main() async {
@@ -26,7 +27,14 @@ class _BootstrapApp extends StatefulWidget {
 }
 
 class _BootstrapAppState extends State<_BootstrapApp> {
-  late final Future<List<Surah>> _surahsFuture = widget.database.allSurahs();
+  late final Future<({List<Surah> surahs, List<SurahPoolEntry> pool})>
+  _bootstrapFuture = _loadBootstrap();
+
+  Future<({List<Surah> surahs, List<SurahPoolEntry> pool})> _loadBootstrap() async {
+    final surahs = await widget.database.allSurahs();
+    final pool = await widget.database.allPoolEntries();
+    return (surahs: surahs, pool: pool);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +43,10 @@ class _BootstrapAppState extends State<_BootstrapApp> {
       theme: AppTheme.light,
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: FutureBuilder<List<Surah>>(
-          future: _surahsFuture,
+        body: FutureBuilder<
+          ({List<Surah> surahs, List<SurahPoolEntry> pool})
+        >(
+          future: _bootstrapFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return const Center(child: CircularProgressIndicator());
@@ -44,7 +54,9 @@ class _BootstrapAppState extends State<_BootstrapApp> {
             if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             }
-            final surahs = snapshot.data!;
+            final data = snapshot.data!;
+            final surahs = data.surahs;
+            final pool = data.pool;
             if (surahs.isEmpty) {
               return const Center(child: Text('No surahs loaded'));
             }
@@ -83,8 +95,17 @@ class _BootstrapAppState extends State<_BootstrapApp> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            '${surahs.length} Surah models',
+                            '${surahs.length} Quran chapters loaded '
+                            '(expected 114)',
                             style: Theme.of(context).textTheme.titleLarge,
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${pool.length} memorization segment(s) in pool '
+                            '(not chapters — same surah can appear more than once)',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 8),
                           Text(
