@@ -9,7 +9,6 @@ import '../data/models/prayer.dart';
 import '../data/models/surah.dart';
 import '../data/models/surah_pool_entry.dart';
 import '../providers/providers.dart';
-import '../widgets/bottom_nav_bar.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/gradient_app_bar.dart';
 import '../widgets/prayer_card.dart';
@@ -20,33 +19,24 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final surahsAsync = ref.watch(surahsAsyncProvider);
-    final navIndex = ref.watch(navIndexProvider);
+    final poolAsync = ref.watch(poolEntriesAsyncProvider);
 
-    return Scaffold(
-      appBar: const _HomeGradientAppBar(),
-      bottomNavigationBar: AppBottomNavBar(
-        currentIndex: navIndex,
-        onTap: (i) => ref.read(navIndexProvider.notifier).state = i,
-      ),
-      body: surahsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Error: $err')),
-        data: (surahs) {
-          if (surahs.isEmpty) {
-            return const Center(child: Text('No surahs loaded'));
-          }
-          return Consumer(
-            builder: (context, ref, _) {
-              final poolAsync = ref.watch(poolEntriesAsyncProvider);
-              return poolAsync.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('Error: $e')),
-                data: (pool) => _HomeBody(surahs: surahs, pool: pool),
-              );
-            },
-          );
-        },
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const _HomeGradientAppBar(),
+        Expanded(
+          child: switch ((surahsAsync, poolAsync)) {
+            (AsyncError(:final error), _) || (_, AsyncError(:final error)) =>
+              Center(child: Text('Error: $error')),
+            (AsyncData(value: final surahs), AsyncData(value: final pool)) =>
+              surahs.isEmpty
+                  ? const Center(child: Text('No surahs loaded'))
+                  : _HomeBody(surahs: surahs, pool: pool),
+            _ => const Center(child: CircularProgressIndicator()),
+          },
+        ),
+      ],
     );
   }
 }
