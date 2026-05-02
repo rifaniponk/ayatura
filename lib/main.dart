@@ -4,12 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'data/models/plan.dart';
+import 'data/models/prayer.dart';
+import 'data/models/surah.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const _BootstrapApp());
 }
 
-/// Step 3: JSON, raster images, and vector assets via flutter_svg.
+/// Temporary bootstrap: loads bundled assets and exercises domain models.
 class _BootstrapApp extends StatelessWidget {
   const _BootstrapApp();
 
@@ -30,13 +34,22 @@ class _BootstrapApp extends StatelessWidget {
             final raw = snapshot.data!;
             final map = jsonDecode(raw) as Map<String, dynamic>;
             final list = map['surahs'] as List<dynamic>;
+            final surahs = list
+                .map((e) => Surah.fromJson(e as Map<String, dynamic>))
+                .toList();
+
+            final sampleDay = DayPlan(
+              day: 1,
+              prayers: {for (final p in Prayer.values) p: PrayerSlot()},
+            );
+            final fajrLabel = sampleDay.slotFor(Prayer.fajr).surahs.isEmpty
+                ? Prayer.fajr.label
+                : sampleDay.slotFor(Prayer.fajr).surahs.first.displayName;
+
             return Stack(
               fit: StackFit.expand,
               children: [
-                Image.asset(
-                  'assets/images/background.png',
-                  fit: BoxFit.cover,
-                ),
+                Image.asset('assets/images/background.png', fit: BoxFit.cover),
                 Container(color: Colors.black26),
                 Center(
                   child: Card(
@@ -59,12 +72,25 @@ class _BootstrapApp extends StatelessWidget {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            '${list.length} seed surahs',
+                            '${surahs.length} Surah models',
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'SVG + PNG assets load from the bundle.',
+                          Text(
+                            'First: ${surahs.first.displayName}',
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            'Last: ${surahs.last.displayName}',
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Prayer enum: ${Prayer.values.map((p) => p.shortLabel).join(' · ')}',
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            'Sample slot for Fajr resolves to: $fajrLabel',
                             textAlign: TextAlign.center,
                           ),
                         ],
