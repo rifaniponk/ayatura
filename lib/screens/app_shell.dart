@@ -30,7 +30,7 @@ class AppShell extends ConsumerWidget {
       body: IndexedStack(index: navIndex, children: _tabs),
       bottomNavigationBar: AppBottomNavBar(
         currentIndex: navIndex,
-        onTap: (i) => ref.read(navIndexProvider.notifier).state = i,
+        onTap: (i) => ref.read(navIndexProvider.notifier).setIndex(i),
       ),
     );
   }

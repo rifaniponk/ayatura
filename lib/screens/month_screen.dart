@@ -53,7 +53,7 @@ class MonthScreen extends ConsumerWidget {
                     child: EmptyState(
                       variant: EmptyStateVariant.noPlan,
                       onAction: () =>
-                          ref.read(navIndexProvider.notifier).state = 0,
+                          ref.read(navIndexProvider.notifier).setIndex(0),
                     ),
                   ),
                 )

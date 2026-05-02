@@ -9,12 +9,14 @@ import 'database_provider.dart';
 ///
 /// Does not return [AppDatabase] — callers use [appDatabaseProvider] for the DB.
 final seededDatabaseProvider = FutureProvider<void>((ref) async {
+  ref.keepAlive();
   final db = ref.read(appDatabaseProvider);
   await SurahSeedService(db).ensureSeeded();
 });
 
 /// Master surah list — loads only when watched (after seed completes).
 final surahsAsyncProvider = FutureProvider<List<Surah>>((ref) async {
+  ref.keepAlive();
   ref.watch(seededDatabaseProvider);
   await ref.read(seededDatabaseProvider.future);
   final db = ref.read(appDatabaseProvider);
@@ -26,6 +28,7 @@ final surahsAsyncProvider = FutureProvider<List<Surah>>((ref) async {
 final poolEntriesAsyncProvider = FutureProvider<List<SurahPoolEntry>>((
   ref,
 ) async {
+  ref.keepAlive();
   ref.watch(seededDatabaseProvider);
   await ref.read(seededDatabaseProvider.future);
   final db = ref.read(appDatabaseProvider);
