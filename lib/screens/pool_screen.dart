@@ -10,32 +10,41 @@ import '../widgets/gradient_app_bar.dart';
 import '../widgets/pool_segment_editor_sheet.dart';
 
 /// Memorization pool — add, edit, remove segments; toggle enabled (Drift).
-class PoolScreen extends ConsumerWidget {
+class PoolScreen extends ConsumerStatefulWidget {
   const PoolScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PoolScreen> createState() => _PoolScreenState();
+}
+
+class _PoolScreenState extends ConsumerState<PoolScreen> {
+  void _openEditor({SurahPoolEntry? existing}) {
+    final surahsAsync = ref.read(surahsAsyncProvider);
+    surahsAsync.whenData((surahs) {
+      if (surahs.isEmpty || !mounted) return;
+      showPoolSegmentEditor(context, surahs: surahs, existing: existing);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final poolAsync = ref.watch(poolEntriesAsyncProvider);
     final surahsAsync = ref.watch(surahsAsyncProvider);
-
-    void openEditor({SurahPoolEntry? existing}) {
-      surahsAsync.whenData((surahs) {
-        if (surahs.isEmpty) return;
-        showPoolSegmentEditor(context, ref, surahs: surahs, existing: existing);
-      });
-    }
 
     final fab = surahsAsync.maybeWhen(
       data: (surahs) => surahs.isEmpty
           ? null
           : FloatingActionButton.extended(
-              onPressed: () => openEditor(),
+              onPressed: _openEditor,
               icon: const Icon(Icons.add_rounded),
               label: const Text('Add'),
             ),
       orElse: () => null,
     );
 
+    // Nested inside AppShell's root Scaffold so the FAB is scoped to this tab
+    // only. SnackBars from _PoolBody should use ScaffoldMessenger.of(context)
+    // which routes to the nearest ancestor — the inner Scaffold here.
     return Scaffold(
       floatingActionButton: fab,
       body: Column(
@@ -56,8 +65,8 @@ class PoolScreen extends ConsumerWidget {
                 _PoolBody(
                   pool: pool,
                   surahs: surahs,
-                  onAddSegment: () => openEditor(),
-                  onEditSegment: (e) => openEditor(existing: e),
+                  onAddSegment: _openEditor,
+                  onEditSegment: (e) => _openEditor(existing: e),
                 ),
               _ => const Center(child: CircularProgressIndicator()),
             },
@@ -183,7 +192,13 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
     final scheme = Theme.of(context).colorScheme;
 
     return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(18, 12, 18, 88),
+      // Extra bottom padding clears the FAB: extended FAB height (56) + margin × 2.
+      padding: const EdgeInsets.fromLTRB(
+        18,
+        12,
+        18,
+        kFloatingActionButtonMargin * 2 + 56,
+      ),
       itemCount: pool.length,
       separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (context, i) {

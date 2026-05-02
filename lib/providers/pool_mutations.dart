@@ -34,6 +34,10 @@ Future<void> insertPoolSegment({
   int? endAyah,
   bool enabled = true,
 }) async {
+  assert(
+    isFullSurah || (startAyah != null && endAyah != null),
+    'startAyah and endAyah are required for partial segments',
+  );
   final db = ref.read(appDatabaseProvider);
   await db.insertPoolEntry(
     SurahPoolEntriesCompanion.insert(

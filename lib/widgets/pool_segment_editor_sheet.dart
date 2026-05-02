@@ -11,8 +11,7 @@ import '../providers/pool_mutations.dart';
 import 'gradient_button.dart';
 
 Future<void> showPoolSegmentEditor(
-  BuildContext context,
-  WidgetRef ref, {
+  BuildContext context, {
   required List<Surah> surahs,
   SurahPoolEntry? existing,
 }) {
@@ -21,27 +20,23 @@ Future<void> showPoolSegmentEditor(
     isScrollControlled: true,
     showDragHandle: true,
     builder: (ctx) =>
-        _PoolSegmentEditorSheet(ref: ref, surahs: surahs, existing: existing),
+        _PoolSegmentEditorSheet(surahs: surahs, existing: existing),
   );
 }
 
-class _PoolSegmentEditorSheet extends StatefulWidget {
-  const _PoolSegmentEditorSheet({
-    required this.ref,
-    required this.surahs,
-    this.existing,
-  });
+class _PoolSegmentEditorSheet extends ConsumerStatefulWidget {
+  const _PoolSegmentEditorSheet({required this.surahs, this.existing});
 
-  final WidgetRef ref;
   final List<Surah> surahs;
   final SurahPoolEntry? existing;
 
   @override
-  State<_PoolSegmentEditorSheet> createState() =>
+  ConsumerState<_PoolSegmentEditorSheet> createState() =>
       _PoolSegmentEditorSheetState();
 }
 
-class _PoolSegmentEditorSheetState extends State<_PoolSegmentEditorSheet> {
+class _PoolSegmentEditorSheetState
+    extends ConsumerState<_PoolSegmentEditorSheet> {
   late int? _surahId;
   late bool _fullSurah;
   late TextEditingController _startCtl;
@@ -84,7 +79,10 @@ class _PoolSegmentEditorSheetState extends State<_PoolSegmentEditorSheet> {
     final sid = _surahId;
     if (sid == null || !mounted) return;
 
-    final master = widget.surahs.firstWhere((s) => s.id == sid);
+    final master = widget.surahs.firstWhere(
+      (s) => s.id == sid,
+      orElse: () => widget.surahs.first,
+    );
 
     int? start;
     int? end;
@@ -109,7 +107,7 @@ class _PoolSegmentEditorSheetState extends State<_PoolSegmentEditorSheet> {
       final existing = widget.existing;
       if (existing == null) {
         await insertPoolSegment(
-          ref: widget.ref,
+          ref: ref,
           surahId: sid,
           isFullSurah: _fullSurah,
           startAyah: _fullSurah ? null : start!,
@@ -117,7 +115,7 @@ class _PoolSegmentEditorSheetState extends State<_PoolSegmentEditorSheet> {
         );
       } else {
         await replacePoolSegment(
-          ref: widget.ref,
+          ref: ref,
           entry: SurahPoolEntry(
             id: existing.id,
             surahId: sid,
