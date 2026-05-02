@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/theme/app_text_styles.dart';
+import '../data/models/plan.dart';
 import '../providers/providers.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/gradient_app_bar.dart';
 
-/// Month overview placeholder until persisted [MonthPlan] exists.
+/// Month overview — summary list when a plan exists, otherwise placeholder.
 class MonthScreen extends ConsumerWidget {
   const MonthScreen({super.key});
 
@@ -27,9 +29,18 @@ class MonthScreen extends ConsumerWidget {
     return '${months[now.month - 1]} ${now.year}';
   }
 
+  static MonthPlan? _effectivePlan(MonthPlan? plan, DateTime now) {
+    if (plan == null) return null;
+    if (plan.isStaleAt(now)) return null;
+    return plan;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final now = DateTime.now();
+    final plan = ref.watch(monthPlanProvider);
+    final effective = _effectivePlan(plan, now);
+
     final surahsAsync = ref.watch(surahsAsyncProvider);
     final subtitle = surahsAsync.maybeWhen(
       data: (s) =>
@@ -42,15 +53,40 @@ class MonthScreen extends ConsumerWidget {
       children: [
         GradientAppBar(title: 'Month', subtitle: subtitle),
         Expanded(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: EmptyState(
-                variant: EmptyStateVariant.noPlan,
-                onAction: () => ref.read(navIndexProvider.notifier).state = 0,
-              ),
-            ),
-          ),
+          child: effective == null
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: EmptyState(
+                      variant: EmptyStateVariant.noPlan,
+                      onAction: () =>
+                          ref.read(navIndexProvider.notifier).state = 0,
+                    ),
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(18, 12, 18, 24),
+                  itemCount: effective.days.length,
+                  itemBuilder: (context, i) {
+                    final d = effective.days[i];
+                    final slots = d.prayers.values.fold<int>(
+                      0,
+                      (sum, slot) => sum + slot.surahs.length,
+                    );
+                    return Card(
+                      child: ListTile(
+                        title: Text(
+                          'Day ${d.day}',
+                          style: AppTextStyles.cardLabel,
+                        ),
+                        subtitle: Text(
+                          '$slots planned reading(s) across prayers',
+                          style: AppTextStyles.meta,
+                        ),
+                      ),
+                    );
+                  },
+                ),
         ),
       ],
     );
