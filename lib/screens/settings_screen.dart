@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/theme/app_text_styles.dart';
-import '../widgets/gradient_app_bar.dart';
+import '../widgets/common/gradient_app_bar.dart';
 
 /// Preferences and data actions — placeholders until wired to persistence.
 class SettingsScreen extends StatefulWidget {

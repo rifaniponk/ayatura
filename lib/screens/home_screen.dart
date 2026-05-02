@@ -7,10 +7,10 @@ import '../data/models/prayer.dart';
 import '../data/models/surah.dart';
 import '../data/models/surah_pool_entry.dart';
 import '../providers/providers.dart';
-import '../widgets/empty_state.dart';
-import '../widgets/gradient_app_bar.dart';
-import '../widgets/gradient_button.dart';
-import '../widgets/prayer_card.dart';
+import '../widgets/common/empty_state.dart';
+import '../widgets/common/gradient_app_bar.dart';
+import '../widgets/common/gradient_button.dart';
+import '../widgets/prayer/prayer_card.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});

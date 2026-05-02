@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-import 'models/surah.dart';
+import '../data/models/surah.dart';
 
 /// [FormBuilderValidators]-based rules for ayat-range fields on the hifdh list.
 abstract final class PoolSegmentFormValidators {

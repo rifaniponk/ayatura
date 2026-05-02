@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/theme/app_text_styles.dart';
 import '../providers/providers.dart';
-import '../widgets/empty_state.dart';
-import '../widgets/gradient_app_bar.dart';
+import '../widgets/common/empty_state.dart';
+import '../widgets/common/gradient_app_bar.dart';
 
 /// Month overview — summary list when a plan exists, otherwise placeholder.
 class MonthScreen extends ConsumerWidget {

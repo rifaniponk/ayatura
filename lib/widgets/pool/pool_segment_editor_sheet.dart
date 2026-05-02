@@ -3,13 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-import '../core/theme/app_colors.dart';
-import '../core/theme/app_text_styles.dart';
-import '../data/models/surah.dart';
-import '../data/models/surah_pool_entry.dart';
-import '../data/pool_segment_form_validators.dart';
-import '../providers/pool_mutations.dart';
-import 'gradient_button.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text_styles.dart';
+import '../../data/models/surah.dart';
+import '../../data/models/surah_pool_entry.dart';
+import '../../validators/pool_segment_form_validators.dart';
+import '../../providers/pool_mutations.dart';
+import '../common/gradient_button.dart';
 
 Future<void> showPoolSegmentEditor(
   BuildContext context, {

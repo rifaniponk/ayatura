@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../core/theme/app_colors.dart';
-import '../core/theme/app_text_styles.dart';
-import '../data/models/plan.dart';
-import '../data/models/prayer.dart';
-import '../data/models/surah.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text_styles.dart';
+import '../../data/models/plan.dart';
+import '../../data/models/prayer.dart';
+import '../../data/models/surah.dart';
 
 /// A single prayer slot card (e.g. home timeline).
 ///
