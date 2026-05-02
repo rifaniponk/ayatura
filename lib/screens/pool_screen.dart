@@ -5,10 +5,10 @@ import '../core/theme/app_text_styles.dart';
 import '../data/models/surah.dart';
 import '../data/models/surah_pool_entry.dart';
 import '../providers/providers.dart';
-import '../widgets/empty_state.dart';
-import '../widgets/gradient_app_bar.dart';
-import '../widgets/dismissible_intro_tip.dart';
-import '../widgets/pool_segment_editor_sheet.dart';
+import '../widgets/common/empty_state.dart';
+import '../widgets/common/gradient_app_bar.dart';
+import '../widgets/pool/dismissible_intro_tip.dart';
+import '../widgets/pool/pool_segment_editor_sheet.dart';
 
 /// Hifdh list — surahs / ayat ranges for memorization; add, edit, remove; Drift.
 class PoolScreen extends ConsumerStatefulWidget {

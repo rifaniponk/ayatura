@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:surah_planner/data/models/surah.dart';
-import 'package:surah_planner/data/pool_segment_form_validators.dart';
+import 'package:surah_planner/validators/pool_segment_form_validators.dart';
 
 void main() {
   const alFatiha = Surah(

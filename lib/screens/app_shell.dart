@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/nav_provider.dart';
-import '../widgets/bottom_nav_bar.dart';
+import '../widgets/navigation/bottom_nav_bar.dart';
 import 'home_screen.dart';
 import 'month_screen.dart';
 import 'pool_screen.dart';
