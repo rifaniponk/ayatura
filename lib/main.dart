@@ -64,9 +64,14 @@ class _BootstrapAppState extends State<_BootstrapApp> {
               day: 1,
               prayers: {for (final p in Prayer.values) p: PrayerSlot()},
             );
-            final fajrLabel = sampleDay.slotFor(Prayer.fajr).surahs.isEmpty
+            final fajrSlot = sampleDay.slotFor(Prayer.fajr);
+            final fajrLabel = fajrSlot.surahs.isEmpty
                 ? Prayer.fajr.label
-                : sampleDay.slotFor(Prayer.fajr).surahs.first.displayName;
+                : fajrSlot.surahs.first.displayLabel(
+                    surahs.firstWhere(
+                      (s) => s.id == fajrSlot.surahs.first.surahId,
+                    ),
+                  );
 
             return Stack(
               fit: StackFit.expand,

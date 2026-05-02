@@ -9,29 +9,10 @@ import 'package:surah_planner/data/models/surah_pool_entry.dart';
 Surah _surah(int id) =>
     Surah(id: id, name: 'S$id', arabicName: 'x', ayatCount: 10);
 
-PlanSurah _planFull(int id) {
-  final s = _surah(id);
-  return PlanSurah(
-    surahId: s.id,
-    name: s.name,
-    arabicName: s.arabicName,
-    ayatCount: s.ayatCount,
-    isFullSurah: true,
-  );
-}
+PlanSurah _planFull(int id) => PlanSurah(surahId: id, isFullSurah: true);
 
-PlanSurah _planPartial(int id, int start, int end) {
-  final s = _surah(id);
-  return PlanSurah(
-    surahId: s.id,
-    name: s.name,
-    arabicName: s.arabicName,
-    ayatCount: s.ayatCount,
-    isFullSurah: false,
-    startAyah: start,
-    endAyah: end,
-  );
-}
+PlanSurah _planPartial(int id, int start, int end) =>
+    PlanSurah(surahId: id, isFullSurah: false, startAyah: start, endAyah: end);
 
 void main() {
   group('Surah', () {
@@ -60,22 +41,40 @@ void main() {
   });
 
   group('PlanSurah', () {
-    test('displayName includes ayat span when partial', () {
+    test('displayLabel uses master name; ayat span when partial', () {
       final p = _planPartial(2, 1, 5);
-      expect(p.displayName, 'S2 (1–5)');
+      expect(p.displayLabel(_surah(2)), 'S2 (1–5)');
     });
 
-    test('fromJson uses new shape', () {
+    test('fromJson stores ids and segment only', () {
       final p = PlanSurah.fromJson({
         'surahId': 2,
-        'name': 'Al-Baqarah',
-        'arabicName': 'ب',
-        'ayatCount': 286,
         'isFullSurah': false,
         'startAyah': 255,
         'endAyah': 255,
       });
-      expect(p.displayName, 'Al-Baqarah (255)');
+      const master = Surah(
+        id: 2,
+        name: 'Al-Baqarah',
+        arabicName: 'ب',
+        ayatCount: 286,
+      );
+      expect(p.displayLabel(master), 'Al-Baqarah (255)');
+    });
+
+    test('fromSurahPoolEntry copies segment fields', () {
+      const entry = SurahPoolEntry(
+        id: 9,
+        surahId: 3,
+        isFullSurah: false,
+        startAyah: 10,
+        endAyah: 20,
+      );
+      final p = PlanSurah.fromSurahPoolEntry(entry);
+      expect(p.surahId, 3);
+      expect(p.isFullSurah, false);
+      expect(p.startAyah, 10);
+      expect(p.endAyah, 20);
     });
   });
 
@@ -141,13 +140,7 @@ void main() {
         'prayers': {
           'fajr': {
             'surahs': [
-              {
-                'surahId': 1,
-                'name': 'Al-Fatihah',
-                'arabicName': 'الفاتحة',
-                'ayatCount': 7,
-                'isFullSurah': true,
-              },
+              {'surahId': 1, 'isFullSurah': true},
             ],
             'locked': false,
           },
