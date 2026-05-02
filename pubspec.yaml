@@ -1,5 +1,5 @@
 name: surah_planner
-description: "A new Flutter project."
+description: "Surah Planner — assign Quran surahs to each prayer across the month."
 publish_to: 'none'
 version: 0.1.0+1
 
@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_svg: ^2.0.10+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -17,3 +19,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/data/surahs.json
+    - assets/images/app_icon.png
+    - assets/images/adaptive_icon_foreground.png
+    - assets/images/splash.png
+    - assets/images/background.png
+    - assets/svg/crescent_mark.svg
+    - assets/svg/app_icon.svg
+    - assets/svg/logo_lockup.svg

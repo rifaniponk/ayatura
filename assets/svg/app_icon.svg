@@ -1,0 +1,27 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  
+  <rect width="1024" height="1024" fill="#0F3D2E"></rect>
+
+  
+  <g opacity="0.1" stroke="#D4AF37" stroke-width="1.5" fill="none">
+    <polygon points="512,40 812,213 812,560 512,733 212,560 212,213"></polygon>
+    <polygon points="512,140 712,257 712,490 512,607 312,490 312,257"></polygon>
+  </g>
+
+  
+  <defs>
+    <mask id="cm">
+      <rect width="1024" height="1024" fill="white"></rect>
+      
+      <circle cx="596" cy="354" r="192" fill="black"></circle>
+    </mask>
+  </defs>
+  <circle cx="450" cy="390" r="235" fill="#D4AF37" mask="url(#cm)"></circle>
+
+  
+  <circle cx="212" cy="760" r="54" fill="#D4AF37"></circle>
+  <circle cx="358" cy="760" r="54" fill="#D4AF37"></circle>
+  <circle cx="512" cy="760" r="54" fill="#D4AF37"></circle>
+  <circle cx="666" cy="760" r="54" fill="#D4AF37"></circle>
+  <circle cx="812" cy="760" r="54" fill="#D4AF37"></circle>
+</svg>
