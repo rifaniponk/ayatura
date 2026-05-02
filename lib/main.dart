@@ -8,7 +8,7 @@ void main() {
   runApp(const _BootstrapApp());
 }
 
-/// Step 1: proves bundled JSON is on the asset bundle and parses.
+/// Step 2: bundled JSON plus raster images decode on the asset bundle.
 class _BootstrapApp extends StatelessWidget {
   const _BootstrapApp();
 
@@ -17,7 +17,6 @@ class _BootstrapApp extends StatelessWidget {
     return MaterialApp(
       title: 'Surah Planner',
       home: Scaffold(
-        appBar: AppBar(title: const Text('Bootstrap')),
         body: FutureBuilder<String>(
           future: rootBundle.loadString('assets/data/surahs.json'),
           builder: (context, snapshot) {
@@ -30,11 +29,43 @@ class _BootstrapApp extends StatelessWidget {
             final raw = snapshot.data!;
             final map = jsonDecode(raw) as Map<String, dynamic>;
             final list = map['surahs'] as List<dynamic>;
-            return Center(
-              child: Text(
-                'Loaded ${list.length} seed surahs from assets.',
-                textAlign: TextAlign.center,
-              ),
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  'assets/images/background.png',
+                  fit: BoxFit.cover,
+                ),
+                Container(color: Colors.black26),
+                Center(
+                  child: Card(
+                    margin: const EdgeInsets.all(24),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            'assets/images/app_icon.png',
+                            width: 72,
+                            height: 72,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            '${list.length} seed surahs',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Raster assets load from the bundle.',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             );
           },
         ),

@@ -20,3 +20,7 @@ flutter:
 
   assets:
     - assets/data/surahs.json
+    - assets/images/app_icon.png
+    - assets/images/adaptive_icon_foreground.png
+    - assets/images/splash.png
+    - assets/images/background.png
