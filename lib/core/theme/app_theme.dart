@@ -95,6 +95,7 @@ abstract final class AppTheme {
         thickness: 1,
         space: 1,
       ),
+      // Material [Switch] / [SwitchListTile] — align with [AppToggle] (custom).
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.all(AppColors.white),
         trackColor: WidgetStateProperty.resolveWith((states) {
