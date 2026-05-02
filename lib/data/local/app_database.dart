@@ -104,6 +104,12 @@ class AppDatabase extends _$AppDatabase {
     return update(surahPoolEntries).replace(row);
   }
 
+  Future<void> setPoolEntryEnabled(int id, bool enabled) async {
+    await (update(surahPoolEntries)..where((t) => t.id.equals(id))).write(
+      SurahPoolEntriesCompanion(enabled: Value(enabled)),
+    );
+  }
+
   Future<int> deletePoolEntry(int id) {
     return (delete(surahPoolEntries)..where((t) => t.id.equals(id))).go();
   }
