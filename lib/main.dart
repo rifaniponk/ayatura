@@ -1,22 +1,32 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'core/theme/app_theme.dart';
+import 'data/local/app_database.dart';
 import 'data/models/plan.dart';
 import 'data/models/prayer.dart';
 import 'data/models/surah.dart';
+import 'data/services/surah_seed_service.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const _BootstrapApp());
+  final db = AppDatabase();
+  await SurahSeedService(db).ensureSeeded();
+  runApp(_BootstrapApp(database: db));
 }
 
-/// Temporary bootstrap: loads bundled assets and exercises domain models.
-class _BootstrapApp extends StatelessWidget {
-  const _BootstrapApp();
+/// Temporary bootstrap: reads surahs from the local DB after seeding.
+class _BootstrapApp extends StatefulWidget {
+  const _BootstrapApp({required this.database});
+
+  final AppDatabase database;
+
+  @override
+  State<_BootstrapApp> createState() => _BootstrapAppState();
+}
+
+class _BootstrapAppState extends State<_BootstrapApp> {
+  late final Future<List<Surah>> _surahsFuture = widget.database.allSurahs();
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +35,8 @@ class _BootstrapApp extends StatelessWidget {
       theme: AppTheme.light,
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: FutureBuilder<String>(
-          future: rootBundle.loadString('assets/data/surahs.json'),
+        body: FutureBuilder<List<Surah>>(
+          future: _surahsFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return const Center(child: CircularProgressIndicator());
@@ -34,12 +44,10 @@ class _BootstrapApp extends StatelessWidget {
             if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             }
-            final raw = snapshot.data!;
-            final map = jsonDecode(raw) as Map<String, dynamic>;
-            final list = map['surahs'] as List<dynamic>;
-            final surahs = list
-                .map((e) => Surah.fromJson(e as Map<String, dynamic>))
-                .toList();
+            final surahs = snapshot.data!;
+            if (surahs.isEmpty) {
+              return const Center(child: Text('No surahs loaded'));
+            }
 
             final sampleDay = DayPlan(
               day: 1,
