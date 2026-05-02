@@ -1,9 +1,13 @@
-import 'surah.dart';
-import 'prayer.dart';
+import 'package:surah_planner/core/plan_config.dart';
 
-/// Up to 2 surahs assigned to a single prayer slot.
+import 'prayer.dart';
+import 'surah.dart';
+
+/// Surahs assigned to one prayer slot, capped by [PlanLimits.maxSurahsPerPrayerSlot].
+///
+/// New assignments should respect that cap; stored rows may contain fewer.
 class PrayerSlot {
-  final List<Surah> surahs; // max 2
+  final List<Surah> surahs;
   final bool locked;
 
   const PrayerSlot({this.surahs = const [], this.locked = false});
