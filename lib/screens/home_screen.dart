@@ -19,32 +19,22 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final surahsAsync = ref.watch(surahsAsyncProvider);
+    final poolAsync = ref.watch(poolEntriesAsyncProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const _HomeGradientAppBar(),
         Expanded(
-          child: surahsAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, _) => Center(child: Text('Error: $err')),
-            data: (surahs) {
-              if (surahs.isEmpty) {
-                return const Center(child: Text('No surahs loaded'));
-              }
-              return Consumer(
-                builder: (context, ref, _) {
-                  final poolAsync = ref.watch(poolEntriesAsyncProvider);
-                  return poolAsync.when(
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (e, _) => Center(child: Text('Error: $e')),
-                    data: (pool) => _HomeBody(surahs: surahs, pool: pool),
-                  );
-                },
-              );
-            },
-          ),
+          child: switch ((surahsAsync, poolAsync)) {
+            (AsyncError(:final error), _) || (_, AsyncError(:final error)) =>
+              Center(child: Text('Error: $error')),
+            (AsyncData(value: final surahs), AsyncData(value: final pool)) =>
+              surahs.isEmpty
+                  ? const Center(child: Text('No surahs loaded'))
+                  : _HomeBody(surahs: surahs, pool: pool),
+            _ => const Center(child: CircularProgressIndicator()),
+          },
         ),
       ],
     );

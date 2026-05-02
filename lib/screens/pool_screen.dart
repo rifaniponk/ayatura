@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/theme/app_colors.dart';
 import '../core/theme/app_text_styles.dart';
 import '../data/models/surah.dart';
 import '../data/models/surah_pool_entry.dart';
@@ -29,15 +28,13 @@ class PoolScreen extends ConsumerWidget {
           ),
         ),
         Expanded(
-          child: poolAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text('Error: $e')),
-            data: (pool) => surahsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error: $e')),
-              data: (surahs) => _PoolBody(pool: pool, surahs: surahs),
-            ),
-          ),
+          child: switch ((poolAsync, surahsAsync)) {
+            (AsyncError(:final error), _) || (_, AsyncError(:final error)) =>
+              Center(child: Text('Error: $error')),
+            (AsyncData(value: final pool), AsyncData(value: final surahs)) =>
+              _PoolBody(pool: pool, surahs: surahs),
+            _ => const Center(child: CircularProgressIndicator()),
+          },
         ),
       ],
     );
@@ -80,31 +77,34 @@ class _PoolBody extends StatelessWidget {
             ? entry.displayLabel(master)
             : 'Surah ${entry.surahId}';
         final meta = entry.enabled ? 'Enabled' : 'Disabled';
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(label, style: AppTextStyles.cardLabel),
-                    const SizedBox(height: 4),
-                    Text(meta, style: AppTextStyles.meta),
-                  ],
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(label, style: AppTextStyles.cardLabel),
+                      const SizedBox(height: 4),
+                      Text(meta, style: AppTextStyles.meta),
+                    ],
+                  ),
                 ),
-              ),
-              Icon(
-                entry.enabled ? Icons.check_circle_rounded : Icons.pause_circle,
-                color: entry.enabled ? AppColors.green2 : AppColors.ink3,
-                size: 22,
-              ),
-            ],
+                Icon(
+                  entry.enabled
+                      ? Icons.check_circle_rounded
+                      : Icons.pause_circle,
+                  color: entry.enabled
+                      ? Theme.of(context).colorScheme.secondary
+                      : Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.4),
+                  size: 22,
+                ),
+              ],
+            ),
           ),
         );
       },

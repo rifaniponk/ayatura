@@ -9,8 +9,7 @@ import '../widgets/gradient_app_bar.dart';
 class MonthScreen extends ConsumerWidget {
   const MonthScreen({super.key});
 
-  static String _monthYearLabel() {
-    final now = DateTime.now();
+  static String _monthYearLabel(DateTime now) {
     const months = [
       'January',
       'February',
@@ -30,11 +29,12 @@ class MonthScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final now = DateTime.now();
     final surahsAsync = ref.watch(surahsAsyncProvider);
     final subtitle = surahsAsync.maybeWhen(
       data: (s) =>
-          s.isEmpty ? null : '${_monthYearLabel()} · ${s.length} chapters',
-      orElse: () => _monthYearLabel(),
+          s.isEmpty ? null : '${_monthYearLabel(now)} · ${s.length} chapters',
+      orElse: () => _monthYearLabel(now),
     );
 
     return Column(

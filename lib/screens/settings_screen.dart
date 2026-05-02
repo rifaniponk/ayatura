@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/theme/app_colors.dart';
 import '../core/theme/app_text_styles.dart';
 import '../widgets/gradient_app_bar.dart';
 
 /// Preferences and data actions — placeholders until wired to persistence.
-class SettingsScreen extends ConsumerStatefulWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+  State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+class _SettingsScreenState extends State<SettingsScreen> {
   bool _reminders = false;
 
   @override
@@ -29,11 +27,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               Text('Preferences', style: AppTextStyles.sectionHeadingSerif),
               const SizedBox(height: 12),
               Card(
-                margin: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  side: const BorderSide(color: AppColors.border),
-                ),
                 child: SwitchListTile(
                   title: Text(
                     'Prayer reminders',
@@ -44,8 +37,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     style: AppTextStyles.meta,
                   ),
                   value: _reminders,
-                  activeThumbColor: AppColors.white,
-                  activeTrackColor: AppColors.green2,
                   onChanged: (v) => setState(() => _reminders = v),
                 ),
               ),
@@ -55,7 +46,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               Text(
                 'Surah Planner links memorization segments to prayers across '
                 'the month. Monthly assignment storage is coming next.',
-                style: AppTextStyles.body.copyWith(color: AppColors.ink2),
+                style: AppTextStyles.body.copyWith(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
               ),
             ],
           ),
