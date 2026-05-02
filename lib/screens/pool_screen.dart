@@ -55,8 +55,11 @@ class _PoolScreenState extends ConsumerState<PoolScreen> {
             subtitle: poolAsync.maybeWhen(
               data: (p) =>
                   p.isEmpty ? 'Nothing listed yet' : '${p.length} added',
-              orElse: () => null,
+              orElse: () => '…',
             ),
+            subtitleCaption:
+                'Hifdh is Quran memorization. What you list here is used '
+                'when you build your monthly plan.',
           ),
           Expanded(
             child: switch ((poolAsync, surahsAsync)) {

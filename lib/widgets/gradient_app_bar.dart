@@ -10,18 +10,22 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.title,
     this.subtitle,
+    this.subtitleCaption,
     this.showLogo = false,
     this.onBack,
   });
 
   final String title;
   final String? subtitle;
+
+  /// Optional second line under [subtitle] (e.g. short screen description).
+  final String? subtitleCaption;
   final bool showLogo;
   final VoidCallback? onBack;
 
   /// Total bar height below the status bar (content + vertical padding).
   @override
-  Size get preferredSize => const Size.fromHeight(80);
+  Size get preferredSize => Size.fromHeight(subtitleCaption != null ? 108 : 80);
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +75,19 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
                             color: Colors.white54,
                           ),
                         ),
+                      if (subtitleCaption != null) ...[
+                        SizedBox(height: subtitle != null ? 4 : 6),
+                        Text(
+                          subtitleCaption!,
+                          style: AppTextStyles.meta.copyWith(
+                            color: Colors.white54,
+                            fontSize: 11,
+                            height: 1.35,
+                          ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ],
                   ),
                 ),
