@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'core/theme/app_theme.dart';
 import 'data/models/plan.dart';
 import 'data/models/prayer.dart';
 import 'data/models/surah.dart';
@@ -21,6 +22,8 @@ class _BootstrapApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Surah Planner',
+      theme: AppTheme.light,
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: FutureBuilder<String>(
           future: rootBundle.loadString('assets/data/surahs.json'),
