@@ -53,11 +53,32 @@ class _PoolBody extends ConsumerStatefulWidget {
 
 class _PoolBodyState extends ConsumerState<_PoolBody> {
   final Set<int> _busyIds = {};
+  late Map<int, Surah> _masterById;
+
+  @override
+  void initState() {
+    super.initState();
+    _masterById = {for (final s in widget.surahs) s.id: s};
+  }
+
+  @override
+  void didUpdateWidget(_PoolBody old) {
+    super.didUpdateWidget(old);
+    if (old.surahs != widget.surahs) {
+      _masterById = {for (final s in widget.surahs) s.id: s};
+    }
+  }
 
   Future<void> _toggle(SurahPoolEntry entry, bool enabled) async {
     setState(() => _busyIds.add(entry.id));
     try {
       await setPoolEntryEnabled(ref, entry, enabled);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to save: $e')));
+      }
     } finally {
       if (mounted) setState(() => _busyIds.remove(entry.id));
     }
@@ -83,7 +104,6 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
       );
     }
 
-    final masterById = {for (final s in surahs) s.id: s};
     final scheme = Theme.of(context).colorScheme;
 
     return ListView.separated(
@@ -92,7 +112,7 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
       separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (context, i) {
         final entry = pool[i];
-        final master = masterById[entry.surahId];
+        final master = _masterById[entry.surahId];
         final label = master != null
             ? entry.displayLabel(master)
             : 'Surah ${entry.surahId}';
