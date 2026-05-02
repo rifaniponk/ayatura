@@ -133,7 +133,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
             selectedDay: clampedDay,
             daysInMonth: daysInMonth,
             onChanged: (d) =>
-                ref.read(selectedPlanDayProvider.notifier).state = d,
+                ref.read(selectedPlanDayProvider.notifier).setDay(d),
           ),
           const SizedBox(height: 16),
           ...Prayer.values.map(
@@ -159,7 +159,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
           if (enabledCount < 2)
             EmptyState(
               variant: EmptyStateVariant.hifdhListTooSmall,
-              onAction: () => ref.read(navIndexProvider.notifier).state = 2,
+              onAction: () => ref.read(navIndexProvider.notifier).setIndex(2),
             )
           else
             EmptyState(variant: EmptyStateVariant.noPlan, onAction: _generate),

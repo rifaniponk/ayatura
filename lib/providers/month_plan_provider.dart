@@ -5,7 +5,15 @@ import '../data/services/month_plan_generator.dart';
 import 'surah_data_providers.dart';
 
 /// Current calendar day highlighted on Home (1–31).
-final selectedPlanDayProvider = StateProvider<int>((ref) => DateTime.now().day);
+class SelectedPlanDayNotifier extends Notifier<int> {
+  @override
+  int build() => DateTime.now().day;
+
+  void setDay(int value) => state = value;
+}
+
+final selectedPlanDayProvider =
+    NotifierProvider<SelectedPlanDayNotifier, int>(SelectedPlanDayNotifier.new);
 
 /// In-memory month plan for the active session (persist to Drift later).
 class MonthPlanNotifier extends Notifier<MonthPlan?> {
@@ -32,7 +40,7 @@ class MonthPlanNotifier extends Notifier<MonthPlan?> {
     final dim = DateTime(next.year, next.month + 1, 0).day;
     final day = ref.read(selectedPlanDayProvider);
     if (day > dim) {
-      ref.read(selectedPlanDayProvider.notifier).state = dim;
+      ref.read(selectedPlanDayProvider.notifier).setDay(dim);
     }
     return true;
   }
