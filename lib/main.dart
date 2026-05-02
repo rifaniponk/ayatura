@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const _BootstrapApp());
 }
 
-/// Step 2: bundled JSON plus raster images decode on the asset bundle.
+/// Step 3: JSON, raster images, and vector assets via flutter_svg.
 class _BootstrapApp extends StatelessWidget {
   const _BootstrapApp();
 
@@ -45,6 +46,12 @@ class _BootstrapApp extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          SvgPicture.asset(
+                            'assets/svg/crescent_mark.svg',
+                            width: 56,
+                            height: 56,
+                          ),
+                          const SizedBox(height: 12),
                           Image.asset(
                             'assets/images/app_icon.png',
                             width: 72,
@@ -57,7 +64,7 @@ class _BootstrapApp extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           const Text(
-                            'Raster assets load from the bundle.',
+                            'SVG + PNG assets load from the bundle.',
                             textAlign: TextAlign.center,
                           ),
                         ],

@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_svg: ^2.0.10+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -24,3 +26,6 @@ flutter:
     - assets/images/adaptive_icon_foreground.png
     - assets/images/splash.png
     - assets/images/background.png
+    - assets/svg/crescent_mark.svg
+    - assets/svg/app_icon.svg
+    - assets/svg/logo_lockup.svg
