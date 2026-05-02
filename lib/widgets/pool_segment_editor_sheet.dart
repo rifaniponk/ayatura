@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_text_styles.dart';
 import '../data/models/surah.dart';
 import '../data/models/surah_pool_entry.dart';
-import '../data/pool_segment_validation.dart';
+import '../data/pool_segment_form_validators.dart';
 import '../providers/pool_mutations.dart';
 import 'gradient_button.dart';
 
@@ -37,6 +38,7 @@ class _PoolSegmentEditorSheet extends ConsumerStatefulWidget {
 
 class _PoolSegmentEditorSheetState
     extends ConsumerState<_PoolSegmentEditorSheet> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late int? _surahId;
   late bool _fullSurah;
   late TextEditingController _startCtl;
@@ -79,27 +81,14 @@ class _PoolSegmentEditorSheetState
     final sid = _surahId;
     if (sid == null || !mounted) return;
 
-    final master = widget.surahs.firstWhere(
-      (s) => s.id == sid,
-      orElse: () => widget.surahs.first,
-    );
+    final formOk = _formKey.currentState?.validate() ?? false;
+    if (!formOk) return;
 
     int? start;
     int? end;
     if (!_fullSurah) {
       start = int.tryParse(_startCtl.text.trim());
       end = int.tryParse(_endCtl.text.trim());
-    }
-
-    final err = PoolSegmentValidation.validate(
-      surah: master,
-      isFullSurah: _fullSurah,
-      startAyah: start,
-      endAyah: end,
-    );
-    if (err != null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(err)));
-      return;
     }
 
     setState(() => _saving = true);
@@ -153,95 +142,111 @@ class _PoolSegmentEditorSheetState
 
     return Padding(
       padding: EdgeInsets.only(left: 20, right: 20, bottom: bottomInset + 20),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              widget.existing == null ? 'Add segment' : 'Edit segment',
-              style: AppTextStyles.sectionHeadingSerif,
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<int>(
-              key: ValueKey(_surahId),
-              initialValue: _surahId,
-              decoration: const InputDecoration(
-                labelText: 'Surah',
-                border: OutlineInputBorder(),
-              ),
-              items: [
-                for (final s in surahs)
-                  DropdownMenuItem(
-                    value: s.id,
-                    child: Text(
-                      '${s.id}. ${s.name}',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-              ],
-              onChanged: _saving
-                  ? null
-                  : (v) => setState(() {
-                      _surahId = v;
-                    }),
-            ),
-            const SizedBox(height: 12),
-            SwitchListTile.adaptive(
-              title: const Text('Entire surah'),
-              subtitle: Text(
-                _fullSurah
-                    ? 'This segment covers all ayat.'
-                    : 'Only the ayat range below is included.',
-                style: AppTextStyles.meta,
-              ),
-              value: _fullSurah,
-              onChanged: _saving ? null : (v) => setState(() => _fullSurah = v),
-            ),
-            if (!_fullSurah) ...[
-              const SizedBox(height: 8),
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
               Text(
-                '${master.ayatCount} ayat in this surah',
-                style: AppTextStyles.meta.copyWith(color: AppColors.ink3),
+                widget.existing == null ? 'Add segment' : 'Edit segment',
+                style: AppTextStyles.sectionHeadingSerif,
               ),
-              const SizedBox(height: 8),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _startCtl,
-                      decoration: const InputDecoration(
-                        labelText: 'Start ayah',
-                        border: OutlineInputBorder(),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<int>(
+                key: ValueKey(_surahId),
+                initialValue: _surahId,
+                decoration: const InputDecoration(
+                  labelText: 'Surah',
+                  border: OutlineInputBorder(),
+                ),
+                validator: FormBuilderValidators.required<int?>(),
+                items: [
+                  for (final s in surahs)
+                    DropdownMenuItem(
+                      value: s.id,
+                      child: Text(
+                        '${s.id}. ${s.name}',
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _endCtl,
-                      decoration: const InputDecoration(
-                        labelText: 'End ayah',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    ),
-                  ),
                 ],
+                onChanged: _saving
+                    ? null
+                    : (v) => setState(() {
+                        _surahId = v;
+                      }),
               ),
+              const SizedBox(height: 12),
+              SwitchListTile.adaptive(
+                title: const Text('Entire surah'),
+                subtitle: Text(
+                  _fullSurah
+                      ? 'This segment covers all ayat.'
+                      : 'Only the ayat range below is included.',
+                  style: AppTextStyles.meta,
+                ),
+                value: _fullSurah,
+                onChanged: _saving
+                    ? null
+                    : (v) => setState(() => _fullSurah = v),
+              ),
+              if (!_fullSurah) ...[
+                const SizedBox(height: 8),
+                Text(
+                  '${master.ayatCount} ayat in this surah',
+                  style: AppTextStyles.meta.copyWith(color: AppColors.ink3),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _startCtl,
+                        decoration: const InputDecoration(
+                          labelText: 'Start ayah',
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        validator: PoolSegmentFormValidators.startAyah(master),
+                        onChanged: (_) => _formKey.currentState?.validate(),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _endCtl,
+                        decoration: const InputDecoration(
+                          labelText: 'End ayah',
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        validator: PoolSegmentFormValidators.endAyah(
+                          master,
+                          () => _startCtl.text,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              const SizedBox(height: 24),
+              GradientButton(
+                label: widget.existing == null ? 'Add to pool' : 'Save changes',
+                enabled: !_saving,
+                onPressed: _saving ? null : _submit,
+              ),
+              SizedBox(height: MediaQuery.paddingOf(context).bottom),
             ],
-            const SizedBox(height: 24),
-            GradientButton(
-              label: widget.existing == null ? 'Add to pool' : 'Save changes',
-              enabled: !_saving,
-              onPressed: _saving ? null : _submit,
-            ),
-            SizedBox(height: MediaQuery.paddingOf(context).bottom),
-          ],
+          ),
         ),
       ),
     );

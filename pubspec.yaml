@@ -13,6 +13,10 @@ dependencies:
   collection: ^1.19.1
   flutter_riverpod: ^2.6.1
 
+  flutter_localizations:
+    sdk: flutter
+  form_builder_validators: ^11.3.0
+
   flutter_svg: ^2.0.10+1
 
   drift: ^2.18.0
