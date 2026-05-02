@@ -7,7 +7,7 @@ import '../data/models/surah_pool_entry.dart';
 import '../providers/providers.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/gradient_app_bar.dart';
-import '../widgets/hifdh_intro_tip.dart';
+import '../widgets/dismissible_intro_tip.dart';
 import '../widgets/pool_segment_editor_sheet.dart';
 
 /// Hifdh list — surahs / ayat ranges for memorization; add, edit, remove; Drift.
@@ -67,7 +67,12 @@ class _PoolScreenState extends ConsumerState<PoolScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const HifdhIntroTip(),
+                    const DismissibleIntroTip(
+                      storageKey: kDismissibleIntroTipHifdhKey,
+                      message:
+                          'Hifdh is Quran memorization. What you list here is used '
+                          'when you build your monthly plan.',
+                    ),
                     Expanded(
                       child: _PoolBody(
                         pool: pool,
