@@ -10,6 +10,7 @@ import '../../data/models/surah.dart';
 import '../../data/models/surah_pool_entry.dart';
 import '../../validators/pool_segment_form_validators.dart';
 import '../../providers/pool_mutations.dart';
+import '../common/app_dropdown_button.dart';
 import '../common/gradient_button.dart';
 
 Future<void> showPoolSegmentEditor(
@@ -156,7 +157,7 @@ class _PoolSegmentEditorSheetState
                 style: AppTextStyles.sectionHeadingSerif,
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<int>(
+              AppDropdownButtonFormField<int>(
                 key: ValueKey(_surahId),
                 initialValue: _surahId,
                 decoration: InputDecoration(
