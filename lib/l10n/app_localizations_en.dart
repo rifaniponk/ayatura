@@ -87,8 +87,8 @@ class SEn extends S {
   String get hifdhSubtitleEmpty => 'Nothing listed yet';
 
   @override
-  String hifdhSubtitleCount(int count) {
-    return '$count added';
+  String hifdhSubtitleCount(int enabled, int total) {
+    return '$enabled active of $total total in hifdh list';
   }
 
   @override

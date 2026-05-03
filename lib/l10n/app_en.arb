@@ -40,8 +40,13 @@
 
   "hifdhScreenTitle": "Hifdh",
   "hifdhSubtitleEmpty": "Nothing listed yet",
-  "hifdhSubtitleCount": "{count} added",
-  "@hifdhSubtitleCount": { "placeholders": { "count": {"type": "int"} } },
+  "hifdhSubtitleCount": "{enabled} active of {total} total in hifdh list",
+  "@hifdhSubtitleCount": {
+    "placeholders": {
+      "enabled": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
   "hifdhIntroBanner": "Hifdh is Quran memorization. What you list here is used when you build your monthly plan.",
   "hifdhFabAdd": "Add",
   "hifdhMenuEdit": "Edit",

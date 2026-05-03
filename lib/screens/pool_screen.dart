@@ -70,7 +70,10 @@ class _PoolScreenState extends ConsumerState<PoolScreen> {
             subtitle: poolAsync.maybeWhen(
               data: (p) => p.isEmpty
                   ? s.hifdhSubtitleEmpty
-                  : s.hifdhSubtitleCount(p.length),
+                  : s.hifdhSubtitleCount(
+                      p.where((e) => e.enabled).length,
+                      p.length,
+                    ),
               orElse: () => '…',
             ),
           ),

@@ -86,8 +86,8 @@ class SId extends S {
   String get hifdhSubtitleEmpty => 'Belum ada yang ditambahkan';
 
   @override
-  String hifdhSubtitleCount(int count) {
-    return '$count ditambahkan';
+  String hifdhSubtitleCount(int enabled, int total) {
+    return '$enabled aktif dari total $total hafalan';
   }
 
   @override
