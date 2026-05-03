@@ -117,12 +117,11 @@ class _PoolSegmentEditorSheetState
 
   Future<void> _onJuzChanged(int? juz) async {
     if (juz == null || _saving) return;
+    final requested = juz;
+    setState(() => _selectedJuz = requested);
     final pool = await ref.read(poolEntriesAsyncProvider.future);
-    if (!mounted || _selectedJuz != juz) return;
-    setState(() {
-      _selectedJuz = juz;
-      _seedBulkSelection(pool);
-    });
+    if (!mounted || _selectedJuz != requested) return;
+    setState(() => _seedBulkSelection(pool));
   }
 
   void _bulkSelectAll(Set<int> poolSurahIds) {
