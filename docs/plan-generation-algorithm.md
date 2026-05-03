@@ -37,9 +37,7 @@ Each prayer slot gets `min(maxSurahsPerPrayerSlot, poolSize)` surahs.
 
 ## Randomness
 
-Each time the user taps **Regenerate**, a time-based value is mixed into the seed, producing a completely different shuffle and therefore a different plan. The plan is immediately saved to SQLite, so it persists across app restarts.
-
-The internal shuffle uses `_XorShift32` — a seeded PRNG — so the randomness comes from the seed, not from the system clock mid-generation. This means the generation itself is fast and testable.
+Each time the user taps **Regenerate**, `_RoundRobinDeck` calls `dart:math Random` to shuffle the pool. Each shuffle is independently random, so every regeneration produces a different plan. The plan is immediately saved to SQLite, so it persists across app restarts.
 
 ---
 
