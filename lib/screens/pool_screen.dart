@@ -8,6 +8,7 @@ import '../data/models/surah.dart';
 import '../data/models/surah_pool_entry.dart';
 import '../providers/providers.dart';
 import '../widgets/common/app_alert_dialog.dart';
+import '../widgets/common/app_popup_menu_button.dart';
 import '../widgets/common/app_toggle.dart';
 import '../widgets/common/empty_state.dart';
 import '../widgets/common/gradient_app_bar.dart';
@@ -340,7 +341,7 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
                     ),
                   ),
                 ),
-                PopupMenuButton<String>(
+                AppPopupMenuButton<String>(
                   enabled: !busy,
                   onSelected: (value) {
                     if (value == 'edit') {
@@ -353,12 +354,13 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
                   itemBuilder: (ctx) {
                     final loc = S.of(ctx)!;
                     return [
-                      PopupMenuItem(
+                      AppPopupMenuItem(
                         value: 'edit',
                         child: Text(loc.hifdhMenuEdit),
                       ),
-                      PopupMenuItem(
+                      AppPopupMenuItem(
                         value: 'delete',
+                        destructive: true,
                         child: Text(loc.hifdhMenuRemove),
                       ),
                     ];
