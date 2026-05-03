@@ -7,11 +7,11 @@
   "navHifdh": "Hifdh",
   "navMore": "More",
 
-  "appBarSubtitleChaptersPool": "{chapters} chapters · {pool} in hifdh list",
+  "appBarSubtitleChaptersPool": "{chapters} surahs · {pool} in hifdh list",
   "@appBarSubtitleChaptersPool": {
     "placeholders": { "chapters": {"type": "int"}, "pool": {"type": "int"} }
   },
-  "appBarSubtitleChaptersLoading": "{chapters} chapters · …",
+  "appBarSubtitleChaptersLoading": "{chapters} surahs · …",
   "@appBarSubtitleChaptersLoading": {
     "placeholders": { "chapters": {"type": "int"} }
   },
@@ -29,13 +29,13 @@
   "snackbarNeedTwoSegments": "Need at least two items turned on in your hifdh list.",
 
   "monthScreenTitle": "Month",
-  "monthSubtitle": "{month} · {chapters} chapters",
+  "monthSubtitle": "{month} · {chapters} surahs",
   "@monthSubtitle": {
     "placeholders": { "month": {"type": "String"}, "chapters": {"type": "int"} }
   },
   "monthDayTitle": "Day {day}",
   "@monthDayTitle": { "placeholders": { "day": {"type": "int"} } },
-  "monthDayReadings": "{count} planned reading(s) across prayers",
+  "monthDayReadings": "{count, plural, =1{1 planned reading across prayers} other{{count} planned readings across prayers}}",
   "@monthDayReadings": { "placeholders": { "count": {"type": "int"} } },
 
   "hifdhScreenTitle": "Hifdh",
@@ -43,8 +43,6 @@
   "hifdhSubtitleCount": "{count} added",
   "@hifdhSubtitleCount": { "placeholders": { "count": {"type": "int"} } },
   "hifdhIntroBanner": "Hifdh is Quran memorization. What you list here is used when you build your monthly plan.",
-  "hifdhEntryIncluded": "Included when you generate a plan",
-  "hifdhEntryPaused": "Paused — not used in plans",
   "hifdhFabAdd": "Add",
   "hifdhMenuEdit": "Edit",
   "hifdhMenuRemove": "Remove",

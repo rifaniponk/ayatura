@@ -25,12 +25,12 @@ class SEn extends S {
 
   @override
   String appBarSubtitleChaptersPool(int chapters, int pool) {
-    return '$chapters chapters · $pool in hifdh list';
+    return '$chapters surahs · $pool in hifdh list';
   }
 
   @override
   String appBarSubtitleChaptersLoading(int chapters) {
-    return '$chapters chapters · …';
+    return '$chapters surahs · …';
   }
 
   @override
@@ -61,7 +61,7 @@ class SEn extends S {
 
   @override
   String monthSubtitle(String month, int chapters) {
-    return '$month · $chapters chapters';
+    return '$month · $chapters surahs';
   }
 
   @override
@@ -71,7 +71,13 @@ class SEn extends S {
 
   @override
   String monthDayReadings(int count) {
-    return '$count planned reading(s) across prayers';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count planned readings across prayers',
+      one: '1 planned reading across prayers',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -88,12 +94,6 @@ class SEn extends S {
   @override
   String get hifdhIntroBanner =>
       'Hifdh is Quran memorization. What you list here is used when you build your monthly plan.';
-
-  @override
-  String get hifdhEntryIncluded => 'Included when you generate a plan';
-
-  @override
-  String get hifdhEntryPaused => 'Paused — not used in plans';
 
   @override
   String get hifdhFabAdd => 'Add';

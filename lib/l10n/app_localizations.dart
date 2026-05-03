@@ -130,13 +130,13 @@ abstract class S {
   /// No description provided for @appBarSubtitleChaptersPool.
   ///
   /// In en, this message translates to:
-  /// **'{chapters} chapters · {pool} in hifdh list'**
+  /// **'{chapters} surahs · {pool} in hifdh list'**
   String appBarSubtitleChaptersPool(int chapters, int pool);
 
   /// No description provided for @appBarSubtitleChaptersLoading.
   ///
   /// In en, this message translates to:
-  /// **'{chapters} chapters · …'**
+  /// **'{chapters} surahs · …'**
   String appBarSubtitleChaptersLoading(int chapters);
 
   /// No description provided for @errorGeneric.
@@ -184,7 +184,7 @@ abstract class S {
   /// No description provided for @monthSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'{month} · {chapters} chapters'**
+  /// **'{month} · {chapters} surahs'**
   String monthSubtitle(String month, int chapters);
 
   /// No description provided for @monthDayTitle.
@@ -196,7 +196,7 @@ abstract class S {
   /// No description provided for @monthDayReadings.
   ///
   /// In en, this message translates to:
-  /// **'{count} planned reading(s) across prayers'**
+  /// **'{count, plural, =1{1 planned reading across prayers} other{{count} planned readings across prayers}}'**
   String monthDayReadings(int count);
 
   /// No description provided for @hifdhScreenTitle.
@@ -222,18 +222,6 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Hifdh is Quran memorization. What you list here is used when you build your monthly plan.'**
   String get hifdhIntroBanner;
-
-  /// No description provided for @hifdhEntryIncluded.
-  ///
-  /// In en, this message translates to:
-  /// **'Included when you generate a plan'**
-  String get hifdhEntryIncluded;
-
-  /// No description provided for @hifdhEntryPaused.
-  ///
-  /// In en, this message translates to:
-  /// **'Paused — not used in plans'**
-  String get hifdhEntryPaused;
 
   /// No description provided for @hifdhFabAdd.
   ///

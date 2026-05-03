@@ -71,7 +71,12 @@ class SId extends S {
 
   @override
   String monthDayReadings(int count) {
-    return '$count bacaan direncanakan di berbagai shalat';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bacaan direncanakan di berbagai shalat',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -88,12 +93,6 @@ class SId extends S {
   @override
   String get hifdhIntroBanner =>
       'Hafalan yang kamu daftarkan di sini akan digunakan saat membuat rencana bulanan.';
-
-  @override
-  String get hifdhEntryIncluded => 'Disertakan saat membuat rencana';
-
-  @override
-  String get hifdhEntryPaused => 'Dijeda — tidak digunakan dalam rencana';
 
   @override
   String get hifdhFabAdd => 'Tambah';

@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Injected from [main] via [ProviderScope.overrides].
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
-  throw StateError(
+  throw UnimplementedError(
     'sharedPreferencesProvider must be overridden with SharedPreferences.getInstance()',
   );
 });
