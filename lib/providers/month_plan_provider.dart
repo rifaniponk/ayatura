@@ -56,7 +56,7 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
 
   Future<void> clear() async {
     final db = ref.read(appDatabaseProvider);
-    final plan = state.valueOrNull;
+    final plan = state.maybeWhen(data: (p) => p, orElse: () => null);
     if (plan != null) {
       await db.deletePlan(plan.year, plan.month);
     }
