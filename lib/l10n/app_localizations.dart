@@ -481,6 +481,18 @@ abstract class S {
   /// **'Notify before each prayer'**
   String get settingsPrayerRemindersSubtitle;
 
+  /// No description provided for @settingsSurahsPerPrayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Surahs per prayer'**
+  String get settingsSurahsPerPrayer;
+
+  /// No description provided for @settingsSurahsPerPrayerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Surahs assigned to each slot when you generate a plan. Regenerate your plan after changing this.'**
+  String get settingsSurahsPerPrayerSubtitle;
+
   /// No description provided for @settingsLanguage.
   ///
   /// In en, this message translates to:

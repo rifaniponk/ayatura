@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/models/plan.dart';
 import '../data/services/month_plan_generator.dart';
 import 'database_provider.dart';
+import 'settings_provider.dart';
 import 'surah_data_providers.dart';
 
 /// Current calendar day highlighted on Home (1–31).
@@ -35,10 +36,12 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
 
     final now = DateTime.now();
     final current = state.value;
+    final surahsPerPrayer = ref.read(surahsPerPrayerProvider);
     final next = MonthPlanGenerator.generate(
       month: now.month,
       year: now.year,
       enabledPool: enabled,
+      surahsPerPrayer: surahsPerPrayer,
       existingPlan: current,
     );
 

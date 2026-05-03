@@ -15,6 +15,7 @@ void main() {
         month: 6,
         year: 2026,
         enabledPool: pool,
+        surahsPerPrayer: 4,
       );
 
       // Collect surahIds dealt sequentially across all slots.
@@ -27,7 +28,7 @@ void main() {
 
       // Within the first full cycle (pool.length slots of 1 each = 4 surahs
       // taken 1-by-1), every surah must appear before any repeats.
-      // Here maxSurahsPerPrayerSlot >= pool.length so each slot gets all 4.
+      // Here surahsPerPrayer >= pool.length so each slot gets all 4.
       // Verify the first two full cycles: each set of 4 contains every surahId.
       final poolIds = pool.map((e) => e.surahId).toSet();
       expect(dealt.take(poolIds.length).toSet(), equals(poolIds));
@@ -42,6 +43,7 @@ void main() {
         month: 2,
         year: 2026,
         enabledPool: [],
+        surahsPerPrayer: 2,
       );
       expect(plan.days.length, 28);
       final slot = plan.planForDay(1)!.slotFor(Prayer.fajr);
@@ -54,6 +56,7 @@ void main() {
         month: 1,
         year: 2026,
         enabledPool: pool,
+        surahsPerPrayer: 2,
       );
       final slot = plan.planForDay(15)!.slotFor(Prayer.asr);
       expect(slot.surahs.single.surahId, 5);
@@ -65,6 +68,7 @@ void main() {
         month: 3,
         year: 2026,
         enabledPool: pool,
+        surahsPerPrayer: 2,
       );
       final day1 = first.planForDay(1)!;
       final lockedFajr = day1.slotFor(Prayer.fajr).copyWith(locked: true);
@@ -80,6 +84,7 @@ void main() {
         month: 3,
         year: 2026,
         enabledPool: pool,
+        surahsPerPrayer: 2,
         existingPlan: existing,
       );
 
@@ -88,6 +93,44 @@ void main() {
         second.planForDay(1)!.slotFor(Prayer.fajr).surahs,
         lockedFajr.surahs,
       );
+    });
+
+    test('surahsPerPrayer caps slot size at requested count', () {
+      final pool = [
+        _entry(1, 1),
+        _entry(2, 2),
+        _entry(3, 3),
+        _entry(4, 4),
+        _entry(5, 5),
+        _entry(6, 6),
+      ];
+      final plan = MonthPlanGenerator.generate(
+        month: 4,
+        year: 2026,
+        enabledPool: pool,
+        surahsPerPrayer: 2,
+      );
+      for (final day in plan.days) {
+        for (final prayer in Prayer.values) {
+          final slot = day.slotFor(prayer);
+          expect(slot.surahs.length, 2);
+        }
+      }
+    });
+
+    test('surahsPerPrayer clamps to pool size when pool is smaller', () {
+      final pool = [_entry(1, 1), _entry(2, 2)];
+      final plan = MonthPlanGenerator.generate(
+        month: 5,
+        year: 2026,
+        enabledPool: pool,
+        surahsPerPrayer: 4,
+      );
+      for (final day in plan.days) {
+        for (final prayer in Prayer.values) {
+          expect(day.slotFor(prayer).surahs.length, 2);
+        }
+      }
     });
   });
 }

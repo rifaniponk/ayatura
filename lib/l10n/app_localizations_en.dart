@@ -250,6 +250,13 @@ class SEn extends S {
   String get settingsPrayerRemindersSubtitle => 'Notify before each prayer';
 
   @override
+  String get settingsSurahsPerPrayer => 'Surahs per prayer';
+
+  @override
+  String get settingsSurahsPerPrayerSubtitle =>
+      'Surahs assigned to each slot when you generate a plan. Regenerate your plan after changing this.';
+
+  @override
   String get settingsLanguage => 'Language';
 
   @override

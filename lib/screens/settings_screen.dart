@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/locale_provider.dart';
+import '../providers/settings_provider.dart';
 import '../widgets/common/app_dropdown_button.dart';
 import '../widgets/common/gradient_app_bar.dart';
 
@@ -22,6 +23,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget build(BuildContext context) {
     final s = S.of(context)!;
     final locale = ref.watch(localeProvider);
+    final surahsPerPrayer = ref.watch(surahsPerPrayerProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -48,6 +50,48 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   value: _reminders,
                   onChanged: (v) => setState(() => _reminders = v),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Card(
+                child: ListTile(
+                  title: Text(
+                    s.settingsSurahsPerPrayer,
+                    style: AppTextStyles.cardLabel,
+                  ),
+                  subtitle: Text(
+                    s.settingsSurahsPerPrayerSubtitle,
+                    style: AppTextStyles.meta,
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.remove_rounded),
+                        onPressed: surahsPerPrayer > surahsPerPrayerMin
+                            ? () => ref
+                                .read(surahsPerPrayerProvider.notifier)
+                                .set(surahsPerPrayer - 1)
+                            : null,
+                      ),
+                      SizedBox(
+                        width: 28,
+                        child: Text(
+                          '$surahsPerPrayer',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.cardLabel,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add_rounded),
+                        onPressed: surahsPerPrayer < surahsPerPrayerMax
+                            ? () => ref
+                                .read(surahsPerPrayerProvider.notifier)
+                                .set(surahsPerPrayer + 1)
+                            : null,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 12),

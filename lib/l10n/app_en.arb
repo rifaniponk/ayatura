@@ -104,6 +104,8 @@
   "settingsPreferences": "Preferences",
   "settingsPrayerReminders": "Prayer reminders",
   "settingsPrayerRemindersSubtitle": "Notify before each prayer",
+  "settingsSurahsPerPrayer": "Surahs per prayer",
+  "settingsSurahsPerPrayerSubtitle": "Surahs assigned to each slot when you generate a plan. Regenerate your plan after changing this.",
   "settingsLanguage": "Language",
   "settingsLanguageSubtitle": "Choose your preferred language",
   "settingsAbout": "About",
