@@ -3,6 +3,7 @@ class Surah {
   /// Surah number (1–114).
   final int id;
   final String name;
+
   /// Indonesian romanization (Quran cetakan Kemenag-style); see [localizedName].
   final String nameId;
   final String arabicName;

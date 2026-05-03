@@ -12,8 +12,7 @@ class Surahs extends Table {
 
   TextColumn get name => text()();
 
-  TextColumn get nameId =>
-      text().withDefault(const Constant(''))();
+  TextColumn get nameId => text().withDefault(const Constant(''))();
 
   TextColumn get arabicName => text()();
 
