@@ -165,8 +165,9 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
 
   Future<void> _confirmRemove(SurahPoolEntry entry) async {
     final master = _masterById[entry.surahId];
+    final lang = Localizations.localeOf(context).languageCode;
     final label = master != null
-        ? entry.displayLabel(master)
+        ? entry.displayLabel(master, lang)
         : 'Surah ${entry.surahId}';
 
     final ok = await showAppAlertDialog<bool>(
@@ -242,7 +243,9 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
       itemBuilder: (context, i) {
         final entry = pool[i];
         final master = _masterById[entry.surahId];
-        final englishName = master?.name ?? 'Surah ${entry.surahId}';
+        final lang = Localizations.localeOf(context).languageCode;
+        final latinName =
+            master?.localizedName(lang) ?? 'Surah ${entry.surahId}';
         final ayahRange = _compactAyahRange(entry);
         final busy = _busyIds.contains(entry.id);
         final paused = !entry.enabled;
@@ -278,7 +281,7 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
                             TextSpan(
                               children: [
                                 TextSpan(
-                                  text: englishName,
+                                  text: latinName,
                                   style: AppTextStyles.cardLabel.copyWith(
                                     color: scheme.onSurface.withValues(
                                       alpha: nameAlpha,

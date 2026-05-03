@@ -36,6 +36,7 @@ class PrayerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context)!;
+    final lang = Localizations.localeOf(context).languageCode;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -92,7 +93,7 @@ class PrayerCard extends StatelessWidget {
                 final ps = entry.value;
                 final master = masterBySurahId[ps.surahId];
                 final label = master != null
-                    ? ps.displayLabel(master)
+                    ? ps.displayLabel(master, lang)
                     : 'Surah ${ps.surahId}';
                 final verses = master != null ? ps.verseSpan(master) : 0;
                 return Padding(

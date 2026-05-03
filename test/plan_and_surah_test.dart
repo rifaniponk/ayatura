@@ -9,6 +9,7 @@ import 'package:surah_planner/data/models/surah_pool_entry.dart';
 Surah _surah(int id) => Surah(
   id: id,
   name: 'S$id',
+  nameId: 'S$id',
   arabicName: 'x',
   ayatCount: 10,
   startJuz: 1,
@@ -26,6 +27,7 @@ void main() {
       const s = Surah(
         id: 2,
         name: 'Al-Baqarah',
+        nameId: 'Al-Baqarah',
         arabicName: 'ب',
         ayatCount: 286,
         startJuz: 1,
@@ -34,10 +36,26 @@ void main() {
       expect(s.displayName, 'Al-Baqarah');
     });
 
+    test('localizedName uses nameId for Indonesian locale', () {
+      const s = Surah(
+        id: 9,
+        name: 'At-Tawbah',
+        nameId: 'At-Taubah',
+        arabicName: 'ت',
+        ayatCount: 129,
+        startJuz: 1,
+        endJuz: 1,
+      );
+      expect(s.localizedName('en'), 'At-Tawbah');
+      expect(s.localizedName('id'), 'At-Taubah');
+      expect(s.localizedName('id_ID'), 'At-Taubah');
+    });
+
     test('copyWith replaces fields immutably', () {
       const s = Surah(
         id: 1,
         name: 'A',
+        nameId: 'A',
         arabicName: 'ب',
         ayatCount: 7,
         startJuz: 1,
@@ -52,6 +70,7 @@ void main() {
       const a = Surah(
         id: 1,
         name: 'A',
+        nameId: 'A',
         arabicName: 'ب',
         ayatCount: 7,
         startJuz: 1,
@@ -60,6 +79,7 @@ void main() {
       const b = Surah(
         id: 1,
         name: 'A',
+        nameId: 'A',
         arabicName: 'ب',
         ayatCount: 8,
         startJuz: 1,
@@ -72,7 +92,7 @@ void main() {
   group('PlanSurah', () {
     test('displayLabel uses master name; ayat span when partial', () {
       final p = _planPartial(2, 1, 5);
-      expect(p.displayLabel(_surah(2)), 'S2 (1–5)');
+      expect(p.displayLabel(_surah(2), 'en'), 'S2 (1–5)');
     });
 
     test('fromJson stores ids and segment only', () {
@@ -85,12 +105,13 @@ void main() {
       const master = Surah(
         id: 2,
         name: 'Al-Baqarah',
+        nameId: 'Al-Baqarah',
         arabicName: 'ب',
         ayatCount: 286,
         startJuz: 1,
         endJuz: 3,
       );
-      expect(p.displayLabel(master), 'Al-Baqarah (255)');
+      expect(p.displayLabel(master, 'en'), 'Al-Baqarah (255)');
     });
 
     test('fromSurahPoolEntry copies segment fields', () {
@@ -122,13 +143,14 @@ void main() {
       const master = Surah(
         id: 2,
         name: 'Al-Baqarah',
+        nameId: 'Al-Baqarah',
         arabicName: 'ب',
         ayatCount: 286,
         startJuz: 1,
         endJuz: 3,
       );
       const full = SurahPoolEntry(id: 1, surahId: 2, isFullSurah: true);
-      expect(full.displayLabel(master), 'Al-Baqarah');
+      expect(full.displayLabel(master, 'en'), 'Al-Baqarah');
       const partial = SurahPoolEntry(
         id: 2,
         surahId: 2,
@@ -136,7 +158,7 @@ void main() {
         startAyah: 1,
         endAyah: 5,
       );
-      expect(partial.displayLabel(master), 'Al-Baqarah (1–5)');
+      expect(partial.displayLabel(master, 'en'), 'Al-Baqarah (1–5)');
     });
 
     test('copyWith toggles enabled', () {

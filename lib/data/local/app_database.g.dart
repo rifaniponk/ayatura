@@ -26,6 +26,16 @@ class $SurahsTable extends Surahs with TableInfo<$SurahsTable, SurahRow> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _nameIdMeta = const VerificationMeta('nameId');
+  @override
+  late final GeneratedColumn<String> nameId = GeneratedColumn<String>(
+    'name_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
   static const VerificationMeta _arabicNameMeta = const VerificationMeta(
     'arabicName',
   );
@@ -74,6 +84,7 @@ class $SurahsTable extends Surahs with TableInfo<$SurahsTable, SurahRow> {
   List<GeneratedColumn> get $columns => [
     id,
     name,
+    nameId,
     arabicName,
     ayatCount,
     startJuz,
@@ -101,6 +112,12 @@ class $SurahsTable extends Surahs with TableInfo<$SurahsTable, SurahRow> {
       );
     } else if (isInserting) {
       context.missing(_nameMeta);
+    }
+    if (data.containsKey('name_id')) {
+      context.handle(
+        _nameIdMeta,
+        nameId.isAcceptableOrUnknown(data['name_id']!, _nameIdMeta),
+      );
     }
     if (data.containsKey('arabic_name')) {
       context.handle(
@@ -147,6 +164,10 @@ class $SurahsTable extends Surahs with TableInfo<$SurahsTable, SurahRow> {
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
+      nameId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_id'],
+      )!,
       arabicName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}arabic_name'],
@@ -175,6 +196,7 @@ class $SurahsTable extends Surahs with TableInfo<$SurahsTable, SurahRow> {
 class SurahRow extends DataClass implements Insertable<SurahRow> {
   final int id;
   final String name;
+  final String nameId;
   final String arabicName;
   final int ayatCount;
   final int startJuz;
@@ -182,6 +204,7 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
   const SurahRow({
     required this.id,
     required this.name,
+    required this.nameId,
     required this.arabicName,
     required this.ayatCount,
     required this.startJuz,
@@ -192,6 +215,7 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
+    map['name_id'] = Variable<String>(nameId);
     map['arabic_name'] = Variable<String>(arabicName);
     map['ayat_count'] = Variable<int>(ayatCount);
     map['start_juz'] = Variable<int>(startJuz);
@@ -203,6 +227,7 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
     return SurahsCompanion(
       id: Value(id),
       name: Value(name),
+      nameId: Value(nameId),
       arabicName: Value(arabicName),
       ayatCount: Value(ayatCount),
       startJuz: Value(startJuz),
@@ -218,6 +243,7 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
     return SurahRow(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      nameId: serializer.fromJson<String>(json['nameId']),
       arabicName: serializer.fromJson<String>(json['arabicName']),
       ayatCount: serializer.fromJson<int>(json['ayatCount']),
       startJuz: serializer.fromJson<int>(json['startJuz']),
@@ -230,6 +256,7 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
+      'nameId': serializer.toJson<String>(nameId),
       'arabicName': serializer.toJson<String>(arabicName),
       'ayatCount': serializer.toJson<int>(ayatCount),
       'startJuz': serializer.toJson<int>(startJuz),
@@ -240,6 +267,7 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
   SurahRow copyWith({
     int? id,
     String? name,
+    String? nameId,
     String? arabicName,
     int? ayatCount,
     int? startJuz,
@@ -247,6 +275,7 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
   }) => SurahRow(
     id: id ?? this.id,
     name: name ?? this.name,
+    nameId: nameId ?? this.nameId,
     arabicName: arabicName ?? this.arabicName,
     ayatCount: ayatCount ?? this.ayatCount,
     startJuz: startJuz ?? this.startJuz,
@@ -256,6 +285,7 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
     return SurahRow(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
+      nameId: data.nameId.present ? data.nameId.value : this.nameId,
       arabicName: data.arabicName.present
           ? data.arabicName.value
           : this.arabicName,
@@ -270,6 +300,7 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
     return (StringBuffer('SurahRow(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('nameId: $nameId, ')
           ..write('arabicName: $arabicName, ')
           ..write('ayatCount: $ayatCount, ')
           ..write('startJuz: $startJuz, ')
@@ -280,13 +311,14 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
 
   @override
   int get hashCode =>
-      Object.hash(id, name, arabicName, ayatCount, startJuz, endJuz);
+      Object.hash(id, name, nameId, arabicName, ayatCount, startJuz, endJuz);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SurahRow &&
           other.id == this.id &&
           other.name == this.name &&
+          other.nameId == this.nameId &&
           other.arabicName == this.arabicName &&
           other.ayatCount == this.ayatCount &&
           other.startJuz == this.startJuz &&
@@ -296,6 +328,7 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
 class SurahsCompanion extends UpdateCompanion<SurahRow> {
   final Value<int> id;
   final Value<String> name;
+  final Value<String> nameId;
   final Value<String> arabicName;
   final Value<int> ayatCount;
   final Value<int> startJuz;
@@ -303,6 +336,7 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
   const SurahsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.nameId = const Value.absent(),
     this.arabicName = const Value.absent(),
     this.ayatCount = const Value.absent(),
     this.startJuz = const Value.absent(),
@@ -311,6 +345,7 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
   SurahsCompanion.insert({
     this.id = const Value.absent(),
     required String name,
+    this.nameId = const Value.absent(),
     required String arabicName,
     required int ayatCount,
     this.startJuz = const Value.absent(),
@@ -321,6 +356,7 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
   static Insertable<SurahRow> custom({
     Expression<int>? id,
     Expression<String>? name,
+    Expression<String>? nameId,
     Expression<String>? arabicName,
     Expression<int>? ayatCount,
     Expression<int>? startJuz,
@@ -329,6 +365,7 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (nameId != null) 'name_id': nameId,
       if (arabicName != null) 'arabic_name': arabicName,
       if (ayatCount != null) 'ayat_count': ayatCount,
       if (startJuz != null) 'start_juz': startJuz,
@@ -339,6 +376,7 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
   SurahsCompanion copyWith({
     Value<int>? id,
     Value<String>? name,
+    Value<String>? nameId,
     Value<String>? arabicName,
     Value<int>? ayatCount,
     Value<int>? startJuz,
@@ -347,6 +385,7 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
     return SurahsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      nameId: nameId ?? this.nameId,
       arabicName: arabicName ?? this.arabicName,
       ayatCount: ayatCount ?? this.ayatCount,
       startJuz: startJuz ?? this.startJuz,
@@ -362,6 +401,9 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
+    }
+    if (nameId.present) {
+      map['name_id'] = Variable<String>(nameId.value);
     }
     if (arabicName.present) {
       map['arabic_name'] = Variable<String>(arabicName.value);
@@ -383,6 +425,7 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
     return (StringBuffer('SurahsCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('nameId: $nameId, ')
           ..write('arabicName: $arabicName, ')
           ..write('ayatCount: $ayatCount, ')
           ..write('startJuz: $startJuz, ')
@@ -828,6 +871,7 @@ typedef $$SurahsTableCreateCompanionBuilder =
     SurahsCompanion Function({
       Value<int> id,
       required String name,
+      Value<String> nameId,
       required String arabicName,
       required int ayatCount,
       Value<int> startJuz,
@@ -837,6 +881,7 @@ typedef $$SurahsTableUpdateCompanionBuilder =
     SurahsCompanion Function({
       Value<int> id,
       Value<String> name,
+      Value<String> nameId,
       Value<String> arabicName,
       Value<int> ayatCount,
       Value<int> startJuz,
@@ -884,6 +929,11 @@ class $$SurahsTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameId => $composableBuilder(
+    column: $table.nameId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -952,6 +1002,11 @@ class $$SurahsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get nameId => $composableBuilder(
+    column: $table.nameId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get arabicName => $composableBuilder(
     column: $table.arabicName,
     builder: (column) => ColumnOrderings(column),
@@ -987,6 +1042,9 @@ class $$SurahsTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get nameId =>
+      $composableBuilder(column: $table.nameId, builder: (column) => column);
 
   GeneratedColumn<String> get arabicName => $composableBuilder(
     column: $table.arabicName,
@@ -1058,6 +1116,7 @@ class $$SurahsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
+                Value<String> nameId = const Value.absent(),
                 Value<String> arabicName = const Value.absent(),
                 Value<int> ayatCount = const Value.absent(),
                 Value<int> startJuz = const Value.absent(),
@@ -1065,6 +1124,7 @@ class $$SurahsTableTableManager
               }) => SurahsCompanion(
                 id: id,
                 name: name,
+                nameId: nameId,
                 arabicName: arabicName,
                 ayatCount: ayatCount,
                 startJuz: startJuz,
@@ -1074,6 +1134,7 @@ class $$SurahsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required String name,
+                Value<String> nameId = const Value.absent(),
                 required String arabicName,
                 required int ayatCount,
                 Value<int> startJuz = const Value.absent(),
@@ -1081,6 +1142,7 @@ class $$SurahsTableTableManager
               }) => SurahsCompanion.insert(
                 id: id,
                 name: name,
+                nameId: nameId,
                 arabicName: arabicName,
                 ayatCount: ayatCount,
                 startJuz: startJuz,

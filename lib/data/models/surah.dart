@@ -3,6 +3,9 @@ class Surah {
   /// Surah number (1–114).
   final int id;
   final String name;
+
+  /// Indonesian romanization (Quran cetakan Kemenag-style); see [localizedName].
+  final String nameId;
   final String arabicName;
   final int ayatCount;
 
@@ -15,6 +18,7 @@ class Surah {
   const Surah({
     required this.id,
     required this.name,
+    required this.nameId,
     required this.arabicName,
     required this.ayatCount,
     required this.startJuz,
@@ -22,9 +26,11 @@ class Surah {
   });
 
   factory Surah.fromJson(Map<String, dynamic> json) {
+    final name = json['name'] as String;
     return Surah(
       id: json['id'] as int,
-      name: json['name'] as String,
+      name: name,
+      nameId: json['nameId'] as String? ?? name,
       arabicName: json['arabicName'] as String,
       ayatCount: json['ayatCount'] as int,
       startJuz: json['startJuz'] as int,
@@ -35,18 +41,26 @@ class Surah {
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
+    'nameId': nameId,
     'arabicName': arabicName,
     'ayatCount': ayatCount,
     'startJuz': startJuz,
     'endJuz': endJuz,
   };
 
-  /// Short label for lists (master data has no ayat segment).
+  /// Short English label for lists (master data has no ayat segment).
   String get displayName => name;
+
+  /// Romanized title for UI: Indonesian mushaf convention vs English [name].
+  String localizedName(String languageCode) {
+    final primary = languageCode.split(RegExp(r'[-_]')).first.toLowerCase();
+    return primary == 'id' ? nameId : name;
+  }
 
   Surah copyWith({
     int? id,
     String? name,
+    String? nameId,
     String? arabicName,
     int? ayatCount,
     int? startJuz,
@@ -55,6 +69,7 @@ class Surah {
     return Surah(
       id: id ?? this.id,
       name: name ?? this.name,
+      nameId: nameId ?? this.nameId,
       arabicName: arabicName ?? this.arabicName,
       ayatCount: ayatCount ?? this.ayatCount,
       startJuz: startJuz ?? this.startJuz,
@@ -72,6 +87,7 @@ class Surah {
       (other is Surah &&
           other.id == id &&
           other.name == name &&
+          other.nameId == nameId &&
           other.arabicName == arabicName &&
           other.ayatCount == ayatCount &&
           other.startJuz == startJuz &&
@@ -79,5 +95,5 @@ class Surah {
 
   @override
   int get hashCode =>
-      Object.hash(id, name, arabicName, ayatCount, startJuz, endJuz);
+      Object.hash(id, name, nameId, arabicName, ayatCount, startJuz, endJuz);
 }

@@ -14,8 +14,6 @@ class SurahSeedService {
   static const _assetPath = 'assets/data/surahs.json';
 
   Future<void> ensureSeeded() async {
-    if (await _db.surahRowCount() > 0) return;
-
     final raw = await rootBundle.loadString(_assetPath);
     final map = jsonDecode(raw) as Map<String, dynamic>;
     final list = map['surahs'] as List<dynamic>;

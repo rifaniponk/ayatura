@@ -53,15 +53,16 @@ class PlanSurah {
   }
 
   /// [master] must be the canonical [Surah] for [surahId] (same row as DB/asset).
-  String displayLabel(Surah master) {
-    if (isFullSurah) return master.displayName;
+  String displayLabel(Surah master, String languageCode) {
+    final romaji = master.localizedName(languageCode);
+    if (isFullSurah) return romaji;
     final a = startAyah;
     final b = endAyah;
     if (a != null && b != null) {
-      if (a == b) return '${master.name} ($a)';
-      return '${master.name} ($a–$b)';
+      if (a == b) return '$romaji ($a)';
+      return '$romaji ($a–$b)';
     }
-    return master.displayName;
+    return romaji;
   }
 
   PlanSurah copyWith({

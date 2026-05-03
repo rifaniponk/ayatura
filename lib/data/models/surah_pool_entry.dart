@@ -41,15 +41,16 @@ class SurahPoolEntry {
     'enabled': enabled,
   };
 
-  String displayLabel(Surah surah) {
-    if (isFullSurah) return surah.displayName;
+  String displayLabel(Surah surah, String languageCode) {
+    final romaji = surah.localizedName(languageCode);
+    if (isFullSurah) return romaji;
     final a = startAyah;
     final b = endAyah;
     if (a != null && b != null) {
-      if (a == b) return '${surah.name} ($a)';
-      return '${surah.name} ($a–$b)';
+      if (a == b) return '$romaji ($a)';
+      return '$romaji ($a–$b)';
     }
-    return surah.displayName;
+    return romaji;
   }
 
   SurahPoolEntry copyWith({

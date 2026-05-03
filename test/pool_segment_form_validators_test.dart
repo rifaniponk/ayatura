@@ -6,6 +6,7 @@ void main() {
   const alFatiha = Surah(
     id: 1,
     name: 'Al-Fatihah',
+    nameId: 'Al-Fatihah',
     arabicName: 'الفاتحة',
     ayatCount: 7,
     startJuz: 1,
