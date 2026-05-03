@@ -48,8 +48,37 @@ class $SurahsTable extends Surahs with TableInfo<$SurahsTable, SurahRow> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _startJuzMeta = const VerificationMeta(
+    'startJuz',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, name, arabicName, ayatCount];
+  late final GeneratedColumn<int> startJuz = GeneratedColumn<int>(
+    'start_juz',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _endJuzMeta = const VerificationMeta('endJuz');
+  @override
+  late final GeneratedColumn<int> endJuz = GeneratedColumn<int>(
+    'end_juz',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    arabicName,
+    ayatCount,
+    startJuz,
+    endJuz,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -89,6 +118,18 @@ class $SurahsTable extends Surahs with TableInfo<$SurahsTable, SurahRow> {
     } else if (isInserting) {
       context.missing(_ayatCountMeta);
     }
+    if (data.containsKey('start_juz')) {
+      context.handle(
+        _startJuzMeta,
+        startJuz.isAcceptableOrUnknown(data['start_juz']!, _startJuzMeta),
+      );
+    }
+    if (data.containsKey('end_juz')) {
+      context.handle(
+        _endJuzMeta,
+        endJuz.isAcceptableOrUnknown(data['end_juz']!, _endJuzMeta),
+      );
+    }
     return context;
   }
 
@@ -114,6 +155,14 @@ class $SurahsTable extends Surahs with TableInfo<$SurahsTable, SurahRow> {
         DriftSqlType.int,
         data['${effectivePrefix}ayat_count'],
       )!,
+      startJuz: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}start_juz'],
+      )!,
+      endJuz: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}end_juz'],
+      )!,
     );
   }
 
@@ -128,11 +177,15 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
   final String name;
   final String arabicName;
   final int ayatCount;
+  final int startJuz;
+  final int endJuz;
   const SurahRow({
     required this.id,
     required this.name,
     required this.arabicName,
     required this.ayatCount,
+    required this.startJuz,
+    required this.endJuz,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -141,6 +194,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
     map['name'] = Variable<String>(name);
     map['arabic_name'] = Variable<String>(arabicName);
     map['ayat_count'] = Variable<int>(ayatCount);
+    map['start_juz'] = Variable<int>(startJuz);
+    map['end_juz'] = Variable<int>(endJuz);
     return map;
   }
 
@@ -150,6 +205,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
       name: Value(name),
       arabicName: Value(arabicName),
       ayatCount: Value(ayatCount),
+      startJuz: Value(startJuz),
+      endJuz: Value(endJuz),
     );
   }
 
@@ -163,6 +220,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
       name: serializer.fromJson<String>(json['name']),
       arabicName: serializer.fromJson<String>(json['arabicName']),
       ayatCount: serializer.fromJson<int>(json['ayatCount']),
+      startJuz: serializer.fromJson<int>(json['startJuz']),
+      endJuz: serializer.fromJson<int>(json['endJuz']),
     );
   }
   @override
@@ -173,6 +232,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
       'name': serializer.toJson<String>(name),
       'arabicName': serializer.toJson<String>(arabicName),
       'ayatCount': serializer.toJson<int>(ayatCount),
+      'startJuz': serializer.toJson<int>(startJuz),
+      'endJuz': serializer.toJson<int>(endJuz),
     };
   }
 
@@ -181,11 +242,15 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
     String? name,
     String? arabicName,
     int? ayatCount,
+    int? startJuz,
+    int? endJuz,
   }) => SurahRow(
     id: id ?? this.id,
     name: name ?? this.name,
     arabicName: arabicName ?? this.arabicName,
     ayatCount: ayatCount ?? this.ayatCount,
+    startJuz: startJuz ?? this.startJuz,
+    endJuz: endJuz ?? this.endJuz,
   );
   SurahRow copyWithCompanion(SurahsCompanion data) {
     return SurahRow(
@@ -195,6 +260,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
           ? data.arabicName.value
           : this.arabicName,
       ayatCount: data.ayatCount.present ? data.ayatCount.value : this.ayatCount,
+      startJuz: data.startJuz.present ? data.startJuz.value : this.startJuz,
+      endJuz: data.endJuz.present ? data.endJuz.value : this.endJuz,
     );
   }
 
@@ -204,13 +271,16 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('arabicName: $arabicName, ')
-          ..write('ayatCount: $ayatCount')
+          ..write('ayatCount: $ayatCount, ')
+          ..write('startJuz: $startJuz, ')
+          ..write('endJuz: $endJuz')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, arabicName, ayatCount);
+  int get hashCode =>
+      Object.hash(id, name, arabicName, ayatCount, startJuz, endJuz);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -218,7 +288,9 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
           other.id == this.id &&
           other.name == this.name &&
           other.arabicName == this.arabicName &&
-          other.ayatCount == this.ayatCount);
+          other.ayatCount == this.ayatCount &&
+          other.startJuz == this.startJuz &&
+          other.endJuz == this.endJuz);
 }
 
 class SurahsCompanion extends UpdateCompanion<SurahRow> {
@@ -226,17 +298,23 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
   final Value<String> name;
   final Value<String> arabicName;
   final Value<int> ayatCount;
+  final Value<int> startJuz;
+  final Value<int> endJuz;
   const SurahsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.arabicName = const Value.absent(),
     this.ayatCount = const Value.absent(),
+    this.startJuz = const Value.absent(),
+    this.endJuz = const Value.absent(),
   });
   SurahsCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     required String arabicName,
     required int ayatCount,
+    this.startJuz = const Value.absent(),
+    this.endJuz = const Value.absent(),
   }) : name = Value(name),
        arabicName = Value(arabicName),
        ayatCount = Value(ayatCount);
@@ -245,12 +323,16 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
     Expression<String>? name,
     Expression<String>? arabicName,
     Expression<int>? ayatCount,
+    Expression<int>? startJuz,
+    Expression<int>? endJuz,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (arabicName != null) 'arabic_name': arabicName,
       if (ayatCount != null) 'ayat_count': ayatCount,
+      if (startJuz != null) 'start_juz': startJuz,
+      if (endJuz != null) 'end_juz': endJuz,
     });
   }
 
@@ -259,12 +341,16 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
     Value<String>? name,
     Value<String>? arabicName,
     Value<int>? ayatCount,
+    Value<int>? startJuz,
+    Value<int>? endJuz,
   }) {
     return SurahsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       arabicName: arabicName ?? this.arabicName,
       ayatCount: ayatCount ?? this.ayatCount,
+      startJuz: startJuz ?? this.startJuz,
+      endJuz: endJuz ?? this.endJuz,
     );
   }
 
@@ -283,6 +369,12 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
     if (ayatCount.present) {
       map['ayat_count'] = Variable<int>(ayatCount.value);
     }
+    if (startJuz.present) {
+      map['start_juz'] = Variable<int>(startJuz.value);
+    }
+    if (endJuz.present) {
+      map['end_juz'] = Variable<int>(endJuz.value);
+    }
     return map;
   }
 
@@ -292,7 +384,9 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('arabicName: $arabicName, ')
-          ..write('ayatCount: $ayatCount')
+          ..write('ayatCount: $ayatCount, ')
+          ..write('startJuz: $startJuz, ')
+          ..write('endJuz: $endJuz')
           ..write(')'))
         .toString();
   }
@@ -736,6 +830,8 @@ typedef $$SurahsTableCreateCompanionBuilder =
       required String name,
       required String arabicName,
       required int ayatCount,
+      Value<int> startJuz,
+      Value<int> endJuz,
     });
 typedef $$SurahsTableUpdateCompanionBuilder =
     SurahsCompanion Function({
@@ -743,6 +839,8 @@ typedef $$SurahsTableUpdateCompanionBuilder =
       Value<String> name,
       Value<String> arabicName,
       Value<int> ayatCount,
+      Value<int> startJuz,
+      Value<int> endJuz,
     });
 
 final class $$SurahsTableReferences
@@ -796,6 +894,16 @@ class $$SurahsTableFilterComposer
 
   ColumnFilters<int> get ayatCount => $composableBuilder(
     column: $table.ayatCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get startJuz => $composableBuilder(
+    column: $table.startJuz,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get endJuz => $composableBuilder(
+    column: $table.endJuz,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -853,6 +961,16 @@ class $$SurahsTableOrderingComposer
     column: $table.ayatCount,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get startJuz => $composableBuilder(
+    column: $table.startJuz,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get endJuz => $composableBuilder(
+    column: $table.endJuz,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SurahsTableAnnotationComposer
@@ -877,6 +995,12 @@ class $$SurahsTableAnnotationComposer
 
   GeneratedColumn<int> get ayatCount =>
       $composableBuilder(column: $table.ayatCount, builder: (column) => column);
+
+  GeneratedColumn<int> get startJuz =>
+      $composableBuilder(column: $table.startJuz, builder: (column) => column);
+
+  GeneratedColumn<int> get endJuz =>
+      $composableBuilder(column: $table.endJuz, builder: (column) => column);
 
   Expression<T> surahPoolEntriesRefs<T extends Object>(
     Expression<T> Function($$SurahPoolEntriesTableAnnotationComposer a) f,
@@ -936,11 +1060,15 @@ class $$SurahsTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<String> arabicName = const Value.absent(),
                 Value<int> ayatCount = const Value.absent(),
+                Value<int> startJuz = const Value.absent(),
+                Value<int> endJuz = const Value.absent(),
               }) => SurahsCompanion(
                 id: id,
                 name: name,
                 arabicName: arabicName,
                 ayatCount: ayatCount,
+                startJuz: startJuz,
+                endJuz: endJuz,
               ),
           createCompanionCallback:
               ({
@@ -948,11 +1076,15 @@ class $$SurahsTableTableManager
                 required String name,
                 required String arabicName,
                 required int ayatCount,
+                Value<int> startJuz = const Value.absent(),
+                Value<int> endJuz = const Value.absent(),
               }) => SurahsCompanion.insert(
                 id: id,
                 name: name,
                 arabicName: arabicName,
                 ayatCount: ayatCount,
+                startJuz: startJuz,
+                endJuz: endJuz,
               ),
           withReferenceMapper: (p0) => p0
               .map(

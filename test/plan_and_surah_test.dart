@@ -6,8 +6,14 @@ import 'package:surah_planner/data/models/prayer.dart';
 import 'package:surah_planner/data/models/surah.dart';
 import 'package:surah_planner/data/models/surah_pool_entry.dart';
 
-Surah _surah(int id) =>
-    Surah(id: id, name: 'S$id', arabicName: 'x', ayatCount: 10);
+Surah _surah(int id) => Surah(
+  id: id,
+  name: 'S$id',
+  arabicName: 'x',
+  ayatCount: 10,
+  startJuz: 1,
+  endJuz: 1,
+);
 
 PlanSurah _planFull(int id) => PlanSurah(surahId: id, isFullSurah: true);
 
@@ -22,20 +28,43 @@ void main() {
         name: 'Al-Baqarah',
         arabicName: 'ب',
         ayatCount: 286,
+        startJuz: 1,
+        endJuz: 3,
       );
       expect(s.displayName, 'Al-Baqarah');
     });
 
     test('copyWith replaces fields immutably', () {
-      const s = Surah(id: 1, name: 'A', arabicName: 'ب', ayatCount: 7);
+      const s = Surah(
+        id: 1,
+        name: 'A',
+        arabicName: 'ب',
+        ayatCount: 7,
+        startJuz: 1,
+        endJuz: 1,
+      );
       final t = s.copyWith(name: 'B');
       expect(s.name, 'A');
       expect(t.name, 'B');
     });
 
     test('equality uses value fields', () {
-      const a = Surah(id: 1, name: 'A', arabicName: 'ب', ayatCount: 7);
-      const b = Surah(id: 1, name: 'A', arabicName: 'ب', ayatCount: 8);
+      const a = Surah(
+        id: 1,
+        name: 'A',
+        arabicName: 'ب',
+        ayatCount: 7,
+        startJuz: 1,
+        endJuz: 1,
+      );
+      const b = Surah(
+        id: 1,
+        name: 'A',
+        arabicName: 'ب',
+        ayatCount: 8,
+        startJuz: 1,
+        endJuz: 1,
+      );
       expect(a, isNot(equals(b)));
     });
   });
@@ -58,6 +87,8 @@ void main() {
         name: 'Al-Baqarah',
         arabicName: 'ب',
         ayatCount: 286,
+        startJuz: 1,
+        endJuz: 3,
       );
       expect(p.displayLabel(master), 'Al-Baqarah (255)');
     });
@@ -93,6 +124,8 @@ void main() {
         name: 'Al-Baqarah',
         arabicName: 'ب',
         ayatCount: 286,
+        startJuz: 1,
+        endJuz: 3,
       );
       const full = SurahPoolEntry(id: 1, surahId: 2, isFullSurah: true);
       expect(full.displayLabel(master), 'Al-Baqarah');
