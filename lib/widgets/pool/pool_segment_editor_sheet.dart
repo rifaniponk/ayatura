@@ -101,26 +101,24 @@ class _PoolSegmentEditorSheetState
     _bulkCheckedSurahIds
       ..clear()
       ..addAll(
-        surahsBelongingToJuz(widget.surahs, _selectedJuz)
-            .where((s) => !inPool.contains(s.id))
-            .map((s) => s.id),
+        surahsBelongingToJuz(
+          widget.surahs,
+          _selectedJuz,
+        ).where((s) => !inPool.contains(s.id)).map((s) => s.id),
       );
   }
 
-  Future<void> _switchToBulkMode() async {
+  Future<void> _loadBulkSelection() async {
     if (_saving || !_isAdd) return;
     final pool = await ref.read(poolEntriesAsyncProvider.future);
-    if (!mounted) return;
-    setState(() {
-      _bulkMode = true;
-      _seedBulkSelection(pool);
-    });
+    if (!mounted || !_bulkMode) return;
+    setState(() => _seedBulkSelection(pool));
   }
 
   Future<void> _onJuzChanged(int? juz) async {
     if (juz == null || _saving) return;
     final pool = await ref.read(poolEntriesAsyncProvider.future);
-    if (!mounted) return;
+    if (!mounted || _selectedJuz != juz) return;
     setState(() {
       _selectedJuz = juz;
       _seedBulkSelection(pool);
@@ -132,9 +130,10 @@ class _PoolSegmentEditorSheetState
       _bulkCheckedSurahIds
         ..clear()
         ..addAll(
-          surahsBelongingToJuz(widget.surahs, _selectedJuz)
-              .where((s) => !poolSurahIds.contains(s.id))
-              .map((s) => s.id),
+          surahsBelongingToJuz(
+            widget.surahs,
+            _selectedJuz,
+          ).where((s) => !poolSurahIds.contains(s.id)).map((s) => s.id),
         );
     });
   }
@@ -256,11 +255,8 @@ class _PoolSegmentEditorSheetState
                   ? null
                   : (next) {
                       final bulk = next.single;
-                      if (bulk) {
-                        _switchToBulkMode();
-                      } else {
-                        setState(() => _bulkMode = false);
-                      }
+                      setState(() => _bulkMode = bulk);
+                      if (bulk) _loadBulkSelection();
                     },
             ),
             const SizedBox(height: 16),
@@ -456,10 +452,7 @@ class _BulkByJuzPanel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context)!;
     final poolAsync = ref.watch(poolEntriesAsyncProvider);
-    final pool = poolAsync.maybeWhen(
-      data: (p) => p,
-      orElse: () => null,
-    );
+    final pool = poolAsync.maybeWhen(data: (p) => p, orElse: () => null);
 
     if (pool == null) {
       return const Padding(
@@ -471,8 +464,6 @@ class _BulkByJuzPanel extends ConsumerWidget {
     final poolSurahIds = pool.map((e) => e.surahId).toSet();
     final inJuz = surahsBelongingToJuz(surahs, selectedJuz);
     final bulkCount = checkedIds.length;
-
-    final listHeight = MediaQuery.sizeOf(context).height * 0.42;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -487,10 +478,7 @@ class _BulkByJuzPanel extends ConsumerWidget {
           ),
           items: [
             for (var j = 1; j <= 30; j++)
-              DropdownMenuItem(
-                value: j,
-                child: Text(s.editorJuzOption(j)),
-              ),
+              DropdownMenuItem(value: j, child: Text(s.editorJuzOption(j))),
           ],
           onChanged: saving ? null : onJuzChanged,
         ),
@@ -507,31 +495,27 @@ class _BulkByJuzPanel extends ConsumerWidget {
             ),
           ],
         ),
-        SizedBox(
-          height: listHeight,
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 320),
           child: ListView.builder(
             shrinkWrap: true,
             itemCount: inJuz.length,
             itemBuilder: (context, index) {
               final surah = inJuz[index];
               final already = poolSurahIds.contains(surah.id);
-              final label =
-                  '${surah.id}. ${surah.localizedName(lang)}';
+              final label = '${surah.id}. ${surah.localizedName(lang)}';
 
               if (already) {
-                return CheckboxListTile(
-                  value: true,
-                  onChanged: null,
-                  secondary: Icon(
+                return ListTile(
+                  leading: Icon(
                     Icons.check_circle_rounded,
                     color: AppColors.ink3,
                   ),
-                  title: Text(label),
+                  title: Text(label, style: TextStyle(color: AppColors.ink3)),
                   subtitle: Text(
                     s.editorAlreadyAdded,
                     style: AppTextStyles.meta.copyWith(color: AppColors.ink3),
                   ),
-                  controlAffinity: ListTileControlAffinity.leading,
                 );
               }
 
