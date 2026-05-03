@@ -4,8 +4,9 @@
     "generatedAt": "2026-05-02T07:41:37Z",
     "juzSource": "https://api.quran.com/api/v4/verses/by_key/{chapter}:{verse} (juz_number; Hafs mushaf division)",
     "juzGeneratedAt": "2026-05-03T00:00:00Z",
-    "nameIdNote": "Indonesian romanization aligned with Quran cetakan Kemenag RI; quran.com /api/v4/chapters name_simple is identical for language=en vs language=id, so nameId is curated from that baseline plus Kemenag conventions.",
-    "nameIdGeneratedAt": "2026-05-03T00:00:00Z"
+    "nameIdNote": "Romanized surah titles (`nameId`) match the Latin spelling used in the Quran NU Online (NU Online) chapter index.",
+    "nameIdGeneratedAt": "2026-05-03T12:00:00Z",
+    "nameIdSource": "https://quran.nu.or.id/"
   },
   "surahs": [
     {
@@ -33,7 +34,7 @@
       "ayatCount": 200,
       "startJuz": 3,
       "endJuz": 4,
-      "nameId": "Ali Imran"
+      "nameId": "Ali 'Imran"
     },
     {
       "id": 4,
@@ -168,7 +169,7 @@
       "ayatCount": 110,
       "startJuz": 15,
       "endJuz": 16,
-      "nameId": "Al-Kahfi"
+      "nameId": "Al-Kahf"
     },
     {
       "id": 19,
@@ -186,7 +187,7 @@
       "ayatCount": 135,
       "startJuz": 16,
       "endJuz": 16,
-      "nameId": "Taha"
+      "nameId": "Thaha"
     },
     {
       "id": 21,
@@ -240,7 +241,7 @@
       "ayatCount": 227,
       "startJuz": 19,
       "endJuz": 19,
-      "nameId": "Asy-Syu'ara"
+      "nameId": "Asy-Syu'ara'"
     },
     {
       "id": 27,
@@ -258,7 +259,7 @@
       "ayatCount": 88,
       "startJuz": 20,
       "endJuz": 20,
-      "nameId": "Al-Qasas"
+      "nameId": "Al-Qashash"
     },
     {
       "id": 29,
@@ -321,7 +322,7 @@
       "ayatCount": 45,
       "startJuz": 22,
       "endJuz": 22,
-      "nameId": "Fatir"
+      "nameId": "Fathir"
     },
     {
       "id": 36,
@@ -339,7 +340,7 @@
       "ayatCount": 182,
       "startJuz": 23,
       "endJuz": 23,
-      "nameId": "As-Saffat"
+      "nameId": "Ash-Shaffat"
     },
     {
       "id": 38,
@@ -348,7 +349,7 @@
       "ayatCount": 88,
       "startJuz": 23,
       "endJuz": 23,
-      "nameId": "Sad"
+      "nameId": "Shad"
     },
     {
       "id": 39,
@@ -375,7 +376,7 @@
       "ayatCount": 54,
       "startJuz": 24,
       "endJuz": 25,
-      "nameId": "Fussilat"
+      "nameId": "Fushshilat"
     },
     {
       "id": 42,
@@ -411,7 +412,7 @@
       "ayatCount": 37,
       "startJuz": 25,
       "endJuz": 25,
-      "nameId": "Al-Jathiyah"
+      "nameId": "Al-Jatsiyah"
     },
     {
       "id": 46,
@@ -474,7 +475,7 @@
       "ayatCount": 49,
       "startJuz": 27,
       "endJuz": 27,
-      "nameId": "At-Tur"
+      "nameId": "At-Thur"
     },
     {
       "id": 53,
@@ -537,7 +538,7 @@
       "ayatCount": 24,
       "startJuz": 28,
       "endJuz": 28,
-      "nameId": "Al-Hashr"
+      "nameId": "Al-Hasyr"
     },
     {
       "id": 60,
@@ -555,7 +556,7 @@
       "ayatCount": 14,
       "startJuz": 28,
       "endJuz": 28,
-      "nameId": "As-Saf"
+      "nameId": "Ash-Shaff"
     },
     {
       "id": 62,
@@ -582,7 +583,7 @@
       "ayatCount": 18,
       "startJuz": 28,
       "endJuz": 28,
-      "nameId": "At-Tagabun"
+      "nameId": "At-Taghabun"
     },
     {
       "id": 65,
@@ -591,7 +592,7 @@
       "ayatCount": 12,
       "startJuz": 28,
       "endJuz": 28,
-      "nameId": "At-Talaq"
+      "nameId": "At-Thalaq"
     },
     {
       "id": 66,
@@ -672,7 +673,7 @@
       "ayatCount": 56,
       "startJuz": 29,
       "endJuz": 29,
-      "nameId": "Al-Muddaththir"
+      "nameId": "Al-Muddatstsir"
     },
     {
       "id": 75,
@@ -708,7 +709,7 @@
       "ayatCount": 40,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "An-Naba"
+      "nameId": "An-Naba'"
     },
     {
       "id": 79,
@@ -744,7 +745,7 @@
       "ayatCount": 19,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "Al-Infitar"
+      "nameId": "Al-Infithar"
     },
     {
       "id": 83,
@@ -753,7 +754,7 @@
       "ayatCount": 36,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "Al-Mutaffifin"
+      "nameId": "Al-Muthaffifin"
     },
     {
       "id": 84,
@@ -762,7 +763,7 @@
       "ayatCount": 25,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "Al-Inshiqaq"
+      "nameId": "Al-Insyiqaq"
     },
     {
       "id": 85,
@@ -780,7 +781,7 @@
       "ayatCount": 17,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "At-Tariq"
+      "nameId": "At-Thariq"
     },
     {
       "id": 87,
@@ -798,7 +799,7 @@
       "ayatCount": 26,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "Al-Ghashiyah"
+      "nameId": "Al-Ghasyiyah"
     },
     {
       "id": 89,
@@ -843,7 +844,7 @@
       "ayatCount": 11,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "Ad-Duhaa"
+      "nameId": "Adh-Dhuha"
     },
     {
       "id": 94,
@@ -852,7 +853,7 @@
       "ayatCount": 8,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "Asy-Syarh"
+      "nameId": "Al-Insyirah"
     },
     {
       "id": 95,
@@ -924,7 +925,7 @@
       "ayatCount": 8,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "At-Takasur"
+      "nameId": "At-Takatsur"
     },
     {
       "id": 103,
@@ -933,7 +934,7 @@
       "ayatCount": 3,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "Al-'Asr"
+      "nameId": "Al-'Ashr"
     },
     {
       "id": 104,
@@ -978,7 +979,7 @@
       "ayatCount": 3,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "Al-Kausar"
+      "nameId": "Al-Kautsar"
     },
     {
       "id": 109,
@@ -996,7 +997,7 @@
       "ayatCount": 3,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "An-Nasr"
+      "nameId": "An-Nashr"
     },
     {
       "id": 111,
@@ -1005,7 +1006,7 @@
       "ayatCount": 5,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "Al-Masad"
+      "nameId": "Al-Lahab"
     },
     {
       "id": 112,
@@ -1014,7 +1015,7 @@
       "ayatCount": 4,
       "startJuz": 30,
       "endJuz": 30,
-      "nameId": "Al-Ikhlas"
+      "nameId": "Al-Ikhlash"
     },
     {
       "id": 113,
