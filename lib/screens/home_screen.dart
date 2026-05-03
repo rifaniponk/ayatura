@@ -114,7 +114,21 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final plan = ref.watch(monthPlanProvider);
+    final planAsync = ref.watch(monthPlanProvider);
+    final plan = planAsync.when(
+      skipLoadingOnReload: true,
+      data: (p) => p,
+      loading: () => planAsync.value,
+      error: (_, _) => planAsync.value,
+    );
+    if (planAsync.hasError && plan == null) {
+      return Center(
+        child: Text(S.of(context)!.errorGeneric('${planAsync.error}')),
+      );
+    }
+    if (planAsync.isLoading && plan == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
     final effective = plan?.effectiveOrNull(now);
     final selectedDay = ref.watch(selectedPlanDayProvider);
     final enabledCount = widget.pool.where((e) => e.enabled).length;

@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
+import '../models/plan.dart';
 import '../models/surah.dart';
 import '../models/surah_pool_entry.dart';
 
@@ -41,13 +44,25 @@ class SurahPoolEntries extends Table {
   BoolColumn get enabled => boolean().withDefault(const Constant(true))();
 }
 
-@DriftDatabase(tables: [Surahs, SurahPoolEntries])
+@DataClassName('MonthPlanRow')
+class MonthPlans extends Table {
+  IntColumn get year => integer()();
+
+  IntColumn get month => integer()();
+
+  TextColumn get planJson => text()();
+
+  @override
+  Set<Column<Object>>? get primaryKey => {year, month};
+}
+
+@DriftDatabase(tables: [Surahs, SurahPoolEntries, MonthPlans])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
     : super(executor ?? driftDatabase(name: 'surah_planner'));
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -64,6 +79,9 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 4) {
         await m.addColumn(surahs, surahs.nameId);
+      }
+      if (from < 5) {
+        await m.createTable(monthPlans);
       }
     },
   );
@@ -139,6 +157,40 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> deletePoolEntry(int id) {
     return (delete(surahPoolEntries)..where((t) => t.id.equals(id))).go();
+  }
+
+  /// Loads the most recently stored plan (by calendar year/month).
+  Future<MonthPlan?> loadLatestPlan() async {
+    final row =
+        await (select(monthPlans)
+              ..orderBy([
+                (t) => OrderingTerm.desc(t.year),
+                (t) => OrderingTerm.desc(t.month),
+              ])
+              ..limit(1))
+            .getSingleOrNull();
+    if (row == null) return null;
+    return MonthPlan.fromJson(jsonDecode(row.planJson) as Map<String, dynamic>);
+  }
+
+  /// Persists [plan] as the sole stored row (older months are removed).
+  Future<void> savePlan(MonthPlan plan) async {
+    await transaction(() async {
+      await delete(monthPlans).go();
+      await into(monthPlans).insert(
+        MonthPlansCompanion.insert(
+          year: plan.year,
+          month: plan.month,
+          planJson: jsonEncode(plan.toJson()),
+        ),
+      );
+    });
+  }
+
+  Future<void> deletePlan(int year, int month) {
+    return (delete(
+      monthPlans,
+    )..where((t) => t.year.equals(year) & t.month.equals(month))).go();
   }
 }
 

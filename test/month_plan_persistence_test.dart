@@ -1,0 +1,62 @@
+import 'dart:convert';
+
+import 'package:drift/native.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:surah_planner/data/local/app_database.dart';
+import 'package:surah_planner/data/models/plan.dart';
+import 'package:surah_planner/data/models/plan_surah.dart';
+import 'package:surah_planner/data/models/prayer.dart';
+
+MonthPlan _samplePlan({required int year, required int month}) {
+  return MonthPlan(
+    month: month,
+    year: year,
+    days: [
+      DayPlan(
+        day: 1,
+        prayers: {
+          Prayer.fajr: PrayerSlot(
+            surahs: [PlanSurah(surahId: 1, isFullSurah: true)],
+          ),
+        },
+      ),
+    ],
+  );
+}
+
+void main() {
+  group('Month plan persistence (Drift)', () {
+    late AppDatabase db;
+
+    setUp(() {
+      db = AppDatabase(NativeDatabase.memory());
+    });
+
+    tearDown(() async {
+      await db.close();
+    });
+
+    test('savePlan + loadLatestPlan round-trip matches JSON', () async {
+      final original = _samplePlan(year: 2026, month: 5);
+      await db.savePlan(original);
+      final loaded = await db.loadLatestPlan();
+      expect(loaded, isNotNull);
+      expect(jsonEncode(loaded!.toJson()), jsonEncode(original.toJson()));
+    });
+
+    test('savePlan keeps only the latest row across months', () async {
+      await db.savePlan(_samplePlan(year: 2026, month: 4));
+      await db.savePlan(_samplePlan(year: 2026, month: 6));
+      final loaded = await db.loadLatestPlan();
+      expect(loaded!.month, 6);
+      expect(loaded.year, 2026);
+    });
+
+    test('deletePlan removes stored row', () async {
+      final plan = _samplePlan(year: 2026, month: 3);
+      await db.savePlan(plan);
+      await db.deletePlan(plan.year, plan.month);
+      expect(await db.loadLatestPlan(), isNull);
+    });
+  });
+}

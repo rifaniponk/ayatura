@@ -850,6 +850,268 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
   }
 }
 
+class $MonthPlansTable extends MonthPlans
+    with TableInfo<$MonthPlansTable, MonthPlanRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MonthPlansTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _yearMeta = const VerificationMeta('year');
+  @override
+  late final GeneratedColumn<int> year = GeneratedColumn<int>(
+    'year',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _monthMeta = const VerificationMeta('month');
+  @override
+  late final GeneratedColumn<int> month = GeneratedColumn<int>(
+    'month',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _planJsonMeta = const VerificationMeta(
+    'planJson',
+  );
+  @override
+  late final GeneratedColumn<String> planJson = GeneratedColumn<String>(
+    'plan_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [year, month, planJson];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'month_plans';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MonthPlanRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('year')) {
+      context.handle(
+        _yearMeta,
+        year.isAcceptableOrUnknown(data['year']!, _yearMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_yearMeta);
+    }
+    if (data.containsKey('month')) {
+      context.handle(
+        _monthMeta,
+        month.isAcceptableOrUnknown(data['month']!, _monthMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_monthMeta);
+    }
+    if (data.containsKey('plan_json')) {
+      context.handle(
+        _planJsonMeta,
+        planJson.isAcceptableOrUnknown(data['plan_json']!, _planJsonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_planJsonMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {year, month};
+  @override
+  MonthPlanRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MonthPlanRow(
+      year: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}year'],
+      )!,
+      month: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}month'],
+      )!,
+      planJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}plan_json'],
+      )!,
+    );
+  }
+
+  @override
+  $MonthPlansTable createAlias(String alias) {
+    return $MonthPlansTable(attachedDatabase, alias);
+  }
+}
+
+class MonthPlanRow extends DataClass implements Insertable<MonthPlanRow> {
+  final int year;
+  final int month;
+  final String planJson;
+  const MonthPlanRow({
+    required this.year,
+    required this.month,
+    required this.planJson,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['year'] = Variable<int>(year);
+    map['month'] = Variable<int>(month);
+    map['plan_json'] = Variable<String>(planJson);
+    return map;
+  }
+
+  MonthPlansCompanion toCompanion(bool nullToAbsent) {
+    return MonthPlansCompanion(
+      year: Value(year),
+      month: Value(month),
+      planJson: Value(planJson),
+    );
+  }
+
+  factory MonthPlanRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MonthPlanRow(
+      year: serializer.fromJson<int>(json['year']),
+      month: serializer.fromJson<int>(json['month']),
+      planJson: serializer.fromJson<String>(json['planJson']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'year': serializer.toJson<int>(year),
+      'month': serializer.toJson<int>(month),
+      'planJson': serializer.toJson<String>(planJson),
+    };
+  }
+
+  MonthPlanRow copyWith({int? year, int? month, String? planJson}) =>
+      MonthPlanRow(
+        year: year ?? this.year,
+        month: month ?? this.month,
+        planJson: planJson ?? this.planJson,
+      );
+  MonthPlanRow copyWithCompanion(MonthPlansCompanion data) {
+    return MonthPlanRow(
+      year: data.year.present ? data.year.value : this.year,
+      month: data.month.present ? data.month.value : this.month,
+      planJson: data.planJson.present ? data.planJson.value : this.planJson,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MonthPlanRow(')
+          ..write('year: $year, ')
+          ..write('month: $month, ')
+          ..write('planJson: $planJson')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(year, month, planJson);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MonthPlanRow &&
+          other.year == this.year &&
+          other.month == this.month &&
+          other.planJson == this.planJson);
+}
+
+class MonthPlansCompanion extends UpdateCompanion<MonthPlanRow> {
+  final Value<int> year;
+  final Value<int> month;
+  final Value<String> planJson;
+  final Value<int> rowid;
+  const MonthPlansCompanion({
+    this.year = const Value.absent(),
+    this.month = const Value.absent(),
+    this.planJson = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MonthPlansCompanion.insert({
+    required int year,
+    required int month,
+    required String planJson,
+    this.rowid = const Value.absent(),
+  }) : year = Value(year),
+       month = Value(month),
+       planJson = Value(planJson);
+  static Insertable<MonthPlanRow> custom({
+    Expression<int>? year,
+    Expression<int>? month,
+    Expression<String>? planJson,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (year != null) 'year': year,
+      if (month != null) 'month': month,
+      if (planJson != null) 'plan_json': planJson,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MonthPlansCompanion copyWith({
+    Value<int>? year,
+    Value<int>? month,
+    Value<String>? planJson,
+    Value<int>? rowid,
+  }) {
+    return MonthPlansCompanion(
+      year: year ?? this.year,
+      month: month ?? this.month,
+      planJson: planJson ?? this.planJson,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (year.present) {
+      map['year'] = Variable<int>(year.value);
+    }
+    if (month.present) {
+      map['month'] = Variable<int>(month.value);
+    }
+    if (planJson.present) {
+      map['plan_json'] = Variable<String>(planJson.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MonthPlansCompanion(')
+          ..write('year: $year, ')
+          ..write('month: $month, ')
+          ..write('planJson: $planJson, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -857,6 +1119,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SurahPoolEntriesTable surahPoolEntries = $SurahPoolEntriesTable(
     this,
   );
+  late final $MonthPlansTable monthPlans = $MonthPlansTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -864,6 +1127,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     surahs,
     surahPoolEntries,
+    monthPlans,
   ];
 }
 
@@ -1549,6 +1813,168 @@ typedef $$SurahPoolEntriesTableProcessedTableManager =
       SurahPoolEntryRow,
       PrefetchHooks Function({bool surahId})
     >;
+typedef $$MonthPlansTableCreateCompanionBuilder =
+    MonthPlansCompanion Function({
+      required int year,
+      required int month,
+      required String planJson,
+      Value<int> rowid,
+    });
+typedef $$MonthPlansTableUpdateCompanionBuilder =
+    MonthPlansCompanion Function({
+      Value<int> year,
+      Value<int> month,
+      Value<String> planJson,
+      Value<int> rowid,
+    });
+
+class $$MonthPlansTableFilterComposer
+    extends Composer<_$AppDatabase, $MonthPlansTable> {
+  $$MonthPlansTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get month => $composableBuilder(
+    column: $table.month,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get planJson => $composableBuilder(
+    column: $table.planJson,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MonthPlansTableOrderingComposer
+    extends Composer<_$AppDatabase, $MonthPlansTable> {
+  $$MonthPlansTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get month => $composableBuilder(
+    column: $table.month,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get planJson => $composableBuilder(
+    column: $table.planJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MonthPlansTableAnnotationComposer
+    extends Composer<_$AppDatabase, $MonthPlansTable> {
+  $$MonthPlansTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get year =>
+      $composableBuilder(column: $table.year, builder: (column) => column);
+
+  GeneratedColumn<int> get month =>
+      $composableBuilder(column: $table.month, builder: (column) => column);
+
+  GeneratedColumn<String> get planJson =>
+      $composableBuilder(column: $table.planJson, builder: (column) => column);
+}
+
+class $$MonthPlansTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $MonthPlansTable,
+          MonthPlanRow,
+          $$MonthPlansTableFilterComposer,
+          $$MonthPlansTableOrderingComposer,
+          $$MonthPlansTableAnnotationComposer,
+          $$MonthPlansTableCreateCompanionBuilder,
+          $$MonthPlansTableUpdateCompanionBuilder,
+          (
+            MonthPlanRow,
+            BaseReferences<_$AppDatabase, $MonthPlansTable, MonthPlanRow>,
+          ),
+          MonthPlanRow,
+          PrefetchHooks Function()
+        > {
+  $$MonthPlansTableTableManager(_$AppDatabase db, $MonthPlansTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MonthPlansTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MonthPlansTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MonthPlansTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> year = const Value.absent(),
+                Value<int> month = const Value.absent(),
+                Value<String> planJson = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MonthPlansCompanion(
+                year: year,
+                month: month,
+                planJson: planJson,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int year,
+                required int month,
+                required String planJson,
+                Value<int> rowid = const Value.absent(),
+              }) => MonthPlansCompanion.insert(
+                year: year,
+                month: month,
+                planJson: planJson,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MonthPlansTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $MonthPlansTable,
+      MonthPlanRow,
+      $$MonthPlansTableFilterComposer,
+      $$MonthPlansTableOrderingComposer,
+      $$MonthPlansTableAnnotationComposer,
+      $$MonthPlansTableCreateCompanionBuilder,
+      $$MonthPlansTableUpdateCompanionBuilder,
+      (
+        MonthPlanRow,
+        BaseReferences<_$AppDatabase, $MonthPlansTable, MonthPlanRow>,
+      ),
+      MonthPlanRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1557,4 +1983,6 @@ class $AppDatabaseManager {
       $$SurahsTableTableManager(_db, _db.surahs);
   $$SurahPoolEntriesTableTableManager get surahPoolEntries =>
       $$SurahPoolEntriesTableTableManager(_db, _db.surahPoolEntries);
+  $$MonthPlansTableTableManager get monthPlans =>
+      $$MonthPlansTableTableManager(_db, _db.monthPlans);
 }
