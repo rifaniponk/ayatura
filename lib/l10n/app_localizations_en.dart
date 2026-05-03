@@ -254,7 +254,7 @@ class SEn extends S {
 
   @override
   String get settingsSurahsPerPrayerSubtitle =>
-      'Surahs assigned to each slot when you generate a plan. Regenerate your plan after changing this.';
+      'Number of surahs per prayer slot. Regenerate to apply.';
 
   @override
   String get settingsLanguage => 'Language';

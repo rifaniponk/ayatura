@@ -255,7 +255,7 @@ class SId extends S {
 
   @override
   String get settingsSurahsPerPrayerSubtitle =>
-      'Jumlah surah per slot saat membuat rencana. Buat ulang rencana setelah mengubah ini.';
+      'Jumlah surah per slot shalat. Buat ulang rencana untuk menerapkan.';
 
   @override
   String get settingsLanguage => 'Bahasa';

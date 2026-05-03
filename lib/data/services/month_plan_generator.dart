@@ -57,8 +57,10 @@ abstract final class MonthPlanGenerator {
           prayers[prayer] = existingSlot;
         } else {
           prayers[prayer] = PrayerSlot(
-            surahs:
-                deck.take(perSlot).map(PlanSurah.fromSurahPoolEntry).toList(),
+            surahs: deck
+                .take(perSlot)
+                .map(PlanSurah.fromSurahPoolEntry)
+                .toList(),
           );
         }
       }

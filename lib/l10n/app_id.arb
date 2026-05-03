@@ -65,7 +65,7 @@
   "settingsPrayerReminders": "Pengingat shalat",
   "settingsPrayerRemindersSubtitle": "Beri tahu sebelum setiap shalat",
   "settingsSurahsPerPrayer": "Surah per shalat",
-  "settingsSurahsPerPrayerSubtitle": "Jumlah surah per slot saat membuat rencana. Buat ulang rencana setelah mengubah ini.",
+  "settingsSurahsPerPrayerSubtitle": "Jumlah surah per slot shalat. Buat ulang rencana untuk menerapkan.",
   "settingsLanguage": "Bahasa",
   "settingsLanguageSubtitle": "Pilih bahasa yang kamu inginkan",
   "settingsAbout": "Tentang",

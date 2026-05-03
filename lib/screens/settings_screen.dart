@@ -70,8 +70,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: const Icon(Icons.remove_rounded),
                         onPressed: surahsPerPrayer > surahsPerPrayerMin
                             ? () => ref
-                                .read(surahsPerPrayerProvider.notifier)
-                                .set(surahsPerPrayer - 1)
+                                  .read(surahsPerPrayerProvider.notifier)
+                                  .set(surahsPerPrayer - 1)
                             : null,
                       ),
                       SizedBox(
@@ -86,8 +86,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         icon: const Icon(Icons.add_rounded),
                         onPressed: surahsPerPrayer < surahsPerPrayerMax
                             ? () => ref
-                                .read(surahsPerPrayerProvider.notifier)
-                                .set(surahsPerPrayer + 1)
+                                  .read(surahsPerPrayerProvider.notifier)
+                                  .set(surahsPerPrayer + 1)
                             : null,
                       ),
                     ],

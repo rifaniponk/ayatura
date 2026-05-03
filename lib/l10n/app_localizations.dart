@@ -490,7 +490,7 @@ abstract class S {
   /// No description provided for @settingsSurahsPerPrayerSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Surahs assigned to each slot when you generate a plan. Regenerate your plan after changing this.'**
+  /// **'Number of surahs per prayer slot. Regenerate to apply.'**
   String get settingsSurahsPerPrayerSubtitle;
 
   /// No description provided for @settingsLanguage.
