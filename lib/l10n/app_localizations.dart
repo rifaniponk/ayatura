@@ -343,6 +343,54 @@ abstract class S {
   /// **'No surahs available.'**
   String get editorNoSurahsAvailable;
 
+  /// No description provided for @editorModeNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get editorModeNormal;
+
+  /// No description provided for @editorModeBulkByJuz.
+  ///
+  /// In en, this message translates to:
+  /// **'Bulk by Juz'**
+  String get editorModeBulkByJuz;
+
+  /// No description provided for @editorJuzLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Juz'**
+  String get editorJuzLabel;
+
+  /// No description provided for @editorJuzOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Juz {juz}'**
+  String editorJuzOption(int juz);
+
+  /// No description provided for @editorBulkAddButton.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{Add 1 to hifdh list} other{Add {count} to hifdh list}}'**
+  String editorBulkAddButton(int count);
+
+  /// No description provided for @editorAlreadyAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Already added'**
+  String get editorAlreadyAdded;
+
+  /// No description provided for @editorSelectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get editorSelectAll;
+
+  /// No description provided for @editorDeselectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Deselect all'**
+  String get editorDeselectAll;
+
   /// No description provided for @emptyNoPlanTitle.
   ///
   /// In en, this message translates to:

@@ -166,6 +166,40 @@ class SEn extends S {
   String get editorNoSurahsAvailable => 'No surahs available.';
 
   @override
+  String get editorModeNormal => 'Normal';
+
+  @override
+  String get editorModeBulkByJuz => 'Bulk by Juz';
+
+  @override
+  String get editorJuzLabel => 'Juz';
+
+  @override
+  String editorJuzOption(int juz) {
+    return 'Juz $juz';
+  }
+
+  @override
+  String editorBulkAddButton(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Add $count to hifdh list',
+      one: 'Add 1 to hifdh list',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorAlreadyAdded => 'Already added';
+
+  @override
+  String get editorSelectAll => 'Select all';
+
+  @override
+  String get editorDeselectAll => 'Deselect all';
+
+  @override
   String get emptyNoPlanTitle => 'No plan yet';
 
   @override

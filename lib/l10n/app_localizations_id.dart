@@ -167,6 +167,39 @@ class SId extends S {
   String get editorNoSurahsAvailable => 'Tidak ada surah yang tersedia.';
 
   @override
+  String get editorModeNormal => 'Biasa';
+
+  @override
+  String get editorModeBulkByJuz => 'Massal per juz';
+
+  @override
+  String get editorJuzLabel => 'Juz';
+
+  @override
+  String editorJuzOption(int juz) {
+    return 'Juz $juz';
+  }
+
+  @override
+  String editorBulkAddButton(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Tambah $count ke daftar hafalan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editorAlreadyAdded => 'Sudah ditambahkan';
+
+  @override
+  String get editorSelectAll => 'Pilih semua';
+
+  @override
+  String get editorDeselectAll => 'Batalkan pilihan';
+
+  @override
   String get emptyNoPlanTitle => 'Belum ada rencana';
 
   @override

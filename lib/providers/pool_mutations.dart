@@ -74,3 +74,38 @@ Future<void> deletePoolSegment(WidgetRef ref, int entryId) async {
   await db.deletePoolEntry(entryId);
   _invalidatePoolAndPlan(ref);
 }
+
+/// Inserts many full-surah hifdh rows in one transaction.
+///
+/// Skips [surahId]s that already have any pool row (full or partial).
+Future<void> bulkInsertFullSurahPoolSegments({
+  required WidgetRef ref,
+  required Iterable<int> surahIds,
+}) async {
+  final uniqueIds = surahIds.toSet().toList();
+  if (uniqueIds.isEmpty) return;
+
+  final db = ref.read(appDatabaseProvider);
+  final existing = await db.allPoolEntries();
+  final taken = existing.map((e) => e.surahId).toSet();
+
+  var insertedAny = false;
+  await db.transaction(() async {
+    for (final sid in uniqueIds) {
+      if (taken.contains(sid)) continue;
+      await db.insertPoolEntry(
+        SurahPoolEntriesCompanion.insert(
+          surahId: sid,
+          isFullSurah: true,
+          enabled: Value(true),
+        ),
+      );
+      taken.add(sid);
+      insertedAny = true;
+    }
+  });
+
+  if (insertedAny) {
+    _invalidatePoolAndPlan(ref);
+  }
+}
