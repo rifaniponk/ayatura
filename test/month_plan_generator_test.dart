@@ -9,19 +9,29 @@ SurahPoolEntry _entry(int id, int surahId) =>
 
 void main() {
   group('MonthPlanGenerator', () {
-    test('same inputs produce identical plans', () {
-      final pool = [_entry(1, 1), _entry(2, 2)];
-      final a = MonthPlanGenerator.generate(
+    test('all pool entries appear before any repeats (round-robin)', () {
+      final pool = [_entry(1, 1), _entry(2, 2), _entry(3, 3), _entry(4, 4)];
+      final plan = MonthPlanGenerator.generate(
         month: 6,
         year: 2026,
         enabledPool: pool,
       );
-      final b = MonthPlanGenerator.generate(
-        month: 6,
-        year: 2026,
-        enabledPool: pool,
-      );
-      expect(a.toJson(), b.toJson());
+
+      // Collect surahIds dealt sequentially across all slots.
+      final dealt = <int>[];
+      for (final day in plan.days) {
+        for (final prayer in Prayer.values) {
+          dealt.addAll(day.slotFor(prayer).surahs.map((s) => s.surahId));
+        }
+      }
+
+      // Within the first full cycle (pool.length slots of 1 each = 4 surahs
+      // taken 1-by-1), every surah must appear before any repeats.
+      // Here maxSurahsPerPrayerSlot >= pool.length so each slot gets all 4.
+      // Verify the first two full cycles: each set of 4 contains every surahId.
+      final poolIds = pool.map((e) => e.surahId).toSet();
+      expect(dealt.take(poolIds.length).toSet(), equals(poolIds));
+      expect(dealt.skip(poolIds.length).take(poolIds.length).toSet(), equals(poolIds));
     });
 
     test('empty pool yields empty slots', () {

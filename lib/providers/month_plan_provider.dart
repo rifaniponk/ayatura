@@ -40,7 +40,6 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
       year: now.year,
       enabledPool: enabled,
       existingPlan: current,
-      salt: now.millisecondsSinceEpoch & 0x7FFFFFFF,
     );
 
     final db = ref.read(appDatabaseProvider);
