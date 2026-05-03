@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/theme/app_text_styles.dart';
+import '../l10n/app_localizations.dart';
 import '../data/models/plan.dart';
 import '../data/models/prayer.dart';
 import '../data/models/surah.dart';
@@ -17,6 +18,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context)!;
     final surahsAsync = ref.watch(surahsAsyncProvider);
     final poolAsync = ref.watch(poolEntriesAsyncProvider);
 
@@ -27,10 +29,10 @@ class HomeScreen extends ConsumerWidget {
         Expanded(
           child: switch ((surahsAsync, poolAsync)) {
             (AsyncError(:final error), _) || (_, AsyncError(:final error)) =>
-              Center(child: Text('Error: $error')),
+              Center(child: Text(s.errorGeneric('$error'))),
             (AsyncData(value: final surahs), AsyncData(value: final pool)) =>
               surahs.isEmpty
-                  ? const Center(child: Text('No surahs loaded'))
+                  ? Center(child: Text(s.noSurahsLoaded))
                   : _HomeBody(surahs: surahs, pool: pool),
             _ => const Center(child: CircularProgressIndicator()),
           },
@@ -49,22 +51,23 @@ class _HomeGradientAppBar extends ConsumerWidget
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context)!;
     final surahsAsync = ref.watch(surahsAsyncProvider);
     final subtitle = surahsAsync.maybeWhen(
       data: (surahs) {
-        if (surahs.isEmpty) return 'No surahs loaded';
+        if (surahs.isEmpty) return s.noSurahsLoaded;
         final poolAsync = ref.watch(poolEntriesAsyncProvider);
         return poolAsync.maybeWhen(
           data: (pool) =>
-              '${surahs.length} chapters · ${pool.length} in hifdh list',
-          orElse: () => '${surahs.length} chapters · …',
+              s.appBarSubtitleChaptersPool(surahs.length, pool.length),
+          orElse: () => s.appBarSubtitleChaptersLoading(surahs.length),
         );
       },
       orElse: () => null,
     );
 
     return GradientAppBar(
-      title: 'Surah Planner',
+      title: s.appTitle,
       subtitle: subtitle,
       showLogo: true,
     );
@@ -103,11 +106,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
     if (!mounted) return;
     if (!ok) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Need at least two items turned on in your hifdh list.',
-          ),
-        ),
+        SnackBar(content: Text(S.of(context)!.snackbarNeedTwoSegments)),
       );
     }
   }
@@ -150,7 +149,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
           ),
           const SizedBox(height: 8),
           GradientButton(
-            label: 'Regenerate Plan',
+            label: S.of(context)!.regeneratePlan,
             icon: Icons.auto_awesome_rounded,
             onPressed: enabledCount >= 2 ? _generate : null,
             enabled: enabledCount >= 2,
@@ -182,9 +181,10 @@ class _DaySelectorRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     return Row(
       children: [
-        Text('Day', style: AppTextStyles.sectionHeadingSerif),
+        Text(s.dayLabel, style: AppTextStyles.sectionHeadingSerif),
         const SizedBox(width: 12),
         IconButton.filledTonal(
           onPressed: selectedDay > 1 ? () => onChanged(selectedDay - 1) : null,
@@ -192,7 +192,7 @@ class _DaySelectorRow extends StatelessWidget {
         ),
         Expanded(
           child: Text(
-            '$selectedDay / $daysInMonth',
+            s.dayOfMonth(selectedDay, daysInMonth),
             textAlign: TextAlign.center,
             style: AppTextStyles.cardLabel,
           ),

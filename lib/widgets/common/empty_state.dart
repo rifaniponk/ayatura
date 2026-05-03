@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../l10n/app_localizations.dart';
 import 'gradient_button.dart';
 
 /// Three variants of the empty state component.
@@ -15,7 +16,7 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final spec = _spec(variant);
+    final spec = _spec(context, variant);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
       decoration: BoxDecoration(
@@ -63,32 +64,29 @@ class EmptyState extends StatelessWidget {
     );
   }
 
-  _EmptyStateSpec _spec(EmptyStateVariant v) {
+  _EmptyStateSpec _spec(BuildContext context, EmptyStateVariant v) {
+    final s = S.of(context)!;
     switch (v) {
       case EmptyStateVariant.noPlan:
-        return const _EmptyStateSpec(
+        return _EmptyStateSpec(
           icon: Icons.auto_awesome_rounded,
-          title: 'No plan yet',
-          subtitle: 'Generate a plan to assign readings across the month.',
-          actionLabel: 'Generate Plan',
+          title: s.emptyNoPlanTitle,
+          subtitle: s.emptyNoPlanSubtitle,
+          actionLabel: s.emptyNoPlanAction,
         );
       case EmptyStateVariant.hifdhListTooSmall:
-        return const _EmptyStateSpec(
+        return _EmptyStateSpec(
           icon: Icons.warning_amber_rounded,
-          title: 'Need more for a plan',
-          subtitle:
-              'Include at least two surahs or ayat ranges in your hifdh list '
-              '(with the switch on), then generate a plan.',
-          actionLabel: 'Open Hifdh',
+          title: s.emptyPoolTooSmallTitle,
+          subtitle: s.emptyPoolTooSmallSubtitle,
+          actionLabel: s.emptyPoolTooSmallAction,
         );
       case EmptyStateVariant.hifdhListEmpty:
-        return const _EmptyStateSpec(
+        return _EmptyStateSpec(
           icon: Icons.library_add_rounded,
-          title: 'Start your hifdh list',
-          subtitle:
-              'Add full surahs or ayat ranges you are memorizing. '
-              'Your monthly plan will draw from this list.',
-          actionLabel: 'Add surah or ayat',
+          title: s.emptyHifdhListTitle,
+          subtitle: s.emptyHifdhListSubtitle,
+          actionLabel: s.emptyHifdhListAction,
         );
     }
   }

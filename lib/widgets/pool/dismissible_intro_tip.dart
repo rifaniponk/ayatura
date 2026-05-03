@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Preference key for the Hifdh screen tip — bump `_v2` if copy should show again.
 ///
@@ -20,7 +21,7 @@ class DismissibleIntroTip extends StatefulWidget {
     required this.message,
     this.outerPadding = const EdgeInsets.fromLTRB(18, 12, 18, 0),
     this.icon = Icons.info_outline_rounded,
-    this.dismissTooltip = 'Dismiss',
+    this.dismissTooltip,
     this.onDismissed,
   });
 
@@ -34,7 +35,8 @@ class DismissibleIntroTip extends StatefulWidget {
 
   final IconData icon;
 
-  final String dismissTooltip;
+  /// Close control tooltip; defaults to [S.dismissTooltip] when omitted.
+  final String? dismissTooltip;
 
   /// Called after persistence succeeds and the widget is about to hide.
   final VoidCallback? onDismissed;
@@ -98,7 +100,7 @@ class _DismissibleIntroTipState extends State<DismissibleIntroTip> {
               ),
               IconButton(
                 icon: const Icon(Icons.close_rounded, size: 20),
-                tooltip: widget.dismissTooltip,
+                tooltip: widget.dismissTooltip ?? S.of(context)!.dismissTooltip,
                 color: AppColors.ink3,
                 visualDensity: VisualDensity.compact,
                 constraints: const BoxConstraints(minWidth: 36, minHeight: 36),

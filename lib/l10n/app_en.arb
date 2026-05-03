@@ -1,0 +1,105 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Surah Planner",
+  "navHome": "Home",
+  "navMonth": "Month",
+  "navHifdh": "Hifdh",
+  "navMore": "More",
+
+  "appBarSubtitleChaptersPool": "{chapters} chapters · {pool} in hifdh list",
+  "@appBarSubtitleChaptersPool": {
+    "placeholders": { "chapters": {"type": "int"}, "pool": {"type": "int"} }
+  },
+  "appBarSubtitleChaptersLoading": "{chapters} chapters · …",
+  "@appBarSubtitleChaptersLoading": {
+    "placeholders": { "chapters": {"type": "int"} }
+  },
+
+  "errorGeneric": "Error: {message}",
+  "@errorGeneric": { "placeholders": { "message": {"type": "String"} } },
+  "noSurahsLoaded": "No surahs loaded",
+
+  "dayLabel": "Day",
+  "dayOfMonth": "{day} / {total}",
+  "@dayOfMonth": {
+    "placeholders": { "day": {"type": "int"}, "total": {"type": "int"} }
+  },
+  "regeneratePlan": "Regenerate Plan",
+  "snackbarNeedTwoSegments": "Need at least two items turned on in your hifdh list.",
+
+  "monthScreenTitle": "Month",
+  "monthSubtitle": "{month} · {chapters} chapters",
+  "@monthSubtitle": {
+    "placeholders": { "month": {"type": "String"}, "chapters": {"type": "int"} }
+  },
+  "monthDayTitle": "Day {day}",
+  "@monthDayTitle": { "placeholders": { "day": {"type": "int"} } },
+  "monthDayReadings": "{count} planned reading(s) across prayers",
+  "@monthDayReadings": { "placeholders": { "count": {"type": "int"} } },
+
+  "hifdhScreenTitle": "Hifdh",
+  "hifdhSubtitleEmpty": "Nothing listed yet",
+  "hifdhSubtitleCount": "{count} added",
+  "@hifdhSubtitleCount": { "placeholders": { "count": {"type": "int"} } },
+  "hifdhIntroBanner": "Hifdh is Quran memorization. What you list here is used when you build your monthly plan.",
+  "hifdhEntryIncluded": "Included when you generate a plan",
+  "hifdhEntryPaused": "Paused — not used in plans",
+  "hifdhFabAdd": "Add",
+  "hifdhMenuEdit": "Edit",
+  "hifdhMenuRemove": "Remove",
+  "hifdhRemoveDialogTitle": "Remove from hifdh list?",
+  "hifdhRemoveDialogContent": "{label} will be removed from your hifdh list. Your current month plan will be cleared until you generate a new one.",
+  "@hifdhRemoveDialogContent": { "placeholders": { "label": {"type": "String"} } },
+  "hifdhRemoveErrorSnackbar": "Could not remove: {error}",
+  "@hifdhRemoveErrorSnackbar": { "placeholders": { "error": {"type": "String"} } },
+  "hifdhSaveErrorSnackbar": "Could not save: {error}",
+  "@hifdhSaveErrorSnackbar": { "placeholders": { "error": {"type": "String"} } },
+  "hifdhToggleErrorSnackbar": "Failed to save: {error}",
+  "@hifdhToggleErrorSnackbar": { "placeholders": { "error": {"type": "String"} } },
+
+  "editorAddTitle": "Add surah or ayat",
+  "editorEditTitle": "Edit entry",
+  "editorSurahLabel": "Surah",
+  "editorEntireSurah": "Entire surah",
+  "editorEntireSurahOn": "The entire surah is on your hifdh list.",
+  "editorEntireSurahOff": "Only the ayat range below is included.",
+  "editorAyatCount": "{count} ayat in this surah",
+  "@editorAyatCount": { "placeholders": { "count": {"type": "int"} } },
+  "editorStartAyah": "Start ayah",
+  "editorEndAyah": "End ayah",
+  "editorAddButton": "Add to hifdh list",
+  "editorSaveButton": "Save",
+  "editorNoSurahsAvailable": "No surahs available.",
+
+  "emptyNoPlanTitle": "No plan yet",
+  "emptyNoPlanSubtitle": "Generate a plan to assign readings across the month.",
+  "emptyNoPlanAction": "Generate Plan",
+  "emptyPoolTooSmallTitle": "Need more for a plan",
+  "emptyPoolTooSmallSubtitle": "Include at least two surahs or ayat ranges in your hifdh list (with the switch on), then generate a plan.",
+  "emptyPoolTooSmallAction": "Open Hifdh",
+  "emptyHifdhListTitle": "Start your hifdh list",
+  "emptyHifdhListSubtitle": "Add full surahs or ayat ranges you are memorizing. Your monthly plan will draw from this list.",
+  "emptyHifdhListAction": "Add surah or ayat",
+
+  "prayerNoReadings": "No readings assigned",
+  "prayerAyatCount": "{count} ayat",
+  "@prayerAyatCount": { "placeholders": { "count": {"type": "int"} } },
+
+  "settingsTitle": "Settings",
+  "settingsPreferences": "Preferences",
+  "settingsPrayerReminders": "Prayer reminders",
+  "settingsPrayerRemindersSubtitle": "Notify before each prayer",
+  "settingsLanguage": "Language",
+  "settingsLanguageSubtitle": "Choose your preferred language",
+  "settingsAbout": "About",
+  "settingsAboutBody": "Surah Planner spreads what you list for hifdh—full surahs or ayat ranges—across prayers through the month. Saving plans to your device is coming next.",
+
+  "langEnglish": "English",
+  "langIndonesian": "Indonesian",
+
+  "dialogCancel": "Cancel",
+  "dialogRemove": "Remove",
+  "backTooltip": "Back",
+  "dismissTooltip": "Dismiss"
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../l10n/app_localizations.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../data/models/plan.dart';
 import '../../data/models/prayer.dart';
@@ -34,6 +35,7 @@ class PrayerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -69,13 +71,16 @@ class PrayerCard extends StatelessWidget {
                 ],
                 const Spacer(),
                 if (slot.surahs.isNotEmpty)
-                  Text('${_totalAyat()} ayat', style: AppTextStyles.meta),
+                  Text(
+                    s.prayerAyatCount(_totalAyat()),
+                    style: AppTextStyles.meta,
+                  ),
               ],
             ),
             const SizedBox(height: 8),
             if (slot.surahs.isEmpty)
               Text(
-                'No readings assigned',
+                s.prayerNoReadings,
                 style: AppTextStyles.meta.copyWith(
                   color: AppColors.ink3,
                   fontStyle: FontStyle.italic,
