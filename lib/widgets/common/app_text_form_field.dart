@@ -12,16 +12,21 @@ InputDecoration mergeAppInputDecoration(
   InputDecoration? partial,
 ]) {
   final theme = Theme.of(context);
-  final applied =
-      (partial ?? const InputDecoration()).applyDefaults(theme.inputDecorationTheme);
+  final applied = (partial ?? const InputDecoration()).applyDefaults(
+    theme.inputDecorationTheme,
+  );
 
   return applied.copyWith(
     labelStyle:
-        applied.labelStyle ?? AppTextStyles.cardLabel.copyWith(color: AppColors.ink2),
-    floatingLabelStyle: applied.floatingLabelStyle ??
+        applied.labelStyle ??
+        AppTextStyles.cardLabel.copyWith(color: AppColors.ink2),
+    floatingLabelStyle:
+        applied.floatingLabelStyle ??
         WidgetStateTextStyle.resolveWith((Set<WidgetState> states) {
           if (states.contains(WidgetState.error)) {
-            return AppTextStyles.cardLabel.copyWith(color: theme.colorScheme.error);
+            return AppTextStyles.cardLabel.copyWith(
+              color: theme.colorScheme.error,
+            );
           }
           if (states.contains(WidgetState.focused)) {
             return AppTextStyles.cardLabel.copyWith(
@@ -31,15 +36,19 @@ InputDecoration mergeAppInputDecoration(
           }
           return AppTextStyles.cardLabel.copyWith(color: AppColors.ink3);
         }),
-    hintStyle: applied.hintStyle ?? AppTextStyles.body.copyWith(color: AppColors.ink3),
+    hintStyle:
+        applied.hintStyle ?? AppTextStyles.body.copyWith(color: AppColors.ink3),
     helperStyle:
-        applied.helperStyle ?? AppTextStyles.smallLabel.copyWith(color: AppColors.ink2),
-    errorStyle: applied.errorStyle ??
+        applied.helperStyle ??
+        AppTextStyles.smallLabel.copyWith(color: AppColors.ink2),
+    errorStyle:
+        applied.errorStyle ??
         AppTextStyles.smallLabel.copyWith(
           color: theme.colorScheme.error,
           height: 1.25,
         ),
-    floatingLabelBehavior: applied.floatingLabelBehavior ?? FloatingLabelBehavior.auto,
+    floatingLabelBehavior:
+        applied.floatingLabelBehavior ?? FloatingLabelBehavior.auto,
   );
 }
 

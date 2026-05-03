@@ -4,7 +4,10 @@ import '../../core/theme/app_text_styles.dart';
 
 /// Popup surface for list-style dropdowns: bordered card, elevation shadow,
 /// app typography (contrasts with flat overflow menus).
-PopupMenuThemeData _raisedDropdownPanelTheme(ThemeData theme, BorderRadius radius) {
+PopupMenuThemeData _raisedDropdownPanelTheme(
+  ThemeData theme,
+  BorderRadius radius,
+) {
   final outline = theme.dividerTheme.color ?? theme.colorScheme.outline;
   final bodyLabel = WidgetStatePropertyAll<TextStyle?>(AppTextStyles.body);
   return theme.popupMenuTheme.copyWith(
@@ -142,13 +145,15 @@ class AppDropdownButton<T> extends StatelessWidget {
     final textStyle = style ?? AppTextStyles.body;
     final effectiveIconColor = enabled
         ? (iconEnabledColor ??
-            theme.colorScheme.onSurface.withValues(alpha: 0.72))
-        : (iconDisabledColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.38));
+              theme.colorScheme.onSurface.withValues(alpha: 0.72))
+        : (iconDisabledColor ??
+              theme.colorScheme.onSurface.withValues(alpha: 0.38));
 
     final suffixIcon =
         icon ?? Icon(Icons.arrow_drop_down_rounded, size: iconSize);
 
-    final triggerPadding = padding ??
+    final triggerPadding =
+        padding ??
         EdgeInsets.symmetric(
           horizontal: isDense ? 4 : 8,
           vertical: isDense ? 2 : 4,

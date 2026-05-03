@@ -207,7 +207,9 @@ class _PoolSegmentEditorSheetState
                     Expanded(
                       child: AppTextFormField(
                         controller: _startCtl,
-                        decoration: InputDecoration(labelText: s.editorStartAyah),
+                        decoration: InputDecoration(
+                          labelText: s.editorStartAyah,
+                        ),
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
@@ -229,8 +231,7 @@ class _PoolSegmentEditorSheetState
                           master,
                           () => _startCtl.text,
                         ),
-                        onChanged: (_) =>
-                            _formKey.currentState?.validate(),
+                        onChanged: (_) => _formKey.currentState?.validate(),
                       ),
                     ),
                   ],

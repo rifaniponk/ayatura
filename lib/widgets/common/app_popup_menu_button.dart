@@ -19,9 +19,9 @@ class AppPopupMenuButton<T> extends StatelessWidget {
     this.child,
     this.icon,
   }) : assert(
-          child == null || icon == null,
-          'Cannot supply both child and icon.',
-        );
+         child == null || icon == null,
+         'Cannot supply both child and icon.',
+       );
 
   final PopupMenuItemBuilder<T> itemBuilder;
   final PopupMenuItemSelected<T>? onSelected;
@@ -45,7 +45,8 @@ class AppPopupMenuButton<T> extends StatelessWidget {
       shadowColor: Colors.transparent,
       elevation: 0,
       color: theme.cardTheme.color,
-      shape: cardShape ??
+      shape:
+          cardShape ??
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
@@ -56,7 +57,8 @@ class AppPopupMenuButton<T> extends StatelessWidget {
       labelTextStyle: bodyLabel,
     );
 
-    final triggerIcon = icon ??
+    final triggerIcon =
+        icon ??
         Icon(
           Icons.more_vert_rounded,
           color: theme.colorScheme.onSurface.withValues(alpha: 0.72),
@@ -94,19 +96,14 @@ class AppPopupMenuItem<T> extends PopupMenuItem<T> {
     super.padding,
     bool destructive = false,
   }) : super(
-          child: Builder(
-            builder: (context) {
-              final base = AppTextStyles.body;
-              final style = destructive
-                  ? base.copyWith(
-                      color: Theme.of(context).colorScheme.error,
-                    )
-                  : base;
-              return DefaultTextStyle.merge(
-                style: style,
-                child: child,
-              );
-            },
-          ),
-        );
+         child: Builder(
+           builder: (context) {
+             final base = AppTextStyles.body;
+             final style = destructive
+                 ? base.copyWith(color: Theme.of(context).colorScheme.error)
+                 : base;
+             return DefaultTextStyle.merge(style: style, child: child);
+           },
+         ),
+       );
 }

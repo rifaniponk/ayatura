@@ -42,10 +42,7 @@ class AppAlertDialog extends StatelessWidget {
                 child: title,
               ),
               const SizedBox(height: 12),
-              DefaultTextStyle.merge(
-                style: AppTextStyles.body,
-                child: content,
-              ),
+              DefaultTextStyle.merge(style: AppTextStyles.body, child: content),
               if (actions.isNotEmpty) ...[
                 const SizedBox(height: 22),
                 Theme(
