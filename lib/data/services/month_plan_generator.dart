@@ -27,10 +27,12 @@ abstract final class MonthPlanGenerator {
 
     if (enabledPool.isEmpty) {
       for (var day = 1; day <= daysInMonth; day++) {
-        days.add(DayPlan(
-          day: day,
-          prayers: {for (final p in Prayer.values) p: PrayerSlot()},
-        ));
+        days.add(
+          DayPlan(
+            day: day,
+            prayers: {for (final p in Prayer.values) p: PrayerSlot()},
+          ),
+        );
       }
       return MonthPlan(month: month, year: year, days: days);
     }
@@ -62,7 +64,7 @@ abstract final class MonthPlanGenerator {
 /// Deals through a shuffled pool and reshuffles on exhaustion.
 class _RoundRobinDeck {
   _RoundRobinDeck({required List<SurahPoolEntry> entries})
-      : _entries = List.from(entries) {
+    : _entries = List.from(entries) {
     _reshuffle();
   }
 

@@ -31,7 +31,10 @@ void main() {
       // Verify the first two full cycles: each set of 4 contains every surahId.
       final poolIds = pool.map((e) => e.surahId).toSet();
       expect(dealt.take(poolIds.length).toSet(), equals(poolIds));
-      expect(dealt.skip(poolIds.length).take(poolIds.length).toSet(), equals(poolIds));
+      expect(
+        dealt.skip(poolIds.length).take(poolIds.length).toSet(),
+        equals(poolIds),
+      );
     });
 
     test('empty pool yields empty slots', () {
