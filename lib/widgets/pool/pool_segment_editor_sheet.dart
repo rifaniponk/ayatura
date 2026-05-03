@@ -229,6 +229,8 @@ class _PoolSegmentEditorSheetState
                           master,
                           () => _startCtl.text,
                         ),
+                        onChanged: (_) =>
+                            _formKey.currentState?.validate(),
                       ),
                     ),
                   ],
