@@ -2,10 +2,10 @@
 
 ## Overview
 
-`MonthPlanGenerator.generate()` builds a `MonthPlan` that assigns hifdh entries (surahs or ayat ranges) to prayer slots across every day of a given month. The algorithm is designed around two goals:
+`MonthPlanGenerator.generate()` builds a `MonthPlan` that assigns hifdh entries (surahs or ayat ranges) to prayer slots across every day of a given month. The algorithm has two goals:
 
-1. **Fair distribution** — every surah in the hifdh list appears roughly the same number of times before any surah repeats.
-2. **Controlled randomness** — plans look varied day-to-day, but the same inputs always produce the same result (except when the user explicitly regenerates).
+1. **Fair distribution** — every surah in the hifdh list is assigned before any surah repeats.
+2. **Variety** — each time the user taps Regenerate, a different plan is produced.
 
 ---
 
@@ -14,47 +14,32 @@
 The core of the algorithm is `_RoundRobinDeck`. Think of it like a physical card deck:
 
 1. Shuffle all enabled hifdh entries.
-2. Deal one card at a time into prayer slots, left to right through the month.
-3. When the deck runs out, reshuffle and start a new cycle.
+2. Deal from the deck into prayer slots, working through the month day by day.
+3. When the deck runs out, reshuffle into a new order and continue.
 
-This guarantees that **every surah is assigned at least once before any surah repeats** — unlike independent random sampling per slot, which can leave some surahs unused for weeks while others cluster.
+This guarantees that **every surah appears at least once before any surah repeats** — unlike picking randomly per slot, which can leave some surahs unused for weeks while others cluster.
 
 ```
 Pool: [A, B, C, D]    maxSurahsPerPrayer = 2
 
 Cycle 1 shuffle: [C, A, D, B]
   Day 1 Fajr   → [C, A]
-  Day 1 Dhuhr  → [D, B]   ← deck exhausted, reshuffle
+  Day 1 Dhuhr  → [D, B]   ← deck exhausted, reshuffle into new order
 
 Cycle 2 shuffle: [B, D, A, C]
   Day 1 Asr    → [B, D]
   ...
 ```
 
-Each prayer slot gets `min(maxSurahsPerPrayerSlot, poolSize)` surahs from the deck.
+Each prayer slot gets `min(maxSurahsPerPrayerSlot, poolSize)` surahs.
 
 ---
 
-## Determinism and Seeds
+## Randomness
 
-The shuffle at each cycle is produced by `_XorShift32`, a fast deterministic PRNG. The seed for cycle `n` is:
+Each time the user taps **Regenerate**, a time-based value is mixed into the seed, producing a completely different shuffle and therefore a different plan. The plan is immediately saved to SQLite, so it persists across app restarts.
 
-```
-seed_n = (baseSeed XOR (n × 0x9e3779b9)) & 0x7FFFFFFF
-```
-
-`baseSeed` itself is derived from the month, year, and an optional salt:
-
-```dart
-baseSeed = (year × 100_000 + month × 1_000 + salt) & 0x7FFFFFFF
-```
-
-| Scenario | Salt | Result |
-|---|---|---|
-| First generation | `0` (default) | Same pool + same month → identical plan every time |
-| User taps Regenerate | `DateTime.now().millisecondsSinceEpoch` | Different plan each tap |
-
-Since plans are persisted to SQLite, strict reproducibility is no longer critical — the database is the source of truth. Determinism on first generation is a convenience: clearing and regenerating without tapping the button gives a consistent starting point.
+The internal shuffle uses `_XorShift32` — a seeded PRNG — so the randomness comes from the seed, not from the system clock mid-generation. This means the generation itself is fast and testable.
 
 ---
 
@@ -66,7 +51,7 @@ Slots marked `PrayerSlot.locked` in an existing plan are **copied verbatim** and
 
 ## Empty Pool Edge Case
 
-If `enabledPool` is empty, `generate()` still produces a full month of days — each slot is simply empty (`PrayerSlot.surahs = []`). This avoids null-checks in the UI and keeps the plan shape consistent.
+If `enabledPool` is empty, `generate()` still produces a full month of days — each slot is simply empty (`PrayerSlot.surahs = []`). This keeps the plan shape consistent and avoids null-checks in the UI.
 
 ---
 
