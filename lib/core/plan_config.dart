@@ -1,13 +1,12 @@
 /// Central numeric limits for prayer–surah planning.
-///
-/// Values are defaults for generation and UI validation. Later this can
-/// read from persisted settings (e.g. Drift `app_settings`) without changing
-/// the shape of [PlanLimits]—call sites would switch from constants to
-/// async lookups when that lands.
 abstract final class PlanLimits {
-  /// Maximum surahs assignable to a single prayer slot (Fajr, Dhuhr, …).
+  /// Hard safety cap on surahs per prayer slot (Fajr, Dhuhr, …).
   ///
-  /// Enforced by [PrayerSlot] construction and serde; adjust UI/generation
-  /// to match if this value changes.
+  /// [PrayerSlot] construction and serde reject more than this many entries.
+  /// It is not the user-facing knob: the **surahs per prayer** preference
+  /// (`surahsPerPrayerProvider`) is the everyday target and must stay
+  /// ≤ this value. Generation uses `min(surahsPerPrayer, maxSurahsPerPrayerSlot,
+  /// poolLength)` so raising the UI maximum above [maxSurahsPerPrayerSlot]
+  /// requires bumping this constant too.
   static const int maxSurahsPerPrayerSlot = 10;
 }

@@ -16,10 +16,14 @@ abstract final class MonthPlanGenerator {
   ///
   /// Slots marked [PrayerSlot.locked] in [existingPlan] for the same
   /// calendar day/prayer are copied verbatim and do not consume deck slots.
+  ///
+  /// [surahsPerPrayer] is clamped to [PlanLimits.maxSurahsPerPrayerSlot] and
+  /// to the enabled pool size for each unlocked slot.
   static MonthPlan generate({
     required int month,
     required int year,
     required List<SurahPoolEntry> enabledPool,
+    required int surahsPerPrayer,
     MonthPlan? existingPlan,
   }) {
     final daysInMonth = DateTime(year, month + 1, 0).day;
@@ -38,6 +42,10 @@ abstract final class MonthPlanGenerator {
     }
 
     final deck = _RoundRobinDeck(entries: enabledPool);
+    final perSlot = min(
+      surahsPerPrayer.clamp(1, PlanLimits.maxSurahsPerPrayerSlot),
+      enabledPool.length,
+    );
 
     for (var day = 1; day <= daysInMonth; day++) {
       final existing = existingPlan?.planForDay(day);
@@ -48,9 +56,11 @@ abstract final class MonthPlanGenerator {
         if (existingSlot != null && existingSlot.locked) {
           prayers[prayer] = existingSlot;
         } else {
-          final n = min(PlanLimits.maxSurahsPerPrayerSlot, enabledPool.length);
           prayers[prayer] = PrayerSlot(
-            surahs: deck.take(n).map(PlanSurah.fromSurahPoolEntry).toList(),
+            surahs: deck
+                .take(perSlot)
+                .map(PlanSurah.fromSurahPoolEntry)
+                .toList(),
           );
         }
       }
