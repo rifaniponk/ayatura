@@ -22,8 +22,13 @@ class MonthScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context)!;
     final now = DateTime.now();
-    final plan = ref.watch(monthPlanProvider);
-    final effective = plan?.effectiveOrNull(now);
+    final planAsync = ref.watch(monthPlanProvider);
+    final plan = planAsync.when(
+      skipLoadingOnReload: true,
+      data: (p) => p,
+      loading: () => planAsync.value,
+      error: (_, _) => planAsync.value,
+    );
 
     final surahsAsync = ref.watch(surahsAsyncProvider);
     final subtitle = surahsAsync.maybeWhen(
@@ -33,46 +38,55 @@ class MonthScreen extends ConsumerWidget {
       orElse: () => _monthYearLabel(context, now),
     );
 
+    final Widget planBody;
+    if (planAsync.hasError && plan == null) {
+      planBody = Center(child: Text(s.errorGeneric('${planAsync.error}')));
+    } else if (planAsync.isLoading && plan == null) {
+      planBody = const Center(child: CircularProgressIndicator());
+    } else {
+      final effective = plan?.effectiveOrNull(now);
+      if (effective == null) {
+        planBody = Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: EmptyState(
+              variant: EmptyStateVariant.noPlan,
+              onAction: () => ref.read(navIndexProvider.notifier).setIndex(0),
+            ),
+          ),
+        );
+      } else {
+        planBody = ListView.builder(
+          padding: const EdgeInsets.fromLTRB(18, 12, 18, 24),
+          itemCount: effective.days.length,
+          itemBuilder: (context, i) {
+            final d = effective.days[i];
+            final slots = d.prayers.values.fold<int>(
+              0,
+              (sum, slot) => sum + slot.surahs.length,
+            );
+            return Card(
+              child: ListTile(
+                title: Text(
+                  s.monthDayTitle(d.day),
+                  style: AppTextStyles.cardLabel,
+                ),
+                subtitle: Text(
+                  s.monthDayReadings(slots),
+                  style: AppTextStyles.meta,
+                ),
+              ),
+            );
+          },
+        );
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         GradientAppBar(title: s.monthScreenTitle, subtitle: subtitle),
-        Expanded(
-          child: effective == null
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: EmptyState(
-                      variant: EmptyStateVariant.noPlan,
-                      onAction: () =>
-                          ref.read(navIndexProvider.notifier).setIndex(0),
-                    ),
-                  ),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(18, 12, 18, 24),
-                  itemCount: effective.days.length,
-                  itemBuilder: (context, i) {
-                    final d = effective.days[i];
-                    final slots = d.prayers.values.fold<int>(
-                      0,
-                      (sum, slot) => sum + slot.surahs.length,
-                    );
-                    return Card(
-                      child: ListTile(
-                        title: Text(
-                          s.monthDayTitle(d.day),
-                          style: AppTextStyles.cardLabel,
-                        ),
-                        subtitle: Text(
-                          s.monthDayReadings(slots),
-                          style: AppTextStyles.meta,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-        ),
+        Expanded(child: planBody),
       ],
     );
   }

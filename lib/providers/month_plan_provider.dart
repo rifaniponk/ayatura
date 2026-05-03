@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/models/plan.dart';
 import '../data/services/month_plan_generator.dart';
+import 'database_provider.dart';
 import 'surah_data_providers.dart';
 
 /// Current calendar day highlighted on Home (1–31).
@@ -16,10 +17,13 @@ final selectedPlanDayProvider = NotifierProvider<SelectedPlanDayNotifier, int>(
   SelectedPlanDayNotifier.new,
 );
 
-/// In-memory month plan for the active session (persist to Drift later).
-class MonthPlanNotifier extends Notifier<MonthPlan?> {
+/// Month plan loaded from Drift on startup and persisted on regenerate.
+class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
   @override
-  MonthPlan? build() => null;
+  Future<MonthPlan?> build() async {
+    final db = ref.read(appDatabaseProvider);
+    return db.loadLatestPlan();
+  }
 
   /// Returns `false` when fewer than two enabled hifdh-list rows exist.
   Future<bool> regenerate() async {
@@ -30,13 +34,17 @@ class MonthPlanNotifier extends Notifier<MonthPlan?> {
     }
 
     final now = DateTime.now();
+    final current = state.value;
     final next = MonthPlanGenerator.generate(
       month: now.month,
       year: now.year,
       enabledPool: enabled,
-      existingPlan: state,
+      existingPlan: current,
     );
-    state = next;
+
+    final db = ref.read(appDatabaseProvider);
+    await db.savePlan(next);
+    state = AsyncData(next);
 
     final dim = DateTime(next.year, next.month + 1, 0).day;
     final day = ref.read(selectedPlanDayProvider);
@@ -46,9 +54,16 @@ class MonthPlanNotifier extends Notifier<MonthPlan?> {
     return true;
   }
 
-  void clear() => state = null;
+  Future<void> clear() async {
+    final db = ref.read(appDatabaseProvider);
+    final plan = state.maybeWhen(data: (p) => p, orElse: () => null);
+    if (plan != null) {
+      await db.deletePlan(plan.year, plan.month);
+    }
+    state = const AsyncData(null);
+  }
 }
 
-final monthPlanProvider = NotifierProvider<MonthPlanNotifier, MonthPlan?>(
+final monthPlanProvider = AsyncNotifierProvider<MonthPlanNotifier, MonthPlan?>(
   MonthPlanNotifier.new,
 );
