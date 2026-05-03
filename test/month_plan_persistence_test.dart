@@ -44,13 +44,45 @@ void main() {
       expect(jsonEncode(loaded!.toJson()), jsonEncode(original.toJson()));
     });
 
-    test('savePlan keeps only the latest row across months', () async {
+    test('savePlan replaces all rows — only the last save survives', () async {
       await db.savePlan(_samplePlan(year: 2026, month: 4));
       await db.savePlan(_samplePlan(year: 2026, month: 6));
       final loaded = await db.loadLatestPlan();
       expect(loaded!.month, 6);
       expect(loaded.year, 2026);
     });
+
+    test(
+      'loadLatestPlan returns most recent by year/month when multiple rows exist',
+      () async {
+        // Insert two rows directly (bypassing savePlan's delete-all) to verify ordering.
+        await db
+            .into(db.monthPlans)
+            .insert(
+              MonthPlansCompanion.insert(
+                year: 2026,
+                month: 3,
+                planJson: jsonEncode(
+                  _samplePlan(year: 2026, month: 3).toJson(),
+                ),
+              ),
+            );
+        await db
+            .into(db.monthPlans)
+            .insert(
+              MonthPlansCompanion.insert(
+                year: 2026,
+                month: 11,
+                planJson: jsonEncode(
+                  _samplePlan(year: 2026, month: 11).toJson(),
+                ),
+              ),
+            );
+        final loaded = await db.loadLatestPlan();
+        expect(loaded!.year, 2026);
+        expect(loaded.month, 11);
+      },
+    );
 
     test('deletePlan removes stored row', () async {
       final plan = _samplePlan(year: 2026, month: 3);

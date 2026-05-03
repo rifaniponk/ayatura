@@ -173,7 +173,11 @@ class AppDatabase extends _$AppDatabase {
     return MonthPlan.fromJson(jsonDecode(row.planJson) as Map<String, dynamic>);
   }
 
-  /// Persists [plan] as the sole stored row (older months are removed).
+  /// Persists [plan] as the sole stored row (all other months are removed).
+  ///
+  /// NOTE: single-plan storage — only one month is kept at a time.
+  /// Issue #31 (multi-month navigation) will require changing this to
+  /// upsert per (year, month) without deleting other rows.
   Future<void> savePlan(MonthPlan plan) async {
     await transaction(() async {
       await delete(monthPlans).go();
