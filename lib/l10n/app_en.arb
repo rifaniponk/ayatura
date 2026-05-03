@@ -75,6 +75,17 @@
   "editorSaveButton": "Save",
   "editorNoSurahsAvailable": "No surahs available.",
 
+  "editorModeNormal": "Normal",
+  "editorModeBulkByJuz": "Bulk by Juz",
+  "editorJuzLabel": "Juz",
+  "editorJuzOption": "Juz {juz}",
+  "@editorJuzOption": { "placeholders": { "juz": {"type": "int"} } },
+  "editorBulkAddButton": "{count, plural, one{Add 1 to hifdh list} other{Add {count} to hifdh list}}",
+  "@editorBulkAddButton": { "placeholders": { "count": {"type": "int"} } },
+  "editorAlreadyAdded": "Already added",
+  "editorSelectAll": "Select all",
+  "editorDeselectAll": "Deselect all",
+
   "emptyNoPlanTitle": "No plan yet",
   "emptyNoPlanSubtitle": "Generate a plan to assign readings across the month.",
   "emptyNoPlanAction": "Generate Plan",
