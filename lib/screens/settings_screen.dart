@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/locale_provider.dart';
+import '../widgets/common/app_dropdown_button.dart';
 import '../widgets/common/gradient_app_bar.dart';
 
 /// Preferences and data actions — placeholders until wired to persistence.
@@ -60,8 +61,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     s.settingsLanguageSubtitle,
                     style: AppTextStyles.meta,
                   ),
-                  trailing: DropdownButton<Locale>(
+                  trailing: AppDropdownButton<Locale>(
                     value: locale,
+                    isDense: true,
                     items: [
                       DropdownMenuItem(
                         value: const Locale('en'),

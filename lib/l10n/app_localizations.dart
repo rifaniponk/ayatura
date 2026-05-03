@@ -214,8 +214,8 @@ abstract class S {
   /// No description provided for @hifdhSubtitleCount.
   ///
   /// In en, this message translates to:
-  /// **'{count} added'**
-  String hifdhSubtitleCount(int count);
+  /// **'{enabled} active of {total} total in hifdh list'**
+  String hifdhSubtitleCount(int enabled, int total);
 
   /// No description provided for @hifdhIntroBanner.
   ///

@@ -10,6 +10,8 @@ import '../../data/models/surah.dart';
 import '../../data/models/surah_pool_entry.dart';
 import '../../validators/pool_segment_form_validators.dart';
 import '../../providers/pool_mutations.dart';
+import '../common/app_dropdown_button.dart';
+import '../common/app_text_form_field.dart';
 import '../common/gradient_button.dart';
 
 Future<void> showPoolSegmentEditor(
@@ -156,12 +158,12 @@ class _PoolSegmentEditorSheetState
                 style: AppTextStyles.sectionHeadingSerif,
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<int>(
+              AppDropdownButtonFormField<int>(
                 key: ValueKey(_surahId),
                 initialValue: _surahId,
-                decoration: InputDecoration(
-                  labelText: s.editorSurahLabel,
-                  border: const OutlineInputBorder(),
+                decoration: mergeAppInputDecoration(
+                  context,
+                  InputDecoration(labelText: s.editorSurahLabel),
                 ),
                 validator: FormBuilderValidators.required<int?>(),
                 items: [
@@ -203,11 +205,10 @@ class _PoolSegmentEditorSheetState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: TextFormField(
+                      child: AppTextFormField(
                         controller: _startCtl,
                         decoration: InputDecoration(
                           labelText: s.editorStartAyah,
-                          border: const OutlineInputBorder(),
                         ),
                         keyboardType: TextInputType.number,
                         inputFormatters: [
@@ -219,12 +220,9 @@ class _PoolSegmentEditorSheetState
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: TextFormField(
+                      child: AppTextFormField(
                         controller: _endCtl,
-                        decoration: InputDecoration(
-                          labelText: s.editorEndAyah,
-                          border: const OutlineInputBorder(),
-                        ),
+                        decoration: InputDecoration(labelText: s.editorEndAyah),
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
@@ -233,6 +231,7 @@ class _PoolSegmentEditorSheetState
                           master,
                           () => _startCtl.text,
                         ),
+                        onChanged: (_) => _formKey.currentState?.validate(),
                       ),
                     ),
                   ],

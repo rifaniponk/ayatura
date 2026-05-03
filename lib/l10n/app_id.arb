@@ -19,7 +19,7 @@
   "monthDayReadings": "{count, plural, other{{count} bacaan direncanakan di berbagai shalat}}",
   "hifdhScreenTitle": "Hafalan",
   "hifdhSubtitleEmpty": "Belum ada yang ditambahkan",
-  "hifdhSubtitleCount": "{count} ditambahkan",
+  "hifdhSubtitleCount": "{enabled} aktif dari total {total} hafalan",
   "hifdhIntroBanner": "Hafalan yang kamu daftarkan di sini akan digunakan saat membuat rencana bulanan.",
   "hifdhFabAdd": "Tambah",
   "hifdhMenuEdit": "Edit",

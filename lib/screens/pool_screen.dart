@@ -7,6 +7,8 @@ import '../core/theme/app_text_styles.dart';
 import '../data/models/surah.dart';
 import '../data/models/surah_pool_entry.dart';
 import '../providers/providers.dart';
+import '../widgets/common/app_alert_dialog.dart';
+import '../widgets/common/app_popup_menu_button.dart';
 import '../widgets/common/app_toggle.dart';
 import '../widgets/common/empty_state.dart';
 import '../widgets/common/gradient_app_bar.dart';
@@ -70,7 +72,10 @@ class _PoolScreenState extends ConsumerState<PoolScreen> {
             subtitle: poolAsync.maybeWhen(
               data: (p) => p.isEmpty
                   ? s.hifdhSubtitleEmpty
-                  : s.hifdhSubtitleCount(p.length),
+                  : s.hifdhSubtitleCount(
+                      p.where((e) => e.enabled).length,
+                      p.length,
+                    ),
               orElse: () => '…',
             ),
           ),
@@ -164,24 +169,24 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
         ? entry.displayLabel(master)
         : 'Surah ${entry.surahId}';
 
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (ctx) {
-        final loc = S.of(ctx)!;
-        return AlertDialog(
-          title: Text(loc.hifdhRemoveDialogTitle),
-          content: Text(loc.hifdhRemoveDialogContent(label)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(loc.dialogCancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(loc.dialogRemove),
-            ),
-          ],
-        );
+    final ok = await showAppAlertDialog<bool>(
+      context,
+      title: Text(S.of(context)!.hifdhRemoveDialogTitle),
+      content: Text(S.of(context)!.hifdhRemoveDialogContent(label)),
+      actions: (dialogContext) {
+        final loc = S.of(dialogContext)!;
+        final scheme = Theme.of(dialogContext).colorScheme;
+        return [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(loc.dialogCancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            style: TextButton.styleFrom(foregroundColor: scheme.error),
+            child: Text(loc.dialogRemove),
+          ),
+        ];
       },
     );
     if (ok != true || !mounted) return;
@@ -336,7 +341,7 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
                     ),
                   ),
                 ),
-                PopupMenuButton<String>(
+                AppPopupMenuButton<String>(
                   enabled: !busy,
                   onSelected: (value) {
                     if (value == 'edit') {
@@ -349,12 +354,13 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
                   itemBuilder: (ctx) {
                     final loc = S.of(ctx)!;
                     return [
-                      PopupMenuItem(
+                      AppPopupMenuItem(
                         value: 'edit',
                         child: Text(loc.hifdhMenuEdit),
                       ),
-                      PopupMenuItem(
+                      AppPopupMenuItem(
                         value: 'delete',
+                        destructive: true,
                         child: Text(loc.hifdhMenuRemove),
                       ),
                     ];
