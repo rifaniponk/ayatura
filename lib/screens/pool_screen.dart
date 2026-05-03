@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/theme/app_colors.dart';
+import '../l10n/app_localizations.dart';
 import '../core/theme/app_text_styles.dart';
 import '../data/models/surah.dart';
 import '../data/models/surah_pool_entry.dart';
@@ -41,6 +42,7 @@ class _PoolScreenState extends ConsumerState<PoolScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     final poolAsync = ref.watch(poolEntriesAsyncProvider);
     final surahsAsync = ref.watch(surahsAsyncProvider);
 
@@ -50,7 +52,7 @@ class _PoolScreenState extends ConsumerState<PoolScreen> {
           : FloatingActionButton.extended(
               onPressed: _openEditor,
               icon: const Icon(Icons.add_rounded),
-              label: const Text('Add'),
+              label: Text(s.hifdhFabAdd),
             ),
       orElse: () => null,
     );
@@ -64,26 +66,26 @@ class _PoolScreenState extends ConsumerState<PoolScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           GradientAppBar(
-            title: 'Hifdh',
+            title: s.hifdhScreenTitle,
             subtitle: poolAsync.maybeWhen(
-              data: (p) =>
-                  p.isEmpty ? 'Nothing listed yet' : '${p.length} added',
+              data: (p) => p.isEmpty
+                  ? s.hifdhSubtitleEmpty
+                  : s.hifdhSubtitleCount(p.length),
               orElse: () => '…',
             ),
           ),
           Expanded(
             child: switch ((poolAsync, surahsAsync)) {
               (AsyncError(:final error), _) || (_, AsyncError(:final error)) =>
-                Center(child: Text('Error: $error')),
+                Center(child: Text(s.errorGeneric('$error'))),
               (AsyncData(value: final pool), AsyncData(value: final surahs)) =>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const DismissibleIntroTip(
+                    DismissibleIntroTip(
                       storageKey: kDismissibleIntroTipHifdhKey,
-                      message:
-                          'Hifdh is Quran memorization. What you list here is used '
-                          'when you build your monthly plan.',
+                      message: s.hifdhIntroBanner,
+                      dismissTooltip: s.dismissTooltip,
                     ),
                     Expanded(
                       child: _PoolBody(
@@ -145,9 +147,11 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
       await setPoolEntryEnabled(ref, entry, enabled);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Failed to save: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(S.of(context)!.hifdhToggleErrorSnackbar('$e')),
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _busyIds.remove(entry.id));
@@ -162,23 +166,23 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
 
     final ok = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Remove from hifdh list?'),
-        content: Text(
-          '$label will be removed from your hifdh list. '
-          'Your current month plan will be cleared until you generate a new one.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Remove'),
-          ),
-        ],
-      ),
+      builder: (ctx) {
+        final loc = S.of(ctx)!;
+        return AlertDialog(
+          title: Text(loc.hifdhRemoveDialogTitle),
+          content: Text(loc.hifdhRemoveDialogContent(label)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(loc.dialogCancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(loc.dialogRemove),
+            ),
+          ],
+        );
+      },
     );
     if (ok != true || !mounted) return;
 
@@ -187,9 +191,11 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
       await deletePoolSegment(ref, entry.id);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Could not remove: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(S.of(context)!.hifdhRemoveErrorSnackbar('$e')),
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _busyIds.remove(entry.id));
@@ -202,7 +208,7 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
     final surahs = widget.surahs;
 
     if (surahs.isEmpty) {
-      return const Center(child: Text('No surahs loaded'));
+      return Center(child: Text(S.of(context)!.noSurahsLoaded));
     }
     if (pool.isEmpty) {
       return Center(
@@ -340,10 +346,19 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
                       _confirmRemove(entry);
                     }
                   },
-                  itemBuilder: (context) => const [
-                    PopupMenuItem(value: 'edit', child: Text('Edit')),
-                    PopupMenuItem(value: 'delete', child: Text('Remove')),
-                  ],
+                  itemBuilder: (ctx) {
+                    final loc = S.of(ctx)!;
+                    return [
+                      PopupMenuItem(
+                        value: 'edit',
+                        child: Text(loc.hifdhMenuEdit),
+                      ),
+                      PopupMenuItem(
+                        value: 'delete',
+                        child: Text(loc.hifdhMenuRemove),
+                      ),
+                    ];
+                  },
                 ),
               ],
             ),

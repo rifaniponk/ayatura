@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../core/theme/app_text_styles.dart';
+import '../l10n/app_localizations.dart';
 import '../providers/providers.dart';
 import '../widgets/common/empty_state.dart';
 import '../widgets/common/gradient_app_bar.dart';
@@ -10,41 +12,31 @@ import '../widgets/common/gradient_app_bar.dart';
 class MonthScreen extends ConsumerWidget {
   const MonthScreen({super.key});
 
-  static String _monthYearLabel(DateTime now) {
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    return '${months[now.month - 1]} ${now.year}';
+  static String _monthYearLabel(BuildContext context, DateTime now) {
+    final locale = Localizations.localeOf(context).languageCode;
+    final monthName = DateFormat('MMMM', locale).format(now);
+    return '$monthName ${now.year}';
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = S.of(context)!;
     final now = DateTime.now();
     final plan = ref.watch(monthPlanProvider);
     final effective = plan?.effectiveOrNull(now);
 
     final surahsAsync = ref.watch(surahsAsyncProvider);
     final subtitle = surahsAsync.maybeWhen(
-      data: (s) =>
-          s.isEmpty ? null : '${_monthYearLabel(now)} · ${s.length} chapters',
-      orElse: () => _monthYearLabel(now),
+      data: (list) => list.isEmpty
+          ? null
+          : s.monthSubtitle(_monthYearLabel(context, now), list.length),
+      orElse: () => _monthYearLabel(context, now),
     );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        GradientAppBar(title: 'Month', subtitle: subtitle),
+        GradientAppBar(title: s.monthScreenTitle, subtitle: subtitle),
         Expanded(
           child: effective == null
               ? Center(
@@ -69,11 +61,11 @@ class MonthScreen extends ConsumerWidget {
                     return Card(
                       child: ListTile(
                         title: Text(
-                          'Day ${d.day}',
+                          s.monthDayTitle(d.day),
                           style: AppTextStyles.cardLabel,
                         ),
                         subtitle: Text(
-                          '$slots planned reading(s) across prayers',
+                          s.monthDayReadings(slots),
                           style: AppTextStyles.meta,
                         ),
                       ),

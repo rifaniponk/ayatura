@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Bottom navigation: Home, Month, Hifdh (memorization list), More (Settings).
 class AppBottomNavBar extends StatelessWidget {
@@ -14,15 +15,16 @@ class AppBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
 
-  static const _items = [
-    _NavItem(icon: Icons.home_rounded, label: 'Home'),
-    _NavItem(icon: Icons.calendar_month_rounded, label: 'Month'),
-    _NavItem(icon: Icons.menu_book_rounded, label: 'Hifdh'),
-    _NavItem(icon: Icons.more_horiz_rounded, label: 'More'),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
+    final items = [
+      _NavItem(icon: Icons.home_rounded, label: s.navHome),
+      _NavItem(icon: Icons.calendar_month_rounded, label: s.navMonth),
+      _NavItem(icon: Icons.menu_book_rounded, label: s.navHifdh),
+      _NavItem(icon: Icons.more_horiz_rounded, label: s.navMore),
+    ];
+
     return Container(
       height: 72,
       decoration: BoxDecoration(
@@ -39,13 +41,13 @@ class AppBottomNavBar extends StatelessWidget {
         ],
       ),
       child: Row(
-        children: List.generate(_items.length, (i) {
+        children: List.generate(items.length, (i) {
           final isActive = i == currentIndex;
           return Expanded(
             child: GestureDetector(
               onTap: () => onTap(i),
               behavior: HitTestBehavior.opaque,
-              child: _NavItemWidget(item: _items[i], isActive: isActive),
+              child: _NavItemWidget(item: items[i], isActive: isActive),
             ),
           );
         }),

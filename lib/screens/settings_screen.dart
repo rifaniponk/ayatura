@@ -1,52 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/theme/app_text_styles.dart';
+import '../l10n/app_localizations.dart';
+import '../providers/locale_provider.dart';
 import '../widgets/common/gradient_app_bar.dart';
 
 /// Preferences and data actions — placeholders until wired to persistence.
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _reminders = false;
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
+    final locale = ref.watch(localeProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const GradientAppBar(title: 'Settings'),
+        GradientAppBar(title: s.settingsTitle),
         Expanded(
           child: ListView(
             padding: const EdgeInsets.all(18),
             children: [
-              Text('Preferences', style: AppTextStyles.sectionHeadingSerif),
+              Text(
+                s.settingsPreferences,
+                style: AppTextStyles.sectionHeadingSerif,
+              ),
               const SizedBox(height: 12),
               Card(
                 child: SwitchListTile(
                   title: Text(
-                    'Prayer reminders',
+                    s.settingsPrayerReminders,
                     style: AppTextStyles.cardLabel,
                   ),
                   subtitle: Text(
-                    'Notify before each prayer',
+                    s.settingsPrayerRemindersSubtitle,
                     style: AppTextStyles.meta,
                   ),
                   value: _reminders,
                   onChanged: (v) => setState(() => _reminders = v),
                 ),
               ),
+              const SizedBox(height: 12),
+              Card(
+                child: ListTile(
+                  title: Text(
+                    s.settingsLanguage,
+                    style: AppTextStyles.cardLabel,
+                  ),
+                  subtitle: Text(
+                    s.settingsLanguageSubtitle,
+                    style: AppTextStyles.meta,
+                  ),
+                  trailing: DropdownButton<Locale>(
+                    value: locale,
+                    items: [
+                      DropdownMenuItem(
+                        value: const Locale('en'),
+                        child: Text(s.langEnglish),
+                      ),
+                      DropdownMenuItem(
+                        value: const Locale('id'),
+                        child: Text(s.langIndonesian),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        ref.read(localeProvider.notifier).setLocale(value);
+                      }
+                    },
+                  ),
+                ),
+              ),
               const SizedBox(height: 28),
-              Text('About', style: AppTextStyles.sectionHeadingSerif),
+              Text(s.settingsAbout, style: AppTextStyles.sectionHeadingSerif),
               const SizedBox(height: 12),
               Text(
-                'Surah Planner spreads what you list for hifdh—full surahs or '
-                'ayat ranges—across prayers through the month. Saving plans '
-                'to your device is coming next.',
+                s.settingsAboutBody,
                 style: AppTextStyles.body.copyWith(
                   color: Theme.of(
                     context,

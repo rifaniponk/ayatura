@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../l10n/app_localizations.dart';
 import '../../core/theme/app_text_styles.dart';
 
 /// Gradient header with optional crescent logo + subtitle.
@@ -46,7 +47,10 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (onBack != null) ...[
-                  _BackButton(onTap: onBack!),
+                  _BackButton(
+                    onTap: onBack!,
+                    tooltip: S.of(context)!.backTooltip,
+                  ),
                   const SizedBox(width: 12),
                 ],
                 if (showLogo && onBack == null) ...[
@@ -101,14 +105,15 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _BackButton extends StatelessWidget {
-  const _BackButton({required this.onTap});
+  const _BackButton({required this.onTap, required this.tooltip});
 
   final VoidCallback onTap;
+  final String tooltip;
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: 'Back',
+      message: tooltip,
       child: GestureDetector(
         onTap: onTap,
         child: Container(
