@@ -8,6 +8,8 @@ void main() {
     name: 'Al-Fatihah',
     arabicName: 'الفاتحة',
     ayatCount: 7,
+    startJuz: 1,
+    endJuz: 1,
   );
 
   group('PoolSegmentFormValidators', () {

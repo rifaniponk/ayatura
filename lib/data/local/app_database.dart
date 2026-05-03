@@ -16,6 +16,10 @@ class Surahs extends Table {
 
   IntColumn get ayatCount => integer()();
 
+  IntColumn get startJuz => integer().withDefault(const Constant(1))();
+
+  IntColumn get endJuz => integer().withDefault(const Constant(1))();
+
   @override
   Set<Column<Object>>? get primaryKey => {id};
 }
@@ -38,10 +42,10 @@ class SurahPoolEntries extends Table {
 @DriftDatabase(tables: [Surahs, SurahPoolEntries])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
-    : super(executor ?? driftDatabase(name: 'surah_planner.sqlite'));
+    : super(executor ?? driftDatabase(name: 'surah_planner'));
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -52,23 +56,39 @@ class AppDatabase extends _$AppDatabase {
       if (from < 2) {
         await m.createTable(surahPoolEntries);
       }
+      if (from < 3) {
+        await m.addColumn(surahs, surahs.startJuz);
+        await m.addColumn(surahs, surahs.endJuz);
+      }
     },
   );
 
   Future<int> surahRowCount() => surahs.count().getSingle();
 
-  /// Inserts master surahs only when the table is empty (typical first launch).
+  /// Seeds master surahs when the table is empty, then refreshes juz metadata
+  /// from [list] for all rows (covers upgrades that added `start_juz` / `end_juz`).
   ///
-  /// Runs the empty-check and inserts in one transaction so a restart never
-  /// re-applies seed after data exists, and concurrent callers cannot double-seed.
-  /// Does not touch [surahPoolEntries].
+  /// Runs in one transaction; does not touch [surahPoolEntries].
   Future<void> seedMasterSurahsIfEmpty(List<Surah> list) async {
     if (list.isEmpty) return;
     await transaction(() async {
       final n = await surahs.count().getSingle();
-      if (n > 0) return;
+      if (n == 0) {
+        await batch((b) {
+          b.insertAll(surahs, list.map(_surahToCompanion).toList());
+        });
+      }
       await batch((b) {
-        b.insertAll(surahs, list.map(_surahToCompanion).toList());
+        for (final s in list) {
+          b.update(
+            surahs,
+            SurahsCompanion(
+              startJuz: Value(s.startJuz),
+              endJuz: Value(s.endJuz),
+            ),
+            where: (t) => t.id.equals(s.id),
+          );
+        }
       });
     });
   }
@@ -120,6 +140,8 @@ Surah _rowToSurah(SurahRow r) => Surah(
   name: r.name,
   arabicName: r.arabicName,
   ayatCount: r.ayatCount,
+  startJuz: r.startJuz,
+  endJuz: r.endJuz,
 );
 
 SurahsCompanion _surahToCompanion(Surah s) => SurahsCompanion.insert(
@@ -127,6 +149,8 @@ SurahsCompanion _surahToCompanion(Surah s) => SurahsCompanion.insert(
   name: s.name,
   arabicName: s.arabicName,
   ayatCount: s.ayatCount,
+  startJuz: Value(s.startJuz),
+  endJuz: Value(s.endJuz),
 );
 
 SurahPoolEntry _poolRowToEntry(SurahPoolEntryRow r) => SurahPoolEntry(
