@@ -12,6 +12,9 @@ class Surahs extends Table {
 
   TextColumn get name => text()();
 
+  TextColumn get nameId =>
+      text().withDefault(const Constant(''))();
+
   TextColumn get arabicName => text()();
 
   IntColumn get ayatCount => integer()();
@@ -45,7 +48,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'surah_planner'));
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -60,13 +63,17 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(surahs, surahs.startJuz);
         await m.addColumn(surahs, surahs.endJuz);
       }
+      if (from < 4) {
+        await m.addColumn(surahs, surahs.nameId);
+      }
     },
   );
 
   Future<int> surahRowCount() => surahs.count().getSingle();
 
-  /// Seeds master surahs when the table is empty, then refreshes juz metadata
-  /// from [list] for all rows (covers upgrades that added `start_juz` / `end_juz`).
+  /// Inserts bundled master surahs when the table is empty, then refreshes
+  /// `start_juz`, `end_juz`, and `name_id` from [list] for every row (covers app
+  /// upgrades that add columns).
   ///
   /// Runs in one transaction; does not touch [surahPoolEntries].
   Future<void> seedMasterSurahsIfEmpty(List<Surah> list) async {
@@ -85,6 +92,7 @@ class AppDatabase extends _$AppDatabase {
             SurahsCompanion(
               startJuz: Value(s.startJuz),
               endJuz: Value(s.endJuz),
+              nameId: Value(s.nameId),
             ),
             where: (t) => t.id.equals(s.id),
           );
@@ -138,6 +146,7 @@ class AppDatabase extends _$AppDatabase {
 Surah _rowToSurah(SurahRow r) => Surah(
   id: r.id,
   name: r.name,
+  nameId: r.nameId.isEmpty ? r.name : r.nameId,
   arabicName: r.arabicName,
   ayatCount: r.ayatCount,
   startJuz: r.startJuz,
@@ -147,6 +156,7 @@ Surah _rowToSurah(SurahRow r) => Surah(
 SurahsCompanion _surahToCompanion(Surah s) => SurahsCompanion.insert(
   id: Value(s.id),
   name: s.name,
+  nameId: Value(s.nameId),
   arabicName: s.arabicName,
   ayatCount: s.ayatCount,
   startJuz: Value(s.startJuz),

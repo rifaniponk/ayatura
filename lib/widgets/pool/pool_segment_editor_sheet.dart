@@ -167,11 +167,11 @@ class _PoolSegmentEditorSheetState
                 ),
                 validator: FormBuilderValidators.required<int?>(),
                 items: [
-                  for (final s in surahs)
+                  for (final surah in surahs)
                     DropdownMenuItem(
-                      value: s.id,
+                      value: surah.id,
                       child: Text(
-                        '${s.id}. ${s.name}',
+                        '${surah.id}. ${surah.localizedName(Localizations.localeOf(context).languageCode)}',
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

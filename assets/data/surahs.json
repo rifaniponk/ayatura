@@ -3,7 +3,9 @@
     "source": "https://api.quran.com/api/v4/chapters?language=en",
     "generatedAt": "2026-05-02T07:41:37Z",
     "juzSource": "https://api.quran.com/api/v4/verses/by_key/{chapter}:{verse} (juz_number; Hafs mushaf division)",
-    "juzGeneratedAt": "2026-05-03T00:00:00Z"
+    "juzGeneratedAt": "2026-05-03T00:00:00Z",
+    "nameIdNote": "Indonesian romanization aligned with Quran cetakan Kemenag RI; quran.com /api/v4/chapters name_simple is identical for language=en vs language=id, so nameId is curated from that baseline plus Kemenag conventions.",
+    "nameIdGeneratedAt": "2026-05-03T00:00:00Z"
   },
   "surahs": [
     {
@@ -12,7 +14,8 @@
       "arabicName": "الفاتحة",
       "ayatCount": 7,
       "startJuz": 1,
-      "endJuz": 1
+      "endJuz": 1,
+      "nameId": "Al-Fatihah"
     },
     {
       "id": 2,
@@ -20,7 +23,8 @@
       "arabicName": "البقرة",
       "ayatCount": 286,
       "startJuz": 1,
-      "endJuz": 3
+      "endJuz": 3,
+      "nameId": "Al-Baqarah"
     },
     {
       "id": 3,
@@ -28,7 +32,8 @@
       "arabicName": "آل عمران",
       "ayatCount": 200,
       "startJuz": 3,
-      "endJuz": 4
+      "endJuz": 4,
+      "nameId": "Ali Imran"
     },
     {
       "id": 4,
@@ -36,7 +41,8 @@
       "arabicName": "النساء",
       "ayatCount": 176,
       "startJuz": 4,
-      "endJuz": 6
+      "endJuz": 6,
+      "nameId": "An-Nisa'"
     },
     {
       "id": 5,
@@ -44,7 +50,8 @@
       "arabicName": "المائدة",
       "ayatCount": 120,
       "startJuz": 6,
-      "endJuz": 7
+      "endJuz": 7,
+      "nameId": "Al-Ma'idah"
     },
     {
       "id": 6,
@@ -52,7 +59,8 @@
       "arabicName": "الأنعام",
       "ayatCount": 165,
       "startJuz": 7,
-      "endJuz": 8
+      "endJuz": 8,
+      "nameId": "Al-An'am"
     },
     {
       "id": 7,
@@ -60,7 +68,8 @@
       "arabicName": "الأعراف",
       "ayatCount": 206,
       "startJuz": 8,
-      "endJuz": 9
+      "endJuz": 9,
+      "nameId": "Al-A'raf"
     },
     {
       "id": 8,
@@ -68,7 +77,8 @@
       "arabicName": "الأنفال",
       "ayatCount": 75,
       "startJuz": 9,
-      "endJuz": 10
+      "endJuz": 10,
+      "nameId": "Al-Anfal"
     },
     {
       "id": 9,
@@ -76,7 +86,8 @@
       "arabicName": "التوبة",
       "ayatCount": 129,
       "startJuz": 10,
-      "endJuz": 11
+      "endJuz": 11,
+      "nameId": "At-Taubah"
     },
     {
       "id": 10,
@@ -84,7 +95,8 @@
       "arabicName": "يونس",
       "ayatCount": 109,
       "startJuz": 11,
-      "endJuz": 11
+      "endJuz": 11,
+      "nameId": "Yunus"
     },
     {
       "id": 11,
@@ -92,7 +104,8 @@
       "arabicName": "هود",
       "ayatCount": 123,
       "startJuz": 11,
-      "endJuz": 12
+      "endJuz": 12,
+      "nameId": "Hud"
     },
     {
       "id": 12,
@@ -100,7 +113,8 @@
       "arabicName": "يوسف",
       "ayatCount": 111,
       "startJuz": 12,
-      "endJuz": 13
+      "endJuz": 13,
+      "nameId": "Yusuf"
     },
     {
       "id": 13,
@@ -108,7 +122,8 @@
       "arabicName": "الرعد",
       "ayatCount": 43,
       "startJuz": 13,
-      "endJuz": 13
+      "endJuz": 13,
+      "nameId": "Ar-Ra'd"
     },
     {
       "id": 14,
@@ -116,7 +131,8 @@
       "arabicName": "ابراهيم",
       "ayatCount": 52,
       "startJuz": 13,
-      "endJuz": 13
+      "endJuz": 13,
+      "nameId": "Ibrahim"
     },
     {
       "id": 15,
@@ -124,7 +140,8 @@
       "arabicName": "الحجر",
       "ayatCount": 99,
       "startJuz": 14,
-      "endJuz": 14
+      "endJuz": 14,
+      "nameId": "Al-Hijr"
     },
     {
       "id": 16,
@@ -132,7 +149,8 @@
       "arabicName": "النحل",
       "ayatCount": 128,
       "startJuz": 14,
-      "endJuz": 14
+      "endJuz": 14,
+      "nameId": "An-Nahl"
     },
     {
       "id": 17,
@@ -140,7 +158,8 @@
       "arabicName": "الإسراء",
       "ayatCount": 111,
       "startJuz": 15,
-      "endJuz": 15
+      "endJuz": 15,
+      "nameId": "Al-Isra'"
     },
     {
       "id": 18,
@@ -148,7 +167,8 @@
       "arabicName": "الكهف",
       "ayatCount": 110,
       "startJuz": 15,
-      "endJuz": 16
+      "endJuz": 16,
+      "nameId": "Al-Kahfi"
     },
     {
       "id": 19,
@@ -156,7 +176,8 @@
       "arabicName": "مريم",
       "ayatCount": 98,
       "startJuz": 16,
-      "endJuz": 16
+      "endJuz": 16,
+      "nameId": "Maryam"
     },
     {
       "id": 20,
@@ -164,7 +185,8 @@
       "arabicName": "طه",
       "ayatCount": 135,
       "startJuz": 16,
-      "endJuz": 16
+      "endJuz": 16,
+      "nameId": "Taha"
     },
     {
       "id": 21,
@@ -172,7 +194,8 @@
       "arabicName": "الأنبياء",
       "ayatCount": 112,
       "startJuz": 17,
-      "endJuz": 17
+      "endJuz": 17,
+      "nameId": "Al-Anbiya'"
     },
     {
       "id": 22,
@@ -180,7 +203,8 @@
       "arabicName": "الحج",
       "ayatCount": 78,
       "startJuz": 17,
-      "endJuz": 17
+      "endJuz": 17,
+      "nameId": "Al-Hajj"
     },
     {
       "id": 23,
@@ -188,7 +212,8 @@
       "arabicName": "المؤمنون",
       "ayatCount": 118,
       "startJuz": 18,
-      "endJuz": 18
+      "endJuz": 18,
+      "nameId": "Al-Mu'minun"
     },
     {
       "id": 24,
@@ -196,7 +221,8 @@
       "arabicName": "النور",
       "ayatCount": 64,
       "startJuz": 18,
-      "endJuz": 18
+      "endJuz": 18,
+      "nameId": "An-Nur"
     },
     {
       "id": 25,
@@ -204,7 +230,8 @@
       "arabicName": "الفرقان",
       "ayatCount": 77,
       "startJuz": 18,
-      "endJuz": 19
+      "endJuz": 19,
+      "nameId": "Al-Furqan"
     },
     {
       "id": 26,
@@ -212,7 +239,8 @@
       "arabicName": "الشعراء",
       "ayatCount": 227,
       "startJuz": 19,
-      "endJuz": 19
+      "endJuz": 19,
+      "nameId": "Asy-Syu'ara"
     },
     {
       "id": 27,
@@ -220,7 +248,8 @@
       "arabicName": "النمل",
       "ayatCount": 93,
       "startJuz": 19,
-      "endJuz": 20
+      "endJuz": 20,
+      "nameId": "An-Naml"
     },
     {
       "id": 28,
@@ -228,7 +257,8 @@
       "arabicName": "القصص",
       "ayatCount": 88,
       "startJuz": 20,
-      "endJuz": 20
+      "endJuz": 20,
+      "nameId": "Al-Qasas"
     },
     {
       "id": 29,
@@ -236,7 +266,8 @@
       "arabicName": "العنكبوت",
       "ayatCount": 69,
       "startJuz": 20,
-      "endJuz": 21
+      "endJuz": 21,
+      "nameId": "Al-'Ankabut"
     },
     {
       "id": 30,
@@ -244,7 +275,8 @@
       "arabicName": "الروم",
       "ayatCount": 60,
       "startJuz": 21,
-      "endJuz": 21
+      "endJuz": 21,
+      "nameId": "Ar-Rum"
     },
     {
       "id": 31,
@@ -252,7 +284,8 @@
       "arabicName": "لقمان",
       "ayatCount": 34,
       "startJuz": 21,
-      "endJuz": 21
+      "endJuz": 21,
+      "nameId": "Luqman"
     },
     {
       "id": 32,
@@ -260,7 +293,8 @@
       "arabicName": "السجدة",
       "ayatCount": 30,
       "startJuz": 21,
-      "endJuz": 21
+      "endJuz": 21,
+      "nameId": "As-Sajdah"
     },
     {
       "id": 33,
@@ -268,7 +302,8 @@
       "arabicName": "الأحزاب",
       "ayatCount": 73,
       "startJuz": 21,
-      "endJuz": 22
+      "endJuz": 22,
+      "nameId": "Al-Ahzab"
     },
     {
       "id": 34,
@@ -276,7 +311,8 @@
       "arabicName": "سبإ",
       "ayatCount": 54,
       "startJuz": 22,
-      "endJuz": 22
+      "endJuz": 22,
+      "nameId": "Saba'"
     },
     {
       "id": 35,
@@ -284,7 +320,8 @@
       "arabicName": "فاطر",
       "ayatCount": 45,
       "startJuz": 22,
-      "endJuz": 22
+      "endJuz": 22,
+      "nameId": "Fatir"
     },
     {
       "id": 36,
@@ -292,7 +329,8 @@
       "arabicName": "يس",
       "ayatCount": 83,
       "startJuz": 22,
-      "endJuz": 23
+      "endJuz": 23,
+      "nameId": "Yasin"
     },
     {
       "id": 37,
@@ -300,7 +338,8 @@
       "arabicName": "الصافات",
       "ayatCount": 182,
       "startJuz": 23,
-      "endJuz": 23
+      "endJuz": 23,
+      "nameId": "As-Saffat"
     },
     {
       "id": 38,
@@ -308,7 +347,8 @@
       "arabicName": "ص",
       "ayatCount": 88,
       "startJuz": 23,
-      "endJuz": 23
+      "endJuz": 23,
+      "nameId": "Sad"
     },
     {
       "id": 39,
@@ -316,7 +356,8 @@
       "arabicName": "الزمر",
       "ayatCount": 75,
       "startJuz": 23,
-      "endJuz": 24
+      "endJuz": 24,
+      "nameId": "Az-Zumar"
     },
     {
       "id": 40,
@@ -324,7 +365,8 @@
       "arabicName": "غافر",
       "ayatCount": 85,
       "startJuz": 24,
-      "endJuz": 24
+      "endJuz": 24,
+      "nameId": "Ghafir"
     },
     {
       "id": 41,
@@ -332,7 +374,8 @@
       "arabicName": "فصلت",
       "ayatCount": 54,
       "startJuz": 24,
-      "endJuz": 25
+      "endJuz": 25,
+      "nameId": "Fussilat"
     },
     {
       "id": 42,
@@ -340,7 +383,8 @@
       "arabicName": "الشورى",
       "ayatCount": 53,
       "startJuz": 25,
-      "endJuz": 25
+      "endJuz": 25,
+      "nameId": "Asy-Syura"
     },
     {
       "id": 43,
@@ -348,7 +392,8 @@
       "arabicName": "الزخرف",
       "ayatCount": 89,
       "startJuz": 25,
-      "endJuz": 25
+      "endJuz": 25,
+      "nameId": "Az-Zukhruf"
     },
     {
       "id": 44,
@@ -356,7 +401,8 @@
       "arabicName": "الدخان",
       "ayatCount": 59,
       "startJuz": 25,
-      "endJuz": 25
+      "endJuz": 25,
+      "nameId": "Ad-Dukhan"
     },
     {
       "id": 45,
@@ -364,7 +410,8 @@
       "arabicName": "الجاثية",
       "ayatCount": 37,
       "startJuz": 25,
-      "endJuz": 25
+      "endJuz": 25,
+      "nameId": "Al-Jathiyah"
     },
     {
       "id": 46,
@@ -372,7 +419,8 @@
       "arabicName": "الأحقاف",
       "ayatCount": 35,
       "startJuz": 26,
-      "endJuz": 26
+      "endJuz": 26,
+      "nameId": "Al-Ahqaf"
     },
     {
       "id": 47,
@@ -380,7 +428,8 @@
       "arabicName": "محمد",
       "ayatCount": 38,
       "startJuz": 26,
-      "endJuz": 26
+      "endJuz": 26,
+      "nameId": "Muhammad"
     },
     {
       "id": 48,
@@ -388,7 +437,8 @@
       "arabicName": "الفتح",
       "ayatCount": 29,
       "startJuz": 26,
-      "endJuz": 26
+      "endJuz": 26,
+      "nameId": "Al-Fath"
     },
     {
       "id": 49,
@@ -396,7 +446,8 @@
       "arabicName": "الحجرات",
       "ayatCount": 18,
       "startJuz": 26,
-      "endJuz": 26
+      "endJuz": 26,
+      "nameId": "Al-Hujurat"
     },
     {
       "id": 50,
@@ -404,7 +455,8 @@
       "arabicName": "ق",
       "ayatCount": 45,
       "startJuz": 26,
-      "endJuz": 26
+      "endJuz": 26,
+      "nameId": "Qaf"
     },
     {
       "id": 51,
@@ -412,7 +464,8 @@
       "arabicName": "الذاريات",
       "ayatCount": 60,
       "startJuz": 26,
-      "endJuz": 27
+      "endJuz": 27,
+      "nameId": "Adz-Dzariyat"
     },
     {
       "id": 52,
@@ -420,7 +473,8 @@
       "arabicName": "الطور",
       "ayatCount": 49,
       "startJuz": 27,
-      "endJuz": 27
+      "endJuz": 27,
+      "nameId": "At-Tur"
     },
     {
       "id": 53,
@@ -428,7 +482,8 @@
       "arabicName": "النجم",
       "ayatCount": 62,
       "startJuz": 27,
-      "endJuz": 27
+      "endJuz": 27,
+      "nameId": "An-Najm"
     },
     {
       "id": 54,
@@ -436,7 +491,8 @@
       "arabicName": "القمر",
       "ayatCount": 55,
       "startJuz": 27,
-      "endJuz": 27
+      "endJuz": 27,
+      "nameId": "Al-Qamar"
     },
     {
       "id": 55,
@@ -444,7 +500,8 @@
       "arabicName": "الرحمن",
       "ayatCount": 78,
       "startJuz": 27,
-      "endJuz": 27
+      "endJuz": 27,
+      "nameId": "Ar-Rahman"
     },
     {
       "id": 56,
@@ -452,7 +509,8 @@
       "arabicName": "الواقعة",
       "ayatCount": 96,
       "startJuz": 27,
-      "endJuz": 27
+      "endJuz": 27,
+      "nameId": "Al-Waqi'ah"
     },
     {
       "id": 57,
@@ -460,7 +518,8 @@
       "arabicName": "الحديد",
       "ayatCount": 29,
       "startJuz": 27,
-      "endJuz": 27
+      "endJuz": 27,
+      "nameId": "Al-Hadid"
     },
     {
       "id": 58,
@@ -468,7 +527,8 @@
       "arabicName": "المجادلة",
       "ayatCount": 22,
       "startJuz": 28,
-      "endJuz": 28
+      "endJuz": 28,
+      "nameId": "Al-Mujadilah"
     },
     {
       "id": 59,
@@ -476,7 +536,8 @@
       "arabicName": "الحشر",
       "ayatCount": 24,
       "startJuz": 28,
-      "endJuz": 28
+      "endJuz": 28,
+      "nameId": "Al-Hashr"
     },
     {
       "id": 60,
@@ -484,7 +545,8 @@
       "arabicName": "الممتحنة",
       "ayatCount": 13,
       "startJuz": 28,
-      "endJuz": 28
+      "endJuz": 28,
+      "nameId": "Al-Mumtahanah"
     },
     {
       "id": 61,
@@ -492,7 +554,8 @@
       "arabicName": "الصف",
       "ayatCount": 14,
       "startJuz": 28,
-      "endJuz": 28
+      "endJuz": 28,
+      "nameId": "As-Saf"
     },
     {
       "id": 62,
@@ -500,7 +563,8 @@
       "arabicName": "الجمعة",
       "ayatCount": 11,
       "startJuz": 28,
-      "endJuz": 28
+      "endJuz": 28,
+      "nameId": "Al-Jumu'ah"
     },
     {
       "id": 63,
@@ -508,7 +572,8 @@
       "arabicName": "المنافقون",
       "ayatCount": 11,
       "startJuz": 28,
-      "endJuz": 28
+      "endJuz": 28,
+      "nameId": "Al-Munafiqun"
     },
     {
       "id": 64,
@@ -516,7 +581,8 @@
       "arabicName": "التغابن",
       "ayatCount": 18,
       "startJuz": 28,
-      "endJuz": 28
+      "endJuz": 28,
+      "nameId": "At-Tagabun"
     },
     {
       "id": 65,
@@ -524,7 +590,8 @@
       "arabicName": "الطلاق",
       "ayatCount": 12,
       "startJuz": 28,
-      "endJuz": 28
+      "endJuz": 28,
+      "nameId": "At-Talaq"
     },
     {
       "id": 66,
@@ -532,7 +599,8 @@
       "arabicName": "التحريم",
       "ayatCount": 12,
       "startJuz": 28,
-      "endJuz": 28
+      "endJuz": 28,
+      "nameId": "At-Tahrim"
     },
     {
       "id": 67,
@@ -540,7 +608,8 @@
       "arabicName": "الملك",
       "ayatCount": 30,
       "startJuz": 29,
-      "endJuz": 29
+      "endJuz": 29,
+      "nameId": "Al-Mulk"
     },
     {
       "id": 68,
@@ -548,7 +617,8 @@
       "arabicName": "القلم",
       "ayatCount": 52,
       "startJuz": 29,
-      "endJuz": 29
+      "endJuz": 29,
+      "nameId": "Al-Qalam"
     },
     {
       "id": 69,
@@ -556,7 +626,8 @@
       "arabicName": "الحاقة",
       "ayatCount": 52,
       "startJuz": 29,
-      "endJuz": 29
+      "endJuz": 29,
+      "nameId": "Al-Haqqah"
     },
     {
       "id": 70,
@@ -564,7 +635,8 @@
       "arabicName": "المعارج",
       "ayatCount": 44,
       "startJuz": 29,
-      "endJuz": 29
+      "endJuz": 29,
+      "nameId": "Al-Ma'arij"
     },
     {
       "id": 71,
@@ -572,7 +644,8 @@
       "arabicName": "نوح",
       "ayatCount": 28,
       "startJuz": 29,
-      "endJuz": 29
+      "endJuz": 29,
+      "nameId": "Nuh"
     },
     {
       "id": 72,
@@ -580,7 +653,8 @@
       "arabicName": "الجن",
       "ayatCount": 28,
       "startJuz": 29,
-      "endJuz": 29
+      "endJuz": 29,
+      "nameId": "Al-Jinn"
     },
     {
       "id": 73,
@@ -588,7 +662,8 @@
       "arabicName": "المزمل",
       "ayatCount": 20,
       "startJuz": 29,
-      "endJuz": 29
+      "endJuz": 29,
+      "nameId": "Al-Muzzammil"
     },
     {
       "id": 74,
@@ -596,7 +671,8 @@
       "arabicName": "المدثر",
       "ayatCount": 56,
       "startJuz": 29,
-      "endJuz": 29
+      "endJuz": 29,
+      "nameId": "Al-Muddaththir"
     },
     {
       "id": 75,
@@ -604,7 +680,8 @@
       "arabicName": "القيامة",
       "ayatCount": 40,
       "startJuz": 29,
-      "endJuz": 29
+      "endJuz": 29,
+      "nameId": "Al-Qiyamah"
     },
     {
       "id": 76,
@@ -612,7 +689,8 @@
       "arabicName": "الانسان",
       "ayatCount": 31,
       "startJuz": 29,
-      "endJuz": 29
+      "endJuz": 29,
+      "nameId": "Al-Insan"
     },
     {
       "id": 77,
@@ -620,7 +698,8 @@
       "arabicName": "المرسلات",
       "ayatCount": 50,
       "startJuz": 29,
-      "endJuz": 29
+      "endJuz": 29,
+      "nameId": "Al-Mursalat"
     },
     {
       "id": 78,
@@ -628,7 +707,8 @@
       "arabicName": "النبإ",
       "ayatCount": 40,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "An-Naba"
     },
     {
       "id": 79,
@@ -636,7 +716,8 @@
       "arabicName": "النازعات",
       "ayatCount": 46,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "An-Nazi'at"
     },
     {
       "id": 80,
@@ -644,7 +725,8 @@
       "arabicName": "عبس",
       "ayatCount": 42,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "'Abasa"
     },
     {
       "id": 81,
@@ -652,7 +734,8 @@
       "arabicName": "التكوير",
       "ayatCount": 29,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "At-Takwir"
     },
     {
       "id": 82,
@@ -660,7 +743,8 @@
       "arabicName": "الإنفطار",
       "ayatCount": 19,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Infitar"
     },
     {
       "id": 83,
@@ -668,7 +752,8 @@
       "arabicName": "المطففين",
       "ayatCount": 36,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Mutaffifin"
     },
     {
       "id": 84,
@@ -676,7 +761,8 @@
       "arabicName": "الإنشقاق",
       "ayatCount": 25,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Inshiqaq"
     },
     {
       "id": 85,
@@ -684,7 +770,8 @@
       "arabicName": "البروج",
       "ayatCount": 22,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Buruj"
     },
     {
       "id": 86,
@@ -692,7 +779,8 @@
       "arabicName": "الطارق",
       "ayatCount": 17,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "At-Tariq"
     },
     {
       "id": 87,
@@ -700,7 +788,8 @@
       "arabicName": "الأعلى",
       "ayatCount": 19,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-A'la"
     },
     {
       "id": 88,
@@ -708,7 +797,8 @@
       "arabicName": "الغاشية",
       "ayatCount": 26,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Ghashiyah"
     },
     {
       "id": 89,
@@ -716,7 +806,8 @@
       "arabicName": "الفجر",
       "ayatCount": 30,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Fajr"
     },
     {
       "id": 90,
@@ -724,7 +815,8 @@
       "arabicName": "البلد",
       "ayatCount": 20,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Balad"
     },
     {
       "id": 91,
@@ -732,7 +824,8 @@
       "arabicName": "الشمس",
       "ayatCount": 15,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Asy-Syams"
     },
     {
       "id": 92,
@@ -740,7 +833,8 @@
       "arabicName": "الليل",
       "ayatCount": 21,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Lail"
     },
     {
       "id": 93,
@@ -748,7 +842,8 @@
       "arabicName": "الضحى",
       "ayatCount": 11,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Ad-Duhaa"
     },
     {
       "id": 94,
@@ -756,7 +851,8 @@
       "arabicName": "الشرح",
       "ayatCount": 8,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Asy-Syarh"
     },
     {
       "id": 95,
@@ -764,7 +860,8 @@
       "arabicName": "التين",
       "ayatCount": 8,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "At-Tin"
     },
     {
       "id": 96,
@@ -772,7 +869,8 @@
       "arabicName": "العلق",
       "ayatCount": 19,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-'Alaq"
     },
     {
       "id": 97,
@@ -780,7 +878,8 @@
       "arabicName": "القدر",
       "ayatCount": 5,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Qadr"
     },
     {
       "id": 98,
@@ -788,7 +887,8 @@
       "arabicName": "البينة",
       "ayatCount": 8,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Bayyinah"
     },
     {
       "id": 99,
@@ -796,7 +896,8 @@
       "arabicName": "الزلزلة",
       "ayatCount": 8,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Az-Zalzalah"
     },
     {
       "id": 100,
@@ -804,7 +905,8 @@
       "arabicName": "العاديات",
       "ayatCount": 11,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-'Adiyat"
     },
     {
       "id": 101,
@@ -812,7 +914,8 @@
       "arabicName": "القارعة",
       "ayatCount": 11,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Qari'ah"
     },
     {
       "id": 102,
@@ -820,7 +923,8 @@
       "arabicName": "التكاثر",
       "ayatCount": 8,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "At-Takasur"
     },
     {
       "id": 103,
@@ -828,7 +932,8 @@
       "arabicName": "العصر",
       "ayatCount": 3,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-'Asr"
     },
     {
       "id": 104,
@@ -836,7 +941,8 @@
       "arabicName": "الهمزة",
       "ayatCount": 9,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Humazah"
     },
     {
       "id": 105,
@@ -844,7 +950,8 @@
       "arabicName": "الفيل",
       "ayatCount": 5,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Fil"
     },
     {
       "id": 106,
@@ -852,7 +959,8 @@
       "arabicName": "قريش",
       "ayatCount": 4,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Quraisy"
     },
     {
       "id": 107,
@@ -860,7 +968,8 @@
       "arabicName": "الماعون",
       "ayatCount": 7,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Ma'un"
     },
     {
       "id": 108,
@@ -868,7 +977,8 @@
       "arabicName": "الكوثر",
       "ayatCount": 3,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Kausar"
     },
     {
       "id": 109,
@@ -876,7 +986,8 @@
       "arabicName": "الكافرون",
       "ayatCount": 6,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Kafirun"
     },
     {
       "id": 110,
@@ -884,7 +995,8 @@
       "arabicName": "النصر",
       "ayatCount": 3,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "An-Nasr"
     },
     {
       "id": 111,
@@ -892,7 +1004,8 @@
       "arabicName": "المسد",
       "ayatCount": 5,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Masad"
     },
     {
       "id": 112,
@@ -900,7 +1013,8 @@
       "arabicName": "الإخلاص",
       "ayatCount": 4,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Ikhlas"
     },
     {
       "id": 113,
@@ -908,7 +1022,8 @@
       "arabicName": "الفلق",
       "ayatCount": 5,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "Al-Falaq"
     },
     {
       "id": 114,
@@ -916,7 +1031,8 @@
       "arabicName": "الناس",
       "ayatCount": 6,
       "startJuz": 30,
-      "endJuz": 30
+      "endJuz": 30,
+      "nameId": "An-Nas"
     }
   ]
 }
