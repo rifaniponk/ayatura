@@ -8,6 +8,7 @@ import '../../data/models/plan_surah.dart';
 import '../../data/models/prayer.dart';
 import '../../data/models/surah.dart';
 import '../../data/services/quran_verse_service.dart';
+import '../../l10n/app_localizations.dart';
 import '../../providers/providers.dart';
 
 Future<void> showQuranReaderSheet(
@@ -76,6 +77,7 @@ class _QuranReaderSheetState extends ConsumerState<_QuranReaderSheet>
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     final languageCode = ref.watch(localeProvider).languageCode;
     final slot = widget.slot;
     final currentPlanSurah = slot.surahs[_currentTab];
@@ -135,7 +137,7 @@ class _QuranReaderSheetState extends ConsumerState<_QuranReaderSheet>
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: Text(
-              _ReaderCopy.sourceAttribution(languageCode),
+              s.readerSourceAttribution,
               textAlign: TextAlign.center,
               style: AppTextStyles.meta.copyWith(
                 color: AppColors.ink3,
@@ -251,12 +253,12 @@ class _VersesTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final languageCode = ref.watch(localeProvider).languageCode;
+    final s = S.of(context)!;
     final asyncVerses = ref.watch(quranVersesProvider(request));
     return asyncVerses.when(
       data: (verses) {
         if (verses.isEmpty) {
-          return Center(child: Text(_ReaderCopy.noVerses(languageCode)));
+          return Center(child: Text(s.readerNoVerses));
         }
         return ListView.separated(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
@@ -270,7 +272,7 @@ class _VersesTab extends ConsumerWidget {
         child: TextButton.icon(
           onPressed: () => ref.refresh(quranVersesProvider(request)),
           icon: const Icon(Icons.refresh_rounded),
-          label: Text(_ReaderCopy.loadError(languageCode)),
+          label: Text(s.readerLoadErrorRetry),
         ),
       ),
     );
@@ -336,19 +338,4 @@ class _AyahTile extends StatelessWidget {
       ),
     );
   }
-}
-
-abstract final class _ReaderCopy {
-  static bool _isId(String code) => code == 'id';
-
-  static String noVerses(String code) =>
-      _isId(code) ? 'Ayat tidak ditemukan.' : 'No verses found.';
-
-  static String loadError(String code) => _isId(code)
-      ? 'Tidak bisa memuat ayat. Ketuk untuk mencoba lagi.'
-      : 'Could not load verses. Tap to retry.';
-
-  static String sourceAttribution(String code) => _isId(code)
-      ? 'Sumber teks Al-Quran dan terjemahan: quran.com (Quran Foundation).'
-      : 'Quran text and translation source: quran.com (Quran Foundation).';
 }

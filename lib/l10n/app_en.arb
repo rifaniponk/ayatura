@@ -132,6 +132,9 @@
   "prayerNoReadings": "No readings assigned",
   "prayerAyatCount": "{count} ayat",
   "@prayerAyatCount": { "placeholders": { "count": {"type": "int"} } },
+  "readerNoVerses": "No verses found.",
+  "readerLoadErrorRetry": "Could not load verses. Tap to retry.",
+  "readerSourceAttribution": "Quran text and translation source: quran.com (Quran Foundation).",
 
   "settingsTitle": "Settings",
   "settingsPreferences": "Preferences",

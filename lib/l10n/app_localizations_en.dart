@@ -320,6 +320,16 @@ class SEn extends S {
   }
 
   @override
+  String get readerNoVerses => 'No verses found.';
+
+  @override
+  String get readerLoadErrorRetry => 'Could not load verses. Tap to retry.';
+
+  @override
+  String get readerSourceAttribution =>
+      'Quran text and translation source: quran.com (Quran Foundation).';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override

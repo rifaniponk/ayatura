@@ -319,6 +319,17 @@ class SId extends S {
   }
 
   @override
+  String get readerNoVerses => 'Ayat tidak ditemukan.';
+
+  @override
+  String get readerLoadErrorRetry =>
+      'Tidak bisa memuat ayat. Ketuk untuk mencoba lagi.';
+
+  @override
+  String get readerSourceAttribution =>
+      'Sumber teks Al-Quran dan terjemahan: quran.com (Quran Foundation).';
+
+  @override
   String get settingsTitle => 'Pengaturan';
 
   @override
