@@ -268,7 +268,7 @@ class SId extends S {
 
   @override
   String get settingsAboutBody =>
-      'Surah Planner menyebarkan hafalan kamu—surah penuh atau rentang ayat—ke berbagai shalat sepanjang bulan. Penyimpanan rencana ke perangkat akan hadir berikutnya.';
+      'Surah Planner bantu kamu jaga konsistensi hafalan dengan menyebarkan surah dan ayat ke shalat-shalat harian sepanjang bulan. Tambahkan hafalan kamu, buat rencana, dan muraja\'ah sedikit setiap harinya.';
 
   @override
   String get langEnglish => 'Inggris';

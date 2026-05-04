@@ -514,7 +514,7 @@ abstract class S {
   /// No description provided for @settingsAboutBody.
   ///
   /// In en, this message translates to:
-  /// **'Surah Planner spreads what you list for hifdh—full surahs or ayat ranges—across prayers through the month. Saving plans to your device is coming next.'**
+  /// **'Surah Planner helps you keep up with your hifdh by spreading your surahs and ayat across daily prayers throughout the month. Add what you\'re memorizing, generate a plan, and review a little each day.'**
   String get settingsAboutBody;
 
   /// No description provided for @langEnglish.
