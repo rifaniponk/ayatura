@@ -24,12 +24,17 @@ List<Surah> surahsBelongingToJuz(List<Surah> surahs, int juz) {
   return list;
 }
 
-Future<void> showPoolSegmentEditor(
+/// Shows the pool segment editor modal.
+///
+/// Returns the list of surah IDs that were skipped during a bulk insert
+/// (usually empty; non-empty only in a race condition). Returns null when
+/// the user dismisses without saving.
+Future<List<int>?> showPoolSegmentEditor(
   BuildContext context, {
   required List<Surah> surahs,
   SurahPoolEntry? existing,
 }) {
-  return showModalBottomSheet<void>(
+  return showModalBottomSheet<List<int>>(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
@@ -57,6 +62,7 @@ class _PoolSegmentEditorSheetState
   late TextEditingController _startCtl;
   late TextEditingController _endCtl;
   bool _saving = false;
+  String? _duplicateError;
 
   bool _bulkMode = false;
   int _selectedJuz = 30;
@@ -159,13 +165,28 @@ class _PoolSegmentEditorSheetState
     try {
       final existing = widget.existing;
       if (existing == null) {
-        await insertPoolSegment(
+        final inserted = await insertPoolSegment(
           ref: ref,
           surahId: sid,
           isFullSurah: _fullSurah,
           startAyah: _fullSurah ? null : start!,
           endAyah: _fullSurah ? null : end!,
         );
+        if (!inserted && mounted) {
+          final lang = Localizations.localeOf(context).languageCode;
+          final tmpEntry = SurahPoolEntry(
+            id: 0,
+            surahId: sid,
+            isFullSurah: _fullSurah,
+            startAyah: _fullSurah ? null : start,
+            endAyah: _fullSurah ? null : end,
+          );
+          final label = tmpEntry.displayLabel(_surah, lang);
+          setState(
+            () => _duplicateError = S.of(context)!.hifdhDuplicateError(label),
+          );
+          return;
+        }
       } else {
         await replacePoolSegment(
           ref: ref,
@@ -179,7 +200,7 @@ class _PoolSegmentEditorSheetState
           ),
         );
       }
-      if (mounted) Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop(<int>[]);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -195,11 +216,11 @@ class _PoolSegmentEditorSheetState
     if (_bulkCheckedSurahIds.isEmpty || !mounted) return;
     setState(() => _saving = true);
     try {
-      await bulkInsertFullSurahPoolSegments(
+      final skipped = await bulkInsertFullSurahPoolSegments(
         ref: ref,
         surahIds: List<int>.from(_bulkCheckedSurahIds),
       );
-      if (mounted) Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop(skipped);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -295,8 +316,15 @@ class _PoolSegmentEditorSheetState
                   startCtl: _startCtl,
                   endCtl: _endCtl,
                   formKey: _formKey,
-                  onSurahChanged: (v) => setState(() => _surahId = v),
-                  onFullSurahChanged: (v) => setState(() => _fullSurah = v),
+                  duplicateError: _duplicateError,
+                  onSurahChanged: (v) => setState(() {
+                    _surahId = v;
+                    _duplicateError = null;
+                  }),
+                  onFullSurahChanged: (v) => setState(() {
+                    _fullSurah = v;
+                    _duplicateError = null;
+                  }),
                   onSubmit: _submit,
                 ),
               ),
@@ -322,6 +350,7 @@ class _NormalSegmentFields extends StatelessWidget {
     required this.onSurahChanged,
     required this.onFullSurahChanged,
     required this.onSubmit,
+    this.duplicateError,
   });
 
   final bool saving;
@@ -336,10 +365,12 @@ class _NormalSegmentFields extends StatelessWidget {
   final ValueChanged<int?> onSurahChanged;
   final ValueChanged<bool> onFullSurahChanged;
   final VoidCallback onSubmit;
+  final String? duplicateError;
 
   @override
   Widget build(BuildContext context) {
     final s = S.of(context)!;
+    final scheme = Theme.of(context).colorScheme;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -364,6 +395,22 @@ class _NormalSegmentFields extends StatelessWidget {
           ],
           onChanged: saving ? null : onSurahChanged,
         ),
+        if (duplicateError != null) ...[
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              const SizedBox(width: 4),
+              Icon(Icons.warning_amber_rounded, size: 14, color: scheme.error),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  duplicateError!,
+                  style: AppTextStyles.meta.copyWith(color: scheme.error),
+                ),
+              ),
+            ],
+          ),
+        ],
         const SizedBox(height: 12),
         SwitchListTile.adaptive(
           title: Text(s.editorEntireSurah),

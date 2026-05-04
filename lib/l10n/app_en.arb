@@ -87,6 +87,12 @@
   "@hifdhSaveErrorSnackbar": { "placeholders": { "error": {"type": "String"} } },
   "hifdhToggleErrorSnackbar": "Failed to save: {error}",
   "@hifdhToggleErrorSnackbar": { "placeholders": { "error": {"type": "String"} } },
+  "hifdhDuplicateError": "{label} is already in your hifdh list",
+  "@hifdhDuplicateError": { "placeholders": { "label": {"type": "String"} } },
+  "hifdhBulkSkippedOne": "1 entry was skipped — {label} is already in your hifdh list.",
+  "@hifdhBulkSkippedOne": { "placeholders": { "label": {"type": "String"} } },
+  "hifdhBulkSkippedMany": "{count} entries were skipped — already in your hifdh list.",
+  "@hifdhBulkSkippedMany": { "placeholders": { "count": {"type": "int"} } },
 
   "editorAddTitle": "Add surah or ayat",
   "editorEditTitle": "Edit entry",

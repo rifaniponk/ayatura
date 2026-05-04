@@ -12,6 +12,28 @@ void _invalidatePoolAndPlan(WidgetRef ref) {
   ref.invalidate(monthPlanProvider);
 }
 
+/// Returns the existing pool entry that exactly matches the given criteria, or null.
+///
+/// Two entries are duplicates when they share the same [surahId], [isFullSurah]
+/// flag, and (for partial rows) the same [startAyah] and [endAyah].
+SurahPoolEntry? findDuplicate(
+  List<SurahPoolEntry> existing, {
+  required int surahId,
+  required bool isFullSurah,
+  int? startAyah,
+  int? endAyah,
+}) {
+  for (final e in existing) {
+    if (e.surahId != surahId) continue;
+    if (e.isFullSurah != isFullSurah) continue;
+    if (!isFullSurah && (e.startAyah != startAyah || e.endAyah != endAyah)) {
+      continue;
+    }
+    return e;
+  }
+  return null;
+}
+
 /// Persists whether a hifdh-list row is included and refreshes list data.
 ///
 /// Does not clear [monthPlanProvider] — toggling inclusion alone keeps an
@@ -26,7 +48,9 @@ Future<void> setPoolEntryEnabled(
   ref.invalidate(poolEntriesAsyncProvider);
 }
 
-Future<void> insertPoolSegment({
+/// Inserts a single pool entry. Returns `true` on success, `false` if an
+/// exact duplicate already exists (same surah, same isFullSurah, same range).
+Future<bool> insertPoolSegment({
   required WidgetRef ref,
   required int surahId,
   required bool isFullSurah,
@@ -39,6 +63,17 @@ Future<void> insertPoolSegment({
     'startAyah and endAyah are required for partial (ayat range) rows',
   );
   final db = ref.read(appDatabaseProvider);
+  final existing = await db.allPoolEntries();
+  if (findDuplicate(
+        existing,
+        surahId: surahId,
+        isFullSurah: isFullSurah,
+        startAyah: startAyah,
+        endAyah: endAyah,
+      ) !=
+      null) {
+    return false;
+  }
   await db.insertPoolEntry(
     SurahPoolEntriesCompanion.insert(
       surahId: surahId,
@@ -49,6 +84,7 @@ Future<void> insertPoolSegment({
     ),
   );
   _invalidatePoolAndPlan(ref);
+  return true;
 }
 
 Future<void> replacePoolSegment({
@@ -77,22 +113,29 @@ Future<void> deletePoolSegment(WidgetRef ref, int entryId) async {
 
 /// Inserts many full-surah hifdh rows in one transaction.
 ///
-/// Skips [surahId]s that already have any pool row (full or partial).
-Future<void> bulkInsertFullSurahPoolSegments({
+/// Skips surah IDs that already have any pool row (full or partial) — these
+/// are shown as "already added" in the bulk UI and should never appear in the
+/// [surahIds] list. Returns the IDs of any entries that were skipped anyway
+/// (e.g. due to a race condition between UI load and submit).
+Future<List<int>> bulkInsertFullSurahPoolSegments({
   required WidgetRef ref,
   required Iterable<int> surahIds,
 }) async {
   final uniqueIds = surahIds.toSet().toList();
-  if (uniqueIds.isEmpty) return;
+  if (uniqueIds.isEmpty) return [];
 
   final db = ref.read(appDatabaseProvider);
   final existing = await db.allPoolEntries();
   final taken = existing.map((e) => e.surahId).toSet();
 
+  final skipped = <int>[];
   var insertedAny = false;
   await db.transaction(() async {
     for (final sid in uniqueIds) {
-      if (taken.contains(sid)) continue;
+      if (taken.contains(sid)) {
+        skipped.add(sid);
+        continue;
+      }
       await db.insertPoolEntry(
         SurahPoolEntriesCompanion.insert(
           surahId: sid,
@@ -108,4 +151,5 @@ Future<void> bulkInsertFullSurahPoolSegments({
   if (insertedAny) {
     _invalidatePoolAndPlan(ref);
   }
+  return skipped;
 }

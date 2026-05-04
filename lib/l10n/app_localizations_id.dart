@@ -193,6 +193,21 @@ class SId extends S {
   }
 
   @override
+  String hifdhDuplicateError(String label) {
+    return '$label sudah ada di daftar hafalan kamu';
+  }
+
+  @override
+  String hifdhBulkSkippedOne(String label) {
+    return '1 entri dilewati — $label sudah ada di daftar hafalan kamu.';
+  }
+
+  @override
+  String hifdhBulkSkippedMany(int count) {
+    return '$count entri dilewati — sudah ada di daftar hafalan kamu.';
+  }
+
+  @override
   String get editorAddTitle => 'Tambah surah atau ayat';
 
   @override
