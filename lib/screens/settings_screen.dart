@@ -17,8 +17,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  bool _reminders = false;
-
   @override
   Widget build(BuildContext context) {
     final s = S.of(context)!;
@@ -36,21 +34,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               Text(
                 s.settingsPreferences,
                 style: AppTextStyles.sectionHeadingSerif,
-              ),
-              const SizedBox(height: 12),
-              Card(
-                child: SwitchListTile(
-                  title: Text(
-                    s.settingsPrayerReminders,
-                    style: AppTextStyles.cardLabel,
-                  ),
-                  subtitle: Text(
-                    s.settingsPrayerRemindersSubtitle,
-                    style: AppTextStyles.meta,
-                  ),
-                  value: _reminders,
-                  onChanged: (v) => setState(() => _reminders = v),
-                ),
               ),
               const SizedBox(height: 12),
               Card(

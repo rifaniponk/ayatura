@@ -310,13 +310,6 @@ class SId extends S {
   String get settingsPreferences => 'Preferensi';
 
   @override
-  String get settingsPrayerReminders => 'Pengingat shalat';
-
-  @override
-  String get settingsPrayerRemindersSubtitle =>
-      'Beri tahu sebelum setiap shalat';
-
-  @override
   String get settingsSurahsPerPrayer => 'Surah per shalat';
 
   @override

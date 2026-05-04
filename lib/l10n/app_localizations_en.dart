@@ -311,12 +311,6 @@ class SEn extends S {
   String get settingsPreferences => 'Preferences';
 
   @override
-  String get settingsPrayerReminders => 'Prayer reminders';
-
-  @override
-  String get settingsPrayerRemindersSubtitle => 'Notify before each prayer';
-
-  @override
   String get settingsSurahsPerPrayer => 'Surahs per prayer';
 
   @override
