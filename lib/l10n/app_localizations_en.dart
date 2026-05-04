@@ -334,7 +334,7 @@ class SEn extends S {
 
   @override
   String get settingsAboutBody =>
-      'Surah Planner spreads what you list for hifdh—full surahs or ayat ranges—across prayers through the month. Saving plans to your device is coming next.';
+      'Surah Planner helps you keep up with your hifdh by spreading your surahs and ayat across daily prayers throughout the month. Add what you\'re memorizing, generate a plan, and review a little each day.';
 
   @override
   String get langEnglish => 'English';
