@@ -9,7 +9,7 @@ class PoolEntryDao extends DatabaseAccessor<AppDatabase>
     final rows = await (select(
       surahPoolEntries,
     )..orderBy([(t) => OrderingTerm.asc(t.id)])).get();
-    return rows.map(_poolRowToEntry).toList();
+    return rows.map(_toModel).toList();
   }
 
   Future<List<SurahPoolEntry>> enabledPoolEntries() async {
@@ -18,7 +18,7 @@ class PoolEntryDao extends DatabaseAccessor<AppDatabase>
               ..where((t) => t.enabled.equals(true))
               ..orderBy([(t) => OrderingTerm.asc(t.id)]))
             .get();
-    return rows.map(_poolRowToEntry).toList();
+    return rows.map(_toModel).toList();
   }
 
   Future<int> insertPoolEntry(SurahPoolEntriesCompanion row) {
@@ -38,13 +38,13 @@ class PoolEntryDao extends DatabaseAccessor<AppDatabase>
   Future<int> deletePoolEntry(int id) {
     return (delete(surahPoolEntries)..where((t) => t.id.equals(id))).go();
   }
-}
 
-SurahPoolEntry _poolRowToEntry(SurahPoolEntryRow r) => SurahPoolEntry(
-  id: r.id,
-  surahId: r.surahId,
-  isFullSurah: r.isFullSurah,
-  startAyah: r.startAyah,
-  endAyah: r.endAyah,
-  enabled: r.enabled,
-);
+  static SurahPoolEntry _toModel(SurahPoolEntryRow r) => SurahPoolEntry(
+    id: r.id,
+    surahId: r.surahId,
+    isFullSurah: r.isFullSurah,
+    startAyah: r.startAyah,
+    endAyah: r.endAyah,
+    enabled: r.enabled,
+  );
+}
