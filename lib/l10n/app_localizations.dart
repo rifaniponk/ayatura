@@ -469,18 +469,6 @@ abstract class S {
   /// **'Preferences'**
   String get settingsPreferences;
 
-  /// No description provided for @settingsPrayerReminders.
-  ///
-  /// In en, this message translates to:
-  /// **'Prayer reminders'**
-  String get settingsPrayerReminders;
-
-  /// No description provided for @settingsPrayerRemindersSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Notify before each prayer'**
-  String get settingsPrayerRemindersSubtitle;
-
   /// No description provided for @settingsSurahsPerPrayer.
   ///
   /// In en, this message translates to:

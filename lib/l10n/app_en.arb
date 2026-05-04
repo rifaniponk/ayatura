@@ -102,8 +102,6 @@
 
   "settingsTitle": "Settings",
   "settingsPreferences": "Preferences",
-  "settingsPrayerReminders": "Prayer reminders",
-  "settingsPrayerRemindersSubtitle": "Notify before each prayer",
   "settingsSurahsPerPrayer": "Surahs per prayer",
   "settingsSurahsPerPrayerSubtitle": "Number of surahs per prayer slot. Regenerate to apply.",
   "settingsLanguage": "Language",
