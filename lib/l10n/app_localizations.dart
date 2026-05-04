@@ -121,11 +121,11 @@ abstract class S {
   /// **'Hifdh'**
   String get navHifdh;
 
-  /// No description provided for @navMore.
+  /// No description provided for @navSettings.
   ///
   /// In en, this message translates to:
-  /// **'More'**
-  String get navMore;
+  /// **'Settings'**
+  String get navSettings;
 
   /// No description provided for @appBarSubtitleChaptersPool.
   ///

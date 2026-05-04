@@ -5,7 +5,7 @@
   "navHome": "Home",
   "navMonth": "Month",
   "navHifdh": "Hifdh",
-  "navMore": "More",
+  "navSettings": "Settings",
 
   "appBarSubtitleChaptersPool": "{chapters} surahs · {pool} in hifdh list",
   "@appBarSubtitleChaptersPool": {

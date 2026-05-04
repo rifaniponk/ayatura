@@ -21,7 +21,7 @@ class SEn extends S {
   String get navHifdh => 'Hifdh';
 
   @override
-  String get navMore => 'More';
+  String get navSettings => 'Settings';
 
   @override
   String appBarSubtitleChaptersPool(int chapters, int pool) {
