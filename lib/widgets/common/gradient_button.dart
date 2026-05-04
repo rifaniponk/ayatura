@@ -26,7 +26,7 @@ class GradientButton extends StatelessWidget {
         onTap: enabled ? onPressed : null,
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           decoration: BoxDecoration(
             gradient: enabled
                 ? AppColors.buttonGradient
@@ -46,12 +46,20 @@ class GradientButton extends StatelessWidget {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (icon != null) ...[
                 Icon(icon, color: AppColors.white, size: 18),
                 const SizedBox(width: 8),
               ],
-              Text(label, style: AppTextStyles.buttonLabel),
+              Flexible(
+                child: Text(
+                  label,
+                  style: AppTextStyles.buttonLabel.copyWith(height: 1.25),
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                ),
+              ),
             ],
           ),
         ),

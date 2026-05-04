@@ -187,6 +187,108 @@ abstract class S {
   /// **'{month} · {chapters} surahs'**
   String monthSubtitle(String month, int chapters);
 
+  /// No description provided for @monthScreenSubtitlePool.
+  ///
+  /// In en, this message translates to:
+  /// **'{monthYear} · {count} in hifdh list'**
+  String monthScreenSubtitlePool(String monthYear, int count);
+
+  /// No description provided for @monthNavYearDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{monthYear} · {days, plural, one{1 day} other{{days} days}}'**
+  String monthNavYearDays(String monthYear, int days);
+
+  /// No description provided for @monthNavPreviousMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous month'**
+  String get monthNavPreviousMonth;
+
+  /// No description provided for @monthNavNextMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Next month'**
+  String get monthNavNextMonth;
+
+  /// No description provided for @monthRegenerateCompact.
+  ///
+  /// In en, this message translates to:
+  /// **'Regenerate'**
+  String get monthRegenerateCompact;
+
+  /// No description provided for @monthNoPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No plan for {monthYear}'**
+  String monthNoPlanTitle(String monthYear);
+
+  /// No description provided for @monthNoPlanSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Regenerate to create one.'**
+  String get monthNoPlanSubtitle;
+
+  /// No description provided for @monthRegeneratePlanFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Regenerate Plan for {monthYear}'**
+  String monthRegeneratePlanFor(String monthYear);
+
+  /// No description provided for @monthTodayChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get monthTodayChip;
+
+  /// No description provided for @monthFullSurah.
+  ///
+  /// In en, this message translates to:
+  /// **'Full surah'**
+  String get monthFullSurah;
+
+  /// No description provided for @monthAyatRange.
+  ///
+  /// In en, this message translates to:
+  /// **'{start} – {end}'**
+  String monthAyatRange(int start, int end);
+
+  /// No description provided for @monthPrayerEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'—'**
+  String get monthPrayerEmpty;
+
+  /// No description provided for @prayerNameFajr.
+  ///
+  /// In en, this message translates to:
+  /// **'FAJR'**
+  String get prayerNameFajr;
+
+  /// No description provided for @prayerNameDhuhr.
+  ///
+  /// In en, this message translates to:
+  /// **'DHUHR'**
+  String get prayerNameDhuhr;
+
+  /// No description provided for @prayerNameAsr.
+  ///
+  /// In en, this message translates to:
+  /// **'ASR'**
+  String get prayerNameAsr;
+
+  /// No description provided for @prayerNameMaghrib.
+  ///
+  /// In en, this message translates to:
+  /// **'MAGHRIB'**
+  String get prayerNameMaghrib;
+
+  /// No description provided for @prayerNameIsha.
+  ///
+  /// In en, this message translates to:
+  /// **'ISHA'**
+  String get prayerNameIsha;
+
   /// No description provided for @monthDayTitle.
   ///
   /// In en, this message translates to:

@@ -33,6 +33,33 @@
   "@monthSubtitle": {
     "placeholders": { "month": {"type": "String"}, "chapters": {"type": "int"} }
   },
+  "monthScreenSubtitlePool": "{monthYear} · {count} in hifdh list",
+  "@monthScreenSubtitlePool": {
+    "placeholders": { "monthYear": {"type": "String"}, "count": {"type": "int"} }
+  },
+  "monthNavYearDays": "{monthYear} · {days, plural, one{1 day} other{{days} days}}",
+  "@monthNavYearDays": {
+    "placeholders": { "monthYear": {"type": "String"}, "days": {"type": "int"} }
+  },
+  "monthNavPreviousMonth": "Previous month",
+  "monthNavNextMonth": "Next month",
+  "monthRegenerateCompact": "Regenerate",
+  "monthNoPlanTitle": "No plan for {monthYear}",
+  "@monthNoPlanTitle": { "placeholders": { "monthYear": {"type": "String"} } },
+  "monthNoPlanSubtitle": "Tap Regenerate to create one.",
+  "monthRegeneratePlanFor": "Regenerate Plan for {monthYear}",
+  "@monthRegeneratePlanFor": { "placeholders": { "monthYear": {"type": "String"} } },
+  "monthTodayChip": "Today",
+  "monthFullSurah": "Full surah",
+  "monthAyatRange": "{start} – {end}",
+  "@monthAyatRange": {
+    "placeholders": { "start": {"type": "int"}, "end": {"type": "int"} } },
+  "monthPrayerEmpty": "—",
+  "prayerNameFajr": "FAJR",
+  "prayerNameDhuhr": "DHUHR",
+  "prayerNameAsr": "ASR",
+  "prayerNameMaghrib": "MAGHRIB",
+  "prayerNameIsha": "ISHA",
   "monthDayTitle": "Day {day}",
   "@monthDayTitle": { "placeholders": { "day": {"type": "int"} } },
   "monthDayReadings": "{count, plural, =1{1 planned reading across prayers} other{{count} planned readings across prayers}}",
