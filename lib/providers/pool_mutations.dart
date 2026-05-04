@@ -6,6 +6,7 @@ import '../data/models/surah_pool_entry.dart';
 import 'database_provider.dart';
 import 'month_plan_provider.dart';
 import 'surah_data_providers.dart';
+import 'widget_sync_provider.dart';
 
 void _invalidatePoolAndPlan(WidgetRef ref) {
   ref.invalidate(poolEntriesAsyncProvider);
@@ -46,6 +47,7 @@ Future<void> setPoolEntryEnabled(
   final db = ref.read(appDatabaseProvider);
   await db.setPoolEntryEnabled(entry.id, enabled);
   ref.invalidate(poolEntriesAsyncProvider);
+  await syncHomeWidget(ref);
 }
 
 /// Inserts a single pool entry. Returns `true` on success, `false` if an
@@ -84,6 +86,7 @@ Future<bool> insertPoolSegment({
     ),
   );
   _invalidatePoolAndPlan(ref);
+  await syncHomeWidget(ref);
   return true;
 }
 
@@ -103,12 +106,14 @@ Future<void> replacePoolSegment({
     ),
   );
   _invalidatePoolAndPlan(ref);
+  await syncHomeWidget(ref);
 }
 
 Future<void> deletePoolSegment(WidgetRef ref, int entryId) async {
   final db = ref.read(appDatabaseProvider);
   await db.deletePoolEntry(entryId);
   _invalidatePoolAndPlan(ref);
+  await syncHomeWidget(ref);
 }
 
 /// Inserts many full-surah hifdh rows in one transaction.
@@ -150,6 +155,7 @@ Future<List<int>> bulkInsertFullSurahPoolSegments({
 
   if (insertedAny) {
     _invalidatePoolAndPlan(ref);
+    await syncHomeWidget(ref);
   }
   return skipped;
 }

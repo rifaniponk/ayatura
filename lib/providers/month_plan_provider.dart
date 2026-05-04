@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/models/plan.dart';
@@ -5,6 +7,7 @@ import '../data/services/month_plan_generator.dart';
 import 'database_provider.dart';
 import 'settings_provider.dart';
 import 'surah_data_providers.dart';
+import 'widget_sync_provider.dart';
 
 /// True while [MonthPlanNotifier.regenerate] is running (Month tab button UX).
 class MonthPlanRegenerateBusy extends Notifier<bool> {
@@ -34,7 +37,9 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
   @override
   Future<MonthPlan?> build() async {
     final db = ref.read(appDatabaseProvider);
-    return db.loadLatestPlan();
+    final latest = await db.loadLatestPlan();
+    unawaited(syncHomeWidget(ref));
+    return latest;
   }
 
   /// Returns `false` when fewer than two enabled hifdh-list rows exist.
@@ -81,6 +86,7 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
           ref.read(selectedPlanDayProvider.notifier).setDay(dim);
         }
       }
+      await syncHomeWidget(ref);
       return true;
     } finally {
       ref.read(monthPlanRegenerateBusyProvider.notifier).state = false;
@@ -94,6 +100,7 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
       await db.deletePlan(plan.year, plan.month);
     }
     state = const AsyncData(null);
+    await syncHomeWidget(ref);
   }
 }
 

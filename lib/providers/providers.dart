@@ -8,3 +8,4 @@ export 'quran_verse_provider.dart';
 export 'settings_provider.dart';
 export 'shared_preferences_provider.dart';
 export 'surah_data_providers.dart';
+export 'widget_sync_provider.dart';
