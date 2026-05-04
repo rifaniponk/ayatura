@@ -4,6 +4,7 @@ export 'month_screen_provider.dart';
 export 'month_plan_provider.dart';
 export 'nav_provider.dart';
 export 'pool_mutations.dart';
+export 'quran_verse_provider.dart';
 export 'settings_provider.dart';
 export 'shared_preferences_provider.dart';
 export 'surah_data_providers.dart';
