@@ -37,7 +37,7 @@ class _PoolScreenState extends ConsumerState<PoolScreen> {
   List<int> _bulkSkippedIds = [];
 
   Future<void> _openEditor({SurahPoolEntry? existing}) async {
-    final surahs = ref.read(surahsAsyncProvider).valueOrNull;
+    final surahs = ref.read(surahsAsyncProvider).value;
     if (surahs == null || surahs.isEmpty || !mounted) return;
     final skipped = await showPoolSegmentEditor(
       context,
