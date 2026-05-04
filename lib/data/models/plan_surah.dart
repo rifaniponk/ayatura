@@ -43,7 +43,7 @@ class PlanSurah {
     'endAyah': endAyah,
   };
 
-  /// Inclusive verse count for this assignment (compact UI, e.g. `12v`).
+  /// Inclusive verse count for this assignment (UI label, e.g. `12 ayat`).
   int verseSpan(Surah master) {
     if (isFullSurah) return master.ayatCount;
     final a = startAyah;
