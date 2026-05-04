@@ -132,7 +132,18 @@ class _QuranReaderSheetState extends ConsumerState<_QuranReaderSheet>
                   .toList(),
             ),
           ),
-          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            child: Text(
+              _ReaderCopy.sourceAttribution(languageCode),
+              textAlign: TextAlign.center,
+              style: AppTextStyles.meta.copyWith(
+                color: AppColors.ink3,
+                fontSize: 11,
+                height: 1.4,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -336,4 +347,8 @@ abstract final class _ReaderCopy {
   static String loadError(String code) => _isId(code)
       ? 'Tidak bisa memuat ayat. Ketuk untuk mencoba lagi.'
       : 'Could not load verses. Tap to retry.';
+
+  static String sourceAttribution(String code) => _isId(code)
+      ? 'Sumber teks Al-Quran dan terjemahan: quran.com (Quran Foundation).'
+      : 'Quran text and translation source: quran.com (Quran Foundation).';
 }
