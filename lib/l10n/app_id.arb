@@ -4,7 +4,7 @@
   "navHome": "Beranda",
   "navMonth": "Bulan",
   "navHifdh": "Hafalan",
-  "navMore": "Lainnya",
+  "navSettings": "Pengaturan",
   "appBarSubtitleChaptersPool": "{chapters} surah · {pool} dalam daftar hafalan",
   "appBarSubtitleChaptersLoading": "{chapters} surah · …",
   "errorGeneric": "Galat: {message}",

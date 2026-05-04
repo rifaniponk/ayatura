@@ -4,7 +4,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../l10n/app_localizations.dart';
 
-/// Bottom navigation: Home, Month, Hifdh (memorization list), More (Settings).
+/// Bottom navigation: Home, Month, Hifdh (memorization list), Settings.
 class AppBottomNavBar extends StatelessWidget {
   const AppBottomNavBar({
     super.key,
@@ -22,7 +22,11 @@ class AppBottomNavBar extends StatelessWidget {
       _NavItem(icon: Icons.home_rounded, label: s.navHome),
       _NavItem(icon: Icons.calendar_month_rounded, label: s.navMonth),
       _NavItem(icon: Icons.menu_book_rounded, label: s.navHifdh),
-      _NavItem(icon: Icons.more_horiz_rounded, label: s.navMore),
+      _NavItem(
+        icon: Icons.settings_outlined,
+        activeIcon: Icons.settings,
+        label: s.navSettings,
+      ),
     ];
 
     return Container(
@@ -57,9 +61,10 @@ class AppBottomNavBar extends StatelessWidget {
 }
 
 class _NavItem {
-  const _NavItem({required this.icon, required this.label});
+  const _NavItem({required this.icon, this.activeIcon, required this.label});
 
   final IconData icon;
+  final IconData? activeIcon;
   final String label;
 }
 
@@ -85,7 +90,7 @@ class _NavItemWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
-            item.icon,
+            isActive ? (item.activeIcon ?? item.icon) : item.icon,
             size: 22,
             color: isActive ? AppColors.white : AppColors.bottomNavInactive,
           ),

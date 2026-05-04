@@ -21,7 +21,7 @@ class SId extends S {
   String get navHifdh => 'Hafalan';
 
   @override
-  String get navMore => 'Lainnya';
+  String get navSettings => 'Pengaturan';
 
   @override
   String appBarSubtitleChaptersPool(int chapters, int pool) {
