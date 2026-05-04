@@ -1120,6 +1120,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this,
   );
   late final $MonthPlansTable monthPlans = $MonthPlansTable(this);
+  late final SurahDao surahDao = SurahDao(this as AppDatabase);
+  late final PoolEntryDao poolEntryDao = PoolEntryDao(this as AppDatabase);
+  late final MonthPlanDao monthPlanDao = MonthPlanDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1985,4 +1988,47 @@ class $AppDatabaseManager {
       $$SurahPoolEntriesTableTableManager(_db, _db.surahPoolEntries);
   $$MonthPlansTableTableManager get monthPlans =>
       $$MonthPlansTableTableManager(_db, _db.monthPlans);
+}
+
+mixin _$SurahDaoMixin on DatabaseAccessor<AppDatabase> {
+  $SurahsTable get surahs => attachedDatabase.surahs;
+  SurahDaoManager get managers => SurahDaoManager(this);
+}
+
+class SurahDaoManager {
+  final _$SurahDaoMixin _db;
+  SurahDaoManager(this._db);
+  $$SurahsTableTableManager get surahs =>
+      $$SurahsTableTableManager(_db.attachedDatabase, _db.surahs);
+}
+
+mixin _$PoolEntryDaoMixin on DatabaseAccessor<AppDatabase> {
+  $SurahsTable get surahs => attachedDatabase.surahs;
+  $SurahPoolEntriesTable get surahPoolEntries =>
+      attachedDatabase.surahPoolEntries;
+  PoolEntryDaoManager get managers => PoolEntryDaoManager(this);
+}
+
+class PoolEntryDaoManager {
+  final _$PoolEntryDaoMixin _db;
+  PoolEntryDaoManager(this._db);
+  $$SurahsTableTableManager get surahs =>
+      $$SurahsTableTableManager(_db.attachedDatabase, _db.surahs);
+  $$SurahPoolEntriesTableTableManager get surahPoolEntries =>
+      $$SurahPoolEntriesTableTableManager(
+        _db.attachedDatabase,
+        _db.surahPoolEntries,
+      );
+}
+
+mixin _$MonthPlanDaoMixin on DatabaseAccessor<AppDatabase> {
+  $MonthPlansTable get monthPlans => attachedDatabase.monthPlans;
+  MonthPlanDaoManager get managers => MonthPlanDaoManager(this);
+}
+
+class MonthPlanDaoManager {
+  final _$MonthPlanDaoMixin _db;
+  MonthPlanDaoManager(this._db);
+  $$MonthPlansTableTableManager get monthPlans =>
+      $$MonthPlansTableTableManager(_db.attachedDatabase, _db.monthPlans);
 }
