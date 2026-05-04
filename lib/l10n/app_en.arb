@@ -129,6 +129,11 @@
   "emptyHifdhListSubtitle": "Add full surahs or ayat ranges you are memorizing. Your monthly plan will draw from this list.",
   "emptyHifdhListAction": "Add surah or ayat",
 
+  "prayerFajr": "Fajr",
+  "prayerDhuhr": "Dhuhr",
+  "prayerAsr": "Asr",
+  "prayerMaghrib": "Maghrib",
+  "prayerIsha": "Isha",
   "prayerNoReadings": "No readings assigned",
   "prayerAyatCount": "{count} ayat",
   "@prayerAyatCount": { "placeholders": { "count": {"type": "int"} } },
