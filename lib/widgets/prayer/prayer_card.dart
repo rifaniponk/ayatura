@@ -24,15 +24,6 @@ class PrayerCard extends StatelessWidget {
   final Map<int, Surah> masterBySurahId;
   final VoidCallback? onTap;
 
-  int _totalAyat() {
-    var sum = 0;
-    for (final ps in slot.surahs) {
-      final m = masterBySurahId[ps.surahId];
-      if (m != null) sum += ps.verseSpan(m);
-    }
-    return sum;
-  }
-
   String _localizedName(S s) => switch (prayer) {
     Prayer.fajr => s.prayerFajr,
     Prayer.dhuhr => s.prayerDhuhr,
@@ -79,11 +70,6 @@ class PrayerCard extends StatelessWidget {
                   const Text('🔒', style: TextStyle(fontSize: 11)),
                 ],
                 const Spacer(),
-                if (slot.surahs.isNotEmpty)
-                  Text(
-                    s.prayerAyatCount(_totalAyat()),
-                    style: AppTextStyles.meta,
-                  ),
               ],
             ),
             const SizedBox(height: 8),
@@ -135,7 +121,10 @@ class PrayerCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Text('${verses}v', style: AppTextStyles.meta),
+                      Text(
+                        s.prayerAyatCount(verses),
+                        style: AppTextStyles.meta,
+                      ),
                     ],
                   ),
                 );
