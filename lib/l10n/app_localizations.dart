@@ -373,6 +373,24 @@ abstract class S {
   /// **'Failed to save: {error}'**
   String hifdhToggleErrorSnackbar(String error);
 
+  /// No description provided for @hifdhDuplicateError.
+  ///
+  /// In en, this message translates to:
+  /// **'{label} is already in your hifdh list'**
+  String hifdhDuplicateError(String label);
+
+  /// No description provided for @hifdhBulkSkippedOne.
+  ///
+  /// In en, this message translates to:
+  /// **'1 entry was skipped — {label} is already in your hifdh list.'**
+  String hifdhBulkSkippedOne(String label);
+
+  /// No description provided for @hifdhBulkSkippedMany.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} entries were skipped — already in your hifdh list.'**
+  String hifdhBulkSkippedMany(int count);
+
   /// No description provided for @editorAddTitle.
   ///
   /// In en, this message translates to:

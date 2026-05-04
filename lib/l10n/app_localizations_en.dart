@@ -195,6 +195,21 @@ class SEn extends S {
   }
 
   @override
+  String hifdhDuplicateError(String label) {
+    return '$label is already in your hifdh list';
+  }
+
+  @override
+  String hifdhBulkSkippedOne(String label) {
+    return '1 entry was skipped — $label is already in your hifdh list.';
+  }
+
+  @override
+  String hifdhBulkSkippedMany(int count) {
+    return '$count entries were skipped — already in your hifdh list.';
+  }
+
+  @override
   String get editorAddTitle => 'Add surah or ayat';
 
   @override
