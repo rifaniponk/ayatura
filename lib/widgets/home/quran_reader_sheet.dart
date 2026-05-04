@@ -49,6 +49,9 @@ class _QuranReaderSheet extends ConsumerStatefulWidget {
 
 class _QuranReaderSheetState extends ConsumerState<_QuranReaderSheet>
     with SingleTickerProviderStateMixin {
+  static const _englishTranslationId = 20;
+  static const _indonesianTranslationId = 33;
+
   late final TabController _tabController;
   int _currentTab = 0;
 
@@ -120,7 +123,9 @@ class _QuranReaderSheetState extends ConsumerState<_QuranReaderSheet>
                         surahId: planSurah.surahId,
                         startAyah: planSurah.startAyah,
                         endAyah: planSurah.endAyah,
-                        translationId: languageCode == 'id' ? 33 : 131,
+                        translationId: languageCode == 'id'
+                            ? _indonesianTranslationId
+                            : _englishTranslationId,
                       ),
                     ),
                   )
