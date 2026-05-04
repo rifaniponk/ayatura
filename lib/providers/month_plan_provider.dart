@@ -6,6 +6,17 @@ import 'database_provider.dart';
 import 'settings_provider.dart';
 import 'surah_data_providers.dart';
 
+/// True while [MonthPlanNotifier.regenerate] is running (Month tab button UX).
+class MonthPlanRegenerateBusy extends Notifier<bool> {
+  @override
+  bool build() => false;
+}
+
+final monthPlanRegenerateBusyProvider =
+    NotifierProvider<MonthPlanRegenerateBusy, bool>(
+      MonthPlanRegenerateBusy.new,
+    );
+
 /// Current calendar day highlighted on Home (1–31).
 class SelectedPlanDayNotifier extends Notifier<int> {
   @override
@@ -27,34 +38,53 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
   }
 
   /// Returns `false` when fewer than two enabled hifdh-list rows exist.
-  Future<bool> regenerate() async {
+  ///
+  /// [month] / [year] default to the current calendar month. Locked slots are
+  /// preserved only when the stored plan is for that same month/year.
+  Future<bool> regenerate({int? month, int? year}) async {
     final pool = await ref.read(poolEntriesAsyncProvider.future);
     final enabled = pool.where((e) => e.enabled).toList();
     if (enabled.length < 2) {
       return false;
     }
 
-    final now = DateTime.now();
+    final clock = DateTime.now();
+    final targetMonth = month ?? clock.month;
+    final targetYear = year ?? clock.year;
     final current = state.value;
-    final surahsPerPrayer = ref.read(surahsPerPrayerProvider);
-    final next = MonthPlanGenerator.generate(
-      month: now.month,
-      year: now.year,
-      enabledPool: enabled,
-      surahsPerPrayer: surahsPerPrayer,
-      existingPlan: current,
-    );
+    final existingForTarget =
+        current != null &&
+            current.month == targetMonth &&
+            current.year == targetYear
+        ? current
+        : null;
 
-    final db = ref.read(appDatabaseProvider);
-    await db.savePlan(next);
-    state = AsyncData(next);
+    ref.read(monthPlanRegenerateBusyProvider.notifier).state = true;
+    try {
+      final surahsPerPrayer = ref.read(surahsPerPrayerProvider);
+      final next = MonthPlanGenerator.generate(
+        month: targetMonth,
+        year: targetYear,
+        enabledPool: enabled,
+        surahsPerPrayer: surahsPerPrayer,
+        existingPlan: existingForTarget,
+      );
 
-    final dim = DateTime(next.year, next.month + 1, 0).day;
-    final day = ref.read(selectedPlanDayProvider);
-    if (day > dim) {
-      ref.read(selectedPlanDayProvider.notifier).setDay(dim);
+      final db = ref.read(appDatabaseProvider);
+      await db.savePlan(next);
+      state = AsyncData(next);
+
+      if (next.year == clock.year && next.month == clock.month) {
+        final dim = DateTime(next.year, next.month + 1, 0).day;
+        final day = ref.read(selectedPlanDayProvider);
+        if (day > dim) {
+          ref.read(selectedPlanDayProvider.notifier).setDay(dim);
+        }
+      }
+      return true;
+    } finally {
+      ref.read(monthPlanRegenerateBusyProvider.notifier).state = false;
     }
-    return true;
   }
 
   Future<void> clear() async {

@@ -2,26 +2,92 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../core/theme/app_colors.dart';
 import '../core/theme/app_text_styles.dart';
+import '../data/models/plan.dart';
+import '../data/models/prayer.dart';
+import '../data/models/surah.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/providers.dart';
-import '../widgets/common/empty_state.dart';
 import '../widgets/common/gradient_app_bar.dart';
+import '../widgets/common/gradient_button.dart';
+import '../widgets/month/day_plan_card.dart';
 
-/// Month overview — summary list when a plan exists, otherwise placeholder.
-class MonthScreen extends ConsumerWidget {
+/// Month review: browse any allowed month, see full per-prayer assignments,
+/// regenerate for the viewed month, auto-scroll to today on the current month.
+class MonthScreen extends ConsumerStatefulWidget {
   const MonthScreen({super.key});
 
-  static String _monthYearLabel(BuildContext context, DateTime now) {
+  @override
+  ConsumerState<MonthScreen> createState() => _MonthScreenState();
+}
+
+class _MonthScreenState extends ConsumerState<MonthScreen> {
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _todayKey = GlobalKey();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  String _monthYearLabel(BuildContext context, int year, int month) {
     final locale = Localizations.localeOf(context).languageCode;
-    final monthName = DateFormat('MMMM', locale).format(now);
-    return '$monthName ${now.year}';
+    final monthName = DateFormat('MMMM', locale).format(DateTime(year, month));
+    return '$monthName $year';
+  }
+
+  void _scrollToTodayIfNeeded() {
+    final viewed = ref.read(viewedMonthProvider);
+    final now = DateTime.now();
+    if (viewed.month != now.month || viewed.year != now.year) return;
+    final ctx = _todayKey.currentContext;
+    if (ctx == null || !mounted) return;
+    Scrollable.ensureVisible(
+      ctx,
+      alignment: 0.12,
+      duration: const Duration(milliseconds: 280),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  Future<void> _onRegenerate() async {
+    final viewed = ref.read(viewedMonthProvider);
+    final ok = await ref
+        .read(monthPlanProvider.notifier)
+        .regenerate(month: viewed.month, year: viewed.year);
+    if (!mounted) return;
+    if (!ok) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(S.of(context)!.snackbarNeedTwoSegments)),
+      );
+    }
+  }
+
+  bool _allSlotsLocked(DayPlan d) {
+    for (final p in Prayer.values) {
+      if (!d.slotFor(p).locked) return false;
+    }
+    return true;
+  }
+
+  MonthPlan? _planForViewedMonth(
+    MonthPlan? stored,
+    ({int month, int year}) viewed,
+  ) {
+    if (stored == null) return null;
+    if (stored.month == viewed.month && stored.year == viewed.year) {
+      return stored;
+    }
+    return null;
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final s = S.of(context)!;
     final now = DateTime.now();
+    final viewed = ref.watch(viewedMonthProvider);
     final planAsync = ref.watch(monthPlanProvider);
     final plan = planAsync.when(
       skipLoadingOnReload: true,
@@ -29,64 +95,230 @@ class MonthScreen extends ConsumerWidget {
       loading: () => planAsync.value,
       error: (_, _) => planAsync.value,
     );
+    final effective = _planForViewedMonth(plan, viewed);
+    final busy = ref.watch(monthPlanRegenerateBusyProvider);
+
+    ref.listen(viewedMonthProvider, (previous, next) {
+      if (previous != null && previous != next) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && _scrollController.hasClients) {
+            _scrollController.jumpTo(0);
+          }
+        });
+      }
+    });
+
+    ref.listen(navIndexProvider, (previous, next) {
+      if (next == 1) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _scrollToTodayIfNeeded();
+        });
+      }
+    });
 
     final surahsAsync = ref.watch(surahsAsyncProvider);
-    final subtitle = surahsAsync.maybeWhen(
-      data: (list) => list.isEmpty
-          ? null
-          : s.monthSubtitle(_monthYearLabel(context, now), list.length),
-      orElse: () => _monthYearLabel(context, now),
+    final poolAsync = ref.watch(poolEntriesAsyncProvider);
+    final subtitle = poolAsync.maybeWhen(
+      data: (pool) {
+        final enabled = pool.where((e) => e.enabled).length;
+        return surahsAsync.maybeWhen(
+          data: (list) => list.isEmpty
+              ? null
+              : s.monthScreenSubtitlePool(
+                  _monthYearLabel(context, viewed.year, viewed.month),
+                  enabled,
+                ),
+          orElse: () => _monthYearLabel(context, viewed.year, viewed.month),
+        );
+      },
+      orElse: () => _monthYearLabel(context, viewed.year, viewed.month),
     );
 
-    final Widget planBody;
+    final daysInMonth = DateTime(viewed.year, viewed.month + 1, 0).day;
+    final monthYearStr = _monthYearLabel(context, viewed.year, viewed.month);
+    final navCenter = s.monthNavYearDays(monthYearStr, daysInMonth);
+
+    final Widget body;
     if (planAsync.hasError && plan == null) {
-      planBody = Center(child: Text(s.errorGeneric('${planAsync.error}')));
+      body = Center(child: Text(s.errorGeneric('${planAsync.error}')));
     } else if (planAsync.isLoading && plan == null) {
-      planBody = const Center(child: CircularProgressIndicator());
-    } else {
-      final effective = plan?.effectiveOrNull(now);
-      if (effective == null) {
-        planBody = Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: EmptyState(
-              variant: EmptyStateVariant.noPlan,
-              onAction: () => ref.read(navIndexProvider.notifier).setIndex(0),
-            ),
-          ),
-        );
-      } else {
-        planBody = ListView.builder(
-          padding: const EdgeInsets.fromLTRB(18, 12, 18, 24),
-          itemCount: effective.days.length,
-          itemBuilder: (context, i) {
-            final d = effective.days[i];
-            final slots = d.prayers.values.fold<int>(
-              0,
-              (sum, slot) => sum + slot.surahs.length,
-            );
-            return Card(
-              child: ListTile(
-                title: Text(
-                  s.monthDayTitle(d.day),
-                  style: AppTextStyles.cardLabel,
-                ),
-                subtitle: Text(
-                  s.monthDayReadings(slots),
-                  style: AppTextStyles.meta,
-                ),
+      body = const Center(child: CircularProgressIndicator());
+    } else if (effective == null) {
+      body = Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.autorenew_rounded,
+                size: 48,
+                color: AppColors.green.withValues(alpha: 0.45),
               ),
-            );
-          },
-        );
-      }
+              const SizedBox(height: 16),
+              Text(
+                s.monthNoPlanTitle(monthYearStr),
+                style: AppTextStyles.emptyStateTitle,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                s.monthNoPlanSubtitle,
+                style: AppTextStyles.body.copyWith(
+                  color: AppColors.ink3,
+                  fontSize: 13,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              GradientButton(
+                label: s.monthRegeneratePlanFor(monthYearStr),
+                onPressed: _onRegenerate,
+                enabled: !busy,
+                icon: Icons.auto_awesome_rounded,
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      final masterList = surahsAsync.maybeWhen(
+        data: (list) => list,
+        orElse: () => const <Surah>[],
+      );
+      final masterById = {for (final x in masterList) x.id: x};
+
+      body = ListView.builder(
+        controller: _scrollController,
+        padding: const EdgeInsets.fromLTRB(14, 8, 14, 20),
+        itemCount: effective.days.length,
+        itemBuilder: (context, i) {
+          final d = effective.days[i];
+          final isToday = DayPlanCard.isCalendarToday(
+            viewed.year,
+            viewed.month,
+            d.day,
+            now,
+          );
+          final isPast = DayPlanCard.calendarDayIsPast(
+            viewed.year,
+            viewed.month,
+            d.day,
+            now,
+          );
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: DayPlanCard(
+              key: isToday ? _todayKey : ValueKey('day-${d.day}'),
+              dayPlan: d,
+              viewedYear: viewed.year,
+              viewedMonth: viewed.month,
+              masterBySurahId: masterById,
+              isToday: isToday,
+              isPastDay: isPast,
+              allSlotsLocked: _allSlotsLocked(d),
+            ),
+          );
+        },
+      );
     }
+
+    final canPrev = viewedMonthCanGoPrev(viewed);
+    final canNext = viewedMonthCanGoNext(viewed);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        GradientAppBar(title: s.monthScreenTitle, subtitle: subtitle),
-        Expanded(child: planBody),
+        GradientAppBar(
+          title: s.monthScreenTitle,
+          subtitle: subtitle,
+          showLogo: true,
+        ),
+        Material(
+          color: AppColors.white,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 10, 12, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                      tooltip: s.monthNavPreviousMonth,
+                      onPressed: canPrev
+                          ? () => ref
+                                .read(viewedMonthProvider.notifier)
+                                .goToPrev()
+                          : null,
+                      icon: const Icon(
+                        Icons.chevron_left_rounded,
+                        size: 28,
+                        color: AppColors.green,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        navCenter,
+                        style: AppTextStyles.sectionHeadingSerif,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: s.monthNavNextMonth,
+                      onPressed: canNext
+                          ? () => ref
+                                .read(viewedMonthProvider.notifier)
+                                .goToNext()
+                          : null,
+                      icon: const Icon(
+                        Icons.chevron_right_rounded,
+                        size: 28,
+                        color: AppColors.green,
+                      ),
+                    ),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: OutlinedButton.icon(
+                    onPressed: busy ? null : _onRegenerate,
+                    icon: busy
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: AppColors.green,
+                            ),
+                          )
+                        : const Icon(
+                            Icons.refresh_rounded,
+                            size: 18,
+                            color: AppColors.green,
+                          ),
+                    label: Text(
+                      s.monthRegenerateCompact,
+                      style: AppTextStyles.smallLabel.copyWith(
+                        color: AppColors.green,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.green,
+                      side: const BorderSide(color: AppColors.green2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(child: body),
       ],
     );
   }

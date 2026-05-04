@@ -65,6 +65,73 @@ class SEn extends S {
   }
 
   @override
+  String monthScreenSubtitlePool(String monthYear, int count) {
+    return '$monthYear · $count in hifdh list';
+  }
+
+  @override
+  String monthNavYearDays(String monthYear, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$monthYear · $_temp0';
+  }
+
+  @override
+  String get monthNavPreviousMonth => 'Previous month';
+
+  @override
+  String get monthNavNextMonth => 'Next month';
+
+  @override
+  String get monthRegenerateCompact => 'Regenerate';
+
+  @override
+  String monthNoPlanTitle(String monthYear) {
+    return 'No plan for $monthYear';
+  }
+
+  @override
+  String get monthNoPlanSubtitle => 'Tap Regenerate to create one.';
+
+  @override
+  String monthRegeneratePlanFor(String monthYear) {
+    return 'Regenerate Plan for $monthYear';
+  }
+
+  @override
+  String get monthTodayChip => 'Today';
+
+  @override
+  String get monthFullSurah => 'Full surah';
+
+  @override
+  String monthAyatRange(int start, int end) {
+    return '$start – $end';
+  }
+
+  @override
+  String get monthPrayerEmpty => '—';
+
+  @override
+  String get prayerNameFajr => 'FAJR';
+
+  @override
+  String get prayerNameDhuhr => 'DHUHR';
+
+  @override
+  String get prayerNameAsr => 'ASR';
+
+  @override
+  String get prayerNameMaghrib => 'MAGHRIB';
+
+  @override
+  String get prayerNameIsha => 'ISHA';
+
+  @override
   String monthDayTitle(int day) {
     return 'Day $day';
   }

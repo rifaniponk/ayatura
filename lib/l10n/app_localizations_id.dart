@@ -65,6 +65,72 @@ class SId extends S {
   }
 
   @override
+  String monthScreenSubtitlePool(String monthYear, int count) {
+    return '$monthYear · $count dalam daftar hafalan';
+  }
+
+  @override
+  String monthNavYearDays(String monthYear, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days hari',
+    );
+    return '$monthYear · $_temp0';
+  }
+
+  @override
+  String get monthNavPreviousMonth => 'Bulan sebelumnya';
+
+  @override
+  String get monthNavNextMonth => 'Bulan berikutnya';
+
+  @override
+  String get monthRegenerateCompact => 'Buat ulang';
+
+  @override
+  String monthNoPlanTitle(String monthYear) {
+    return 'Belum ada rencana untuk $monthYear';
+  }
+
+  @override
+  String get monthNoPlanSubtitle => 'Ketuk Buat ulang untuk membuatnya.';
+
+  @override
+  String monthRegeneratePlanFor(String monthYear) {
+    return 'Buat ulang rencana untuk $monthYear';
+  }
+
+  @override
+  String get monthTodayChip => 'Hari ini';
+
+  @override
+  String get monthFullSurah => 'Surah penuh';
+
+  @override
+  String monthAyatRange(int start, int end) {
+    return '$start – $end';
+  }
+
+  @override
+  String get monthPrayerEmpty => '—';
+
+  @override
+  String get prayerNameFajr => 'SUBUH';
+
+  @override
+  String get prayerNameDhuhr => 'DZUHUR';
+
+  @override
+  String get prayerNameAsr => 'ASHAR';
+
+  @override
+  String get prayerNameMaghrib => 'MAGHRIB';
+
+  @override
+  String get prayerNameIsha => 'ISYA';
+
+  @override
   String monthDayTitle(int day) {
     return 'Hari $day';
   }
