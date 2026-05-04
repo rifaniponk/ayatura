@@ -165,8 +165,17 @@ class _ReaderHeader extends StatelessWidget {
   final Surah? master;
   final String languageCode;
 
+  String _localizedName(S s) => switch (prayer) {
+    Prayer.fajr => s.prayerFajr,
+    Prayer.dhuhr => s.prayerDhuhr,
+    Prayer.asr => s.prayerAsr,
+    Prayer.maghrib => s.prayerMaghrib,
+    Prayer.isha => s.prayerIsha,
+  };
+
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context)!;
     final surahLabel = master != null
         ? planSurah.displayLabel(master!, languageCode)
         : 'Surah ${planSurah.surahId}';
@@ -184,7 +193,7 @@ class _ReaderHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            prayer.label.toUpperCase(),
+            _localizedName(s).toUpperCase(),
             style: AppTextStyles.prayerLabel.copyWith(
               color: AppColors.white.withValues(alpha: 0.88),
             ),
