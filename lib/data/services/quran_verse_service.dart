@@ -37,6 +37,7 @@ class QuranVerseService {
     final verses = <QuranVerse>[];
     var currentPage = 1;
     var totalPages = 1;
+    final hasExplicitRange = startAyah != null && endAyah != null;
 
     while (currentPage <= totalPages) {
       final query = <String, String>{
@@ -45,8 +46,9 @@ class QuranVerseService {
         'per_page': '$_perPage',
         'page': '$currentPage',
       };
-      if (startAyah != null) query['verse_start'] = '$startAyah';
-      if (endAyah != null) query['verse_end'] = '$endAyah';
+      // Quran.com v4 expects `from` / `to` on this endpoint.
+      if (startAyah != null) query['from'] = '$startAyah';
+      if (endAyah != null) query['to'] = '$endAyah';
 
       final uri = Uri.https(
         _baseHost,
@@ -80,8 +82,15 @@ class QuranVerseService {
         }),
       );
 
-      final meta = body['meta'] as Map<String, dynamic>? ?? const {};
-      totalPages = meta['total_pages'] as int? ?? 1;
+      if (hasExplicitRange) {
+        // `from`/`to` can still return chapter-level pagination metadata;
+        // keep range requests single-page and trust returned verses.
+        totalPages = 1;
+      } else {
+        final pagination =
+            body['pagination'] as Map<String, dynamic>? ?? const {};
+        totalPages = pagination['total_pages'] as int? ?? 1;
+      }
       currentPage += 1;
     }
 
