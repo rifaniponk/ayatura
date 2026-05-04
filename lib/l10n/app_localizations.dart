@@ -577,6 +577,24 @@ abstract class S {
   /// **'{count} ayat'**
   String prayerAyatCount(int count);
 
+  /// No description provided for @readerNoVerses.
+  ///
+  /// In en, this message translates to:
+  /// **'No verses found.'**
+  String get readerNoVerses;
+
+  /// No description provided for @readerLoadErrorRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load verses. Tap to retry.'**
+  String get readerLoadErrorRetry;
+
+  /// No description provided for @readerSourceAttribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Quran text and translation source: quran.com (Quran Foundation).'**
+  String get readerSourceAttribution;
+
   /// No description provided for @settingsTitle.
   ///
   /// In en, this message translates to:

@@ -11,6 +11,7 @@ import '../providers/providers.dart';
 import '../widgets/common/empty_state.dart';
 import '../widgets/common/gradient_app_bar.dart';
 import '../widgets/common/gradient_button.dart';
+import '../widgets/home/quran_reader_sheet.dart';
 import '../widgets/prayer/prayer_card.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -149,18 +150,27 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                 ref.read(selectedPlanDayProvider.notifier).setDay(d),
           ),
           const SizedBox(height: 16),
-          ...Prayer.values.map(
-            (prayer) => Padding(
+          ...Prayer.values.map((prayer) {
+            final slot =
+                effective.planForDay(clampedDay)?.slotFor(prayer) ??
+                PrayerSlot();
+            return Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: PrayerCard(
                 prayer: prayer,
-                slot:
-                    effective.planForDay(clampedDay)?.slotFor(prayer) ??
-                    PrayerSlot(),
+                slot: slot,
                 masterBySurahId: _masterById,
+                onTap: slot.surahs.isEmpty
+                    ? null
+                    : () => showQuranReaderSheet(
+                        context,
+                        prayer: prayer,
+                        slot: slot,
+                        masterById: _masterById,
+                      ),
               ),
-            ),
-          ),
+            );
+          }),
           const SizedBox(height: 8),
           GradientButton(
             label: S.of(context)!.regeneratePlan,
