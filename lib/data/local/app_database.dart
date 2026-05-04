@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:sentry_drift/sentry_drift.dart';
 
 import '../models/plan.dart';
 import '../models/surah.dart';
@@ -22,7 +23,12 @@ part 'app_database.g.dart';
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
-    : super(executor ?? driftDatabase(name: 'surah_planner'));
+    : super(
+        executor ??
+            driftDatabase(name: 'surah_planner').interceptWith(
+              SentryQueryInterceptor(databaseName: 'surah_planner'),
+            ),
+      );
 
   @override
   int get schemaVersion => 5;
