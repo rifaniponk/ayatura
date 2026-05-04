@@ -33,6 +33,14 @@ class PrayerCard extends StatelessWidget {
     return sum;
   }
 
+  String _localizedName(S s) => switch (prayer) {
+    Prayer.fajr => s.prayerFajr,
+    Prayer.dhuhr => s.prayerDhuhr,
+    Prayer.asr => s.prayerAsr,
+    Prayer.maghrib => s.prayerMaghrib,
+    Prayer.isha => s.prayerIsha,
+  };
+
   @override
   Widget build(BuildContext context) {
     final s = S.of(context)!;
@@ -63,7 +71,7 @@ class PrayerCard extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  prayer.label.toUpperCase(),
+                  _localizedName(s).toUpperCase(),
                   style: AppTextStyles.prayerLabel,
                 ),
                 if (slot.locked) ...[

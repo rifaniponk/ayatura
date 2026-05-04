@@ -230,6 +230,21 @@ class SEn extends S {
   String get emptyHifdhListAction => 'Add surah or ayat';
 
   @override
+  String get prayerFajr => 'Fajr';
+
+  @override
+  String get prayerDhuhr => 'Dhuhr';
+
+  @override
+  String get prayerAsr => 'Asr';
+
+  @override
+  String get prayerMaghrib => 'Maghrib';
+
+  @override
+  String get prayerIsha => 'Isha';
+
+  @override
   String get prayerNoReadings => 'No readings assigned';
 
   @override

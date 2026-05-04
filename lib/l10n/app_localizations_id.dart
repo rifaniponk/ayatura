@@ -230,6 +230,21 @@ class SId extends S {
   String get emptyHifdhListAction => 'Tambah surah atau ayat';
 
   @override
+  String get prayerFajr => 'Subuh';
+
+  @override
+  String get prayerDhuhr => 'Dzuhur';
+
+  @override
+  String get prayerAsr => 'Ashar';
+
+  @override
+  String get prayerMaghrib => 'Maghrib';
+
+  @override
+  String get prayerIsha => 'Isya';
+
+  @override
   String get prayerNoReadings => 'Tidak ada bacaan yang ditugaskan';
 
   @override
