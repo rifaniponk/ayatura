@@ -182,13 +182,6 @@ class PrayerCard extends StatelessWidget {
                             ),
                           ),
                         const Spacer(),
-                        if (prayerTime != null)
-                          Text(
-                            prayerTime!,
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              color: const Color(0xB7FFFFFF),
-                            ),
-                          ),
                         IconButton(
                           icon: Icon(
                             slot.locked
