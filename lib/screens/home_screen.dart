@@ -63,6 +63,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
   };
   late DateTime _clockNow;
   Timer? _clockTimer;
+  bool _shouldScrollToCurrentPrayer = true;
 
   @override
   void initState() {
@@ -195,14 +196,17 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
+      if (!mounted || !_shouldScrollToCurrentPrayer) return;
+      _shouldScrollToCurrentPrayer = false;
       scrollToCurrentPrayer();
     });
 
     ref.listen(navIndexProvider, (previous, next) {
       if (next == 0) {
+        _shouldScrollToCurrentPrayer = true;
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
+          if (!mounted || !_shouldScrollToCurrentPrayer) return;
+          _shouldScrollToCurrentPrayer = false;
           scrollToCurrentPrayer();
         });
       }
