@@ -11,7 +11,6 @@ import '../widgets/common/app_alert_dialog.dart';
 import '../widgets/common/app_popup_menu_button.dart';
 import '../widgets/common/app_toggle.dart';
 import '../widgets/common/empty_state.dart';
-import '../widgets/common/gradient_app_bar.dart';
 import '../widgets/pool/dismissible_intro_tip.dart';
 import '../widgets/pool/pool_segment_editor_sheet.dart';
 
@@ -74,18 +73,6 @@ class _PoolScreenState extends ConsumerState<PoolScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          GradientAppBar(
-            title: s.hifdhScreenTitle,
-            subtitle: poolAsync.maybeWhen(
-              data: (p) => p.isEmpty
-                  ? s.hifdhSubtitleEmpty
-                  : s.hifdhSubtitleCount(
-                      p.where((e) => e.enabled).length,
-                      p.length,
-                    ),
-              orElse: () => '…',
-            ),
-          ),
           Expanded(
             child: switch ((poolAsync, surahsAsync)) {
               (AsyncError(:final error), _) || (_, AsyncError(:final error)) =>

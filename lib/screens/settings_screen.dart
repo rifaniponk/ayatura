@@ -6,7 +6,6 @@ import '../l10n/app_localizations.dart';
 import '../providers/locale_provider.dart';
 import '../providers/settings_provider.dart';
 import '../widgets/common/app_dropdown_button.dart';
-import '../widgets/common/gradient_app_bar.dart';
 
 /// Preferences and data actions — placeholders until wired to persistence.
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -26,7 +25,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        GradientAppBar(title: s.settingsTitle),
         Expanded(
           child: ListView(
             padding: const EdgeInsets.all(18),

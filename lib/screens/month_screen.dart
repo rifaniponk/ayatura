@@ -9,7 +9,6 @@ import '../data/models/prayer.dart';
 import '../data/models/surah.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/providers.dart';
-import '../widgets/common/gradient_app_bar.dart';
 import '../widgets/common/gradient_button.dart';
 import '../widgets/month/day_plan_card.dart';
 import '../widgets/home/quran_reader_sheet.dart';
@@ -135,22 +134,6 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
     });
 
     final surahsAsync = ref.watch(surahsAsyncProvider);
-    final poolAsync = ref.watch(poolEntriesAsyncProvider);
-    final subtitle = poolAsync.maybeWhen(
-      data: (pool) {
-        final enabled = pool.where((e) => e.enabled).length;
-        return surahsAsync.maybeWhen(
-          data: (list) => list.isEmpty
-              ? null
-              : s.monthScreenSubtitlePool(
-                  _monthYearLabel(context, viewed.year, viewed.month),
-                  enabled,
-                ),
-          orElse: () => _monthYearLabel(context, viewed.year, viewed.month),
-        );
-      },
-      orElse: () => _monthYearLabel(context, viewed.year, viewed.month),
-    );
 
     final daysInMonth = DateTime(viewed.year, viewed.month + 1, 0).day;
     final monthYearStr = _monthYearLabel(context, viewed.year, viewed.month);
@@ -264,11 +247,6 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        GradientAppBar(
-          title: s.monthScreenTitle,
-          subtitle: subtitle,
-          showLogo: true,
-        ),
         Material(
           color: AppColors.white,
           child: Padding(
