@@ -117,19 +117,10 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
     required int month,
     required int day,
     required Prayer prayer,
-    required bool currentlyLocked,
   }) async {
     await ref
         .read(monthPlanProvider.notifier)
         .toggleSlotLock(year: year, month: month, day: day, prayer: prayer);
-    if (!mounted) return;
-    final s = S.of(context)!;
-    final message = currentlyLocked
-        ? s.slotUnlockedSnackbar
-        : s.slotLockedSnackbar;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -185,7 +176,6 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                   month: effective.month,
                   day: clampedDay,
                   prayer: prayer,
-                  currentlyLocked: slot.locked,
                 ),
                 onTap: slot.surahs.isEmpty
                     ? null
