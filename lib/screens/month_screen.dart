@@ -98,30 +98,21 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
     return true;
   }
 
-  MonthPlan? _planForViewedMonth(
-    MonthPlan? stored,
-    ({int month, int year}) viewed,
-  ) {
-    if (stored == null) return null;
-    if (stored.month == viewed.month && stored.year == viewed.year) {
-      return stored;
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     final s = S.of(context)!;
     final now = DateTime.now();
     final viewed = ref.watch(viewedMonthProvider);
-    final planAsync = ref.watch(monthPlanProvider);
+    final planAsync = ref.watch(
+      monthPlanByYearMonthProvider((year: viewed.year, month: viewed.month)),
+    );
     final plan = planAsync.when(
       skipLoadingOnReload: true,
       data: (p) => p,
       loading: () => planAsync.value,
       error: (_, _) => planAsync.value,
     );
-    final effective = _planForViewedMonth(plan, viewed);
+    final effective = plan;
     final busy = ref.watch(monthPlanRegenerateBusyProvider);
 
     ref.listen(viewedMonthProvider, (previous, next) {

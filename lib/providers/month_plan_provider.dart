@@ -7,6 +7,15 @@ import 'database_provider.dart';
 import 'settings_provider.dart';
 import 'surah_data_providers.dart';
 
+typedef YearMonth = ({int year, int month});
+
+final monthPlanByYearMonthProvider = FutureProvider.family<MonthPlan?, YearMonth>(
+  (ref, ym) {
+    final db = ref.watch(appDatabaseProvider);
+    return db.loadPlan(ym.year, ym.month);
+  },
+);
+
 /// True while [MonthPlanNotifier.regenerate] is running (Month tab button UX).
 class MonthPlanRegenerateBusy extends Notifier<bool> {
   @override
@@ -35,7 +44,8 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
   @override
   Future<MonthPlan?> build() async {
     final db = ref.read(appDatabaseProvider);
-    return db.loadLatestPlan();
+    final now = DateTime.now();
+    return db.loadPlan(now.year, now.month);
   }
 
   /// Returns `false` when fewer than two enabled hifdh-list rows exist.
@@ -52,13 +62,8 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
     final clock = DateTime.now();
     final targetMonth = month ?? clock.month;
     final targetYear = year ?? clock.year;
-    final current = state.value;
-    final existingForTarget =
-        current != null &&
-            current.month == targetMonth &&
-            current.year == targetYear
-        ? current
-        : null;
+    final db = ref.read(appDatabaseProvider);
+    final existingForTarget = await db.loadPlan(targetYear, targetMonth);
 
     ref.read(monthPlanRegenerateBusyProvider.notifier).state = true;
     try {
@@ -71,9 +76,14 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
         existingPlan: existingForTarget,
       );
 
-      final db = ref.read(appDatabaseProvider);
       await db.savePlan(next);
-      state = AsyncData(next);
+      ref.invalidate(
+        monthPlanByYearMonthProvider((year: targetYear, month: targetMonth)),
+      );
+
+      if (next.year == clock.year && next.month == clock.month) {
+        state = AsyncData(next);
+      }
 
       if (next.year == clock.year && next.month == clock.month) {
         final dim = DateTime(next.year, next.month + 1, 0).day;
@@ -93,6 +103,9 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
     final plan = state.maybeWhen(data: (p) => p, orElse: () => null);
     if (plan != null) {
       await db.deletePlan(plan.year, plan.month);
+      ref.invalidate(
+        monthPlanByYearMonthProvider((year: plan.year, month: plan.month)),
+      );
     }
     state = const AsyncData(null);
   }
@@ -103,10 +116,9 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
     required int day,
     required Prayer prayer,
   }) async {
-    final current = state.value;
-    if (current == null || current.year != year || current.month != month) {
-      return;
-    }
+    final db = ref.read(appDatabaseProvider);
+    final current = await db.loadPlan(year, month);
+    if (current == null) return;
     final updatedDays = current.days.map((d) {
       if (d.day != day) return d;
       final existingSlot = d.slotFor(prayer);
@@ -119,19 +131,21 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
       year: current.year,
       days: updatedDays,
     );
-    final db = ref.read(appDatabaseProvider);
     await db.savePlan(next);
-    state = AsyncData(next);
+    ref.invalidate(monthPlanByYearMonthProvider((year: year, month: month)));
+    final now = DateTime.now();
+    if (year == now.year && month == now.month) {
+      state = AsyncData(next);
+    }
   }
 
   Future<int> clearLocksForMonth({
     required int year,
     required int month,
   }) async {
-    final current = state.value;
-    if (current == null || current.year != year || current.month != month) {
-      return 0;
-    }
+    final db = ref.read(appDatabaseProvider);
+    final current = await db.loadPlan(year, month);
+    if (current == null) return 0;
     var cleared = 0;
     final updatedDays = current.days.map((d) {
       var changed = false;
@@ -152,9 +166,12 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
       year: current.year,
       days: updatedDays,
     );
-    final db = ref.read(appDatabaseProvider);
     await db.savePlan(next);
-    state = AsyncData(next);
+    ref.invalidate(monthPlanByYearMonthProvider((year: year, month: month)));
+    final now = DateTime.now();
+    if (year == now.year && month == now.month) {
+      state = AsyncData(next);
+    }
     return cleared;
   }
 }

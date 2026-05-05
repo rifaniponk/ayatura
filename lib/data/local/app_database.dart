@@ -73,6 +73,9 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> deletePoolEntry(int id) => poolEntryDao.deletePoolEntry(id);
 
+  Future<MonthPlan?> loadPlan(int year, int month) =>
+      monthPlanDao.loadPlan(year, month);
+
   Future<MonthPlan?> loadLatestPlan() => monthPlanDao.loadLatestPlan();
 
   Future<void> savePlan(MonthPlan plan) => monthPlanDao.savePlan(plan);
