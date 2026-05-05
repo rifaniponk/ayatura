@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/locale_provider.dart';
+import '../providers/package_info_provider.dart';
 import '../providers/settings_provider.dart';
 import '../widgets/common/app_dropdown_button.dart';
 
@@ -118,6 +119,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ).colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
+              const SizedBox(height: 32),
+              ref
+                      .watch(packageInfoProvider)
+                      .whenData(
+                        (info) => Text(
+                          'v${info.version} (${info.buildNumber})',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.meta.copyWith(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.35),
+                          ),
+                        ),
+                      ) ??
+                  const SizedBox.shrink(),
             ],
           ),
         ),
