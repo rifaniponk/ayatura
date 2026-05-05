@@ -122,36 +122,40 @@ class PrayerCard extends StatelessWidget {
           opacity: cardOpacity,
           child: Container(
             decoration: cardDecoration,
-            padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-            child: Stack(
-              children: [
-                Positioned(
-                  right: -58,
-                  top: -52,
-                  child: Container(
-                    width: 190,
-                    height: 190,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: const Color(0x20D4AF37),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(22),
+              child: Stack(
+                clipBehavior: Clip.hardEdge,
+                children: [
+                  Positioned(
+                    right: -72,
+                    top: -48,
+                    child: Container(
+                      width: 190,
+                      height: 190,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0x20D4AF37),
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  right: -20,
-                  top: -38,
-                  child: Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: const Color(0x261F7A6B),
+                  Positioned(
+                    right: -24,
+                    top: -30,
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0x261F7A6B),
+                      ),
                     ),
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                     Row(
                       children: [
                         if (hasBadge)
@@ -274,9 +278,11 @@ class PrayerCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
