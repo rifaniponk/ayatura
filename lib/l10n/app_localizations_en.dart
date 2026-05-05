@@ -370,6 +370,22 @@ class SEn extends S {
   }
 
   @override
+  String get homeNowPrayingBadge => 'NOW PRAYING';
+
+  @override
+  String get homeUpNextBadge => 'UP NEXT';
+
+  @override
+  String homePrayerStartedAt(String time) {
+    return 'started $time';
+  }
+
+  @override
+  String homePrayerUntilNext(String duration) {
+    return 'IN $duration UNTIL NEXT';
+  }
+
+  @override
   String get readerNoVerses => 'No verses found.';
 
   @override

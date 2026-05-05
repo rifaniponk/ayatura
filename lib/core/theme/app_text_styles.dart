@@ -44,6 +44,32 @@ abstract final class AppTextStyles {
     color: AppColors.ink,
   );
 
+  /// Large heading used in highlighted current prayer card (e.g. "Isha").
+  static const TextStyle prayerCurrentTitle = TextStyle(
+    fontFamily: _serif,
+    fontSize: 42,
+    fontWeight: FontWeight.w700,
+    height: 1.0,
+    color: AppColors.gold,
+  );
+
+  /// Prayer name for highlighted secondary cards.
+  static const TextStyle prayerHighlightedTitle = TextStyle(
+    fontFamily: _serif,
+    fontSize: 30,
+    fontWeight: FontWeight.w700,
+    height: 1.0,
+    color: AppColors.green,
+  );
+
+  /// Surah row title inside prayer cards.
+  static const TextStyle surahNamePrayerCard = TextStyle(
+    fontFamily: _serif,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: AppColors.ink,
+  );
+
   static const TextStyle sheetSurahName = TextStyle(
     fontFamily: _serif,
     fontSize: 24,
@@ -132,6 +158,37 @@ abstract final class AppTextStyles {
     fontSize: 12,
     fontWeight: FontWeight.w500,
     color: AppColors.ink2,
+  );
+
+  static const TextStyle prayerCardBadge = TextStyle(
+    fontFamily: _sans,
+    fontSize: 9,
+    fontWeight: FontWeight.w800,
+    letterSpacing: 1.8,
+    color: AppColors.gold,
+  );
+
+  static const TextStyle prayerCardProgressMeta = TextStyle(
+    fontFamily: _sans,
+    fontSize: 11,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 0.9,
+    color: AppColors.ink3,
+  );
+
+  static const TextStyle prayerCardPanelTitle = TextStyle(
+    fontFamily: _sans,
+    fontSize: 10,
+    fontWeight: FontWeight.w800,
+    letterSpacing: 2.2,
+    color: AppColors.gold,
+  );
+
+  static const TextStyle prayerCardVerseCount = TextStyle(
+    fontFamily: _sans,
+    fontSize: 11,
+    fontWeight: FontWeight.w700,
+    color: AppColors.ink3,
   );
 
   static const TextStyle dayPillLabel = TextStyle(

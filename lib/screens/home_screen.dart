@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_text_styles.dart';
+import '../data/local/app_database.dart';
 import '../l10n/app_localizations.dart';
 import '../data/models/plan.dart';
 import '../data/models/prayer.dart';
@@ -98,6 +99,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
+    final prayerTimesAsync = ref.watch(prayerTimesSyncProvider);
     final planAsync = ref.watch(monthPlanProvider);
     final plan = planAsync.when(
       skipLoadingOnReload: true,
@@ -133,7 +135,14 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
         selectedDate.year == now.year &&
         selectedDate.month == now.month &&
         selectedDate.day == now.day;
-    const String? locationName = null;
+    final prayerTimesResult = prayerTimesAsync.asData?.value;
+    final prayerTimesToday = isSelectedToday ? prayerTimesResult?.today : null;
+    final locationName = isSelectedToday ? prayerTimesResult?.locationName : null;
+    final cardState = _PrayerCardState.from(
+      now: now,
+      todayRow: prayerTimesToday,
+      tomorrowRow: prayerTimesResult?.tomorrow,
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_weekStripController.hasClients) return;
@@ -213,12 +222,21 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
             final slot =
                 effective.planForDay(clampedDay)?.slotFor(prayer) ??
                 PrayerSlot();
+            final status = cardState.statusFor(prayer, S.of(context)!);
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: PrayerCard(
                 prayer: prayer,
                 slot: slot,
                 masterBySurahId: _masterById,
+                prayerTime: cardState.displayTimeFor(prayer),
+                highlight: status.highlight,
+                badgeLabel: status.badge,
+                trailingMeta: status.trailing,
+                subtitle: status.subtitle,
+                progress: status.progress,
+                progressLeftLabel: status.progressLeft,
+                progressRightLabel: status.progressRight,
                 onToggleLock: () => _toggleLock(
                   year: effective.year,
                   month: effective.month,
@@ -360,5 +378,161 @@ class _WeekStrip extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+class _PrayerCardStatus {
+  const _PrayerCardStatus({
+    this.badge,
+    this.trailing,
+    this.subtitle,
+    this.progress,
+    this.progressLeft,
+    this.progressRight,
+    this.highlight = PrayerCardHighlight.normal,
+  });
+
+  final String? badge;
+  final String? trailing;
+  final String? subtitle;
+  final double? progress;
+  final String? progressLeft;
+  final String? progressRight;
+  final PrayerCardHighlight highlight;
+}
+
+class _PrayerCardState {
+  const _PrayerCardState({
+    required this.times,
+    required this.currentPrayer,
+    required this.upcomingPrayer,
+    required this.tomorrowFajr,
+  });
+
+  final Map<Prayer, DateTime> times;
+  final Prayer? currentPrayer;
+  final Prayer? upcomingPrayer;
+  final DateTime? tomorrowFajr;
+
+  static _PrayerCardState from({
+    required DateTime now,
+    PrayerTime? todayRow,
+    PrayerTime? tomorrowRow,
+  }) {
+    if (todayRow == null) {
+      return const _PrayerCardState(
+        times: {},
+        currentPrayer: null,
+        upcomingPrayer: null,
+        tomorrowFajr: null,
+      );
+    }
+
+    final parsed = <Prayer, DateTime>{};
+    DateTime? parseOn(DateTime day, String hhmm) {
+      final chunks = hhmm.split(':');
+      if (chunks.length < 2) return null;
+      final h = int.tryParse(chunks[0]);
+      final m = int.tryParse(chunks[1]);
+      if (h == null || m == null) return null;
+      return DateTime(day.year, day.month, day.day, h, m);
+    }
+
+    void add(Prayer prayer, String hhmm) {
+      final parsedAt = parseOn(now, hhmm);
+      if (parsedAt == null) return;
+      parsed[prayer] = parsedAt;
+    }
+
+    add(Prayer.fajr, todayRow.fajr);
+    add(Prayer.dhuhr, todayRow.dhuhr);
+    add(Prayer.asr, todayRow.asr);
+    add(Prayer.maghrib, todayRow.maghrib);
+    add(Prayer.isha, todayRow.isha);
+
+    Prayer? current;
+    Prayer? upcoming;
+    for (final prayer in Prayer.values) {
+      final at = parsed[prayer];
+      if (at == null) continue;
+      if (at.isBefore(now) || at.isAtSameMomentAs(now)) {
+        current = prayer;
+      } else {
+        upcoming ??= prayer;
+      }
+    }
+    return _PrayerCardState(
+      times: parsed,
+      currentPrayer: current,
+      upcomingPrayer: upcoming,
+      tomorrowFajr: tomorrowRow == null ? null : parseOn(now.add(const Duration(days: 1)), tomorrowRow.fajr),
+    );
+  }
+
+  _PrayerCardStatus statusFor(Prayer prayer, S s) {
+    if (times.isEmpty) return const _PrayerCardStatus();
+    if (prayer == currentPrayer) {
+      final currentAt = times[prayer];
+      final nextAt = nextTimeAfterCurrent();
+      final progress = (currentAt != null && nextAt != null)
+          ? _windowProgress(currentAt, nextAt)
+          : null;
+      final trailing = _countdownTo(nextAt);
+      return _PrayerCardStatus(
+        badge: s.homeNowPrayingBadge,
+        subtitle: displayTimeFor(prayer) == null
+            ? null
+            : s.homePrayerStartedAt(displayTimeFor(prayer)!),
+        progress: progress,
+        progressLeft: null,
+        progressRight: trailing == null ? null : s.homePrayerUntilNext(trailing),
+        highlight: PrayerCardHighlight.current,
+      );
+    }
+    if (prayer == upcomingPrayer) {
+      return _PrayerCardStatus(
+        badge: s.homeUpNextBadge,
+        trailing: _countdownTo(times[prayer]),
+        highlight: PrayerCardHighlight.upcoming,
+      );
+    }
+    final at = times[prayer];
+    final isPast = at != null && currentPrayer != null && at.isBefore(times[currentPrayer!]!);
+    return _PrayerCardStatus(
+      highlight: isPast ? PrayerCardHighlight.past : PrayerCardHighlight.normal,
+    );
+  }
+
+  String? displayTimeFor(Prayer prayer) {
+    final at = times[prayer];
+    if (at == null) return null;
+    return DateFormat('HH:mm').format(at);
+  }
+
+  DateTime? nextTimeAfterCurrent() {
+    if (currentPrayer == null) return null;
+    if (upcomingPrayer != null) return times[upcomingPrayer!];
+    return tomorrowFajr;
+  }
+
+  double _windowProgress(DateTime start, DateTime end) {
+    final totalMs = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
+    if (totalMs <= 0) return 0;
+    final nowMs = DateTime.now().millisecondsSinceEpoch;
+    final elapsed = (nowMs - start.millisecondsSinceEpoch).clamp(0, totalMs);
+    return elapsed / totalMs;
+  }
+
+  String? _countdownTo(DateTime? at) {
+    if (at == null) return null;
+    final now = DateTime.now();
+    var diff = at.difference(now);
+    if (diff.isNegative) return null;
+    final hours = diff.inHours;
+    diff -= Duration(hours: hours);
+    final minutes = diff.inMinutes;
+    if (hours > 0) return '${hours}H ${minutes}M';
+    if (minutes <= 0) return null;
+    return '${minutes}M';
   }
 }

@@ -1112,6 +1112,567 @@ class MonthPlansCompanion extends UpdateCompanion<MonthPlanRow> {
   }
 }
 
+class $PrayerTimesTable extends PrayerTimes
+    with TableInfo<$PrayerTimesTable, PrayerTime> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PrayerTimesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<String> date = GeneratedColumn<String>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fajrMeta = const VerificationMeta('fajr');
+  @override
+  late final GeneratedColumn<String> fajr = GeneratedColumn<String>(
+    'fajr',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dhuhrMeta = const VerificationMeta('dhuhr');
+  @override
+  late final GeneratedColumn<String> dhuhr = GeneratedColumn<String>(
+    'dhuhr',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _asrMeta = const VerificationMeta('asr');
+  @override
+  late final GeneratedColumn<String> asr = GeneratedColumn<String>(
+    'asr',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _maghribMeta = const VerificationMeta(
+    'maghrib',
+  );
+  @override
+  late final GeneratedColumn<String> maghrib = GeneratedColumn<String>(
+    'maghrib',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ishaMeta = const VerificationMeta('isha');
+  @override
+  late final GeneratedColumn<String> isha = GeneratedColumn<String>(
+    'isha',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _latitudeMeta = const VerificationMeta(
+    'latitude',
+  );
+  @override
+  late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
+    'latitude',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _longitudeMeta = const VerificationMeta(
+    'longitude',
+  );
+  @override
+  late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
+    'longitude',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _locationNameMeta = const VerificationMeta(
+    'locationName',
+  );
+  @override
+  late final GeneratedColumn<String> locationName = GeneratedColumn<String>(
+    'location_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    date,
+    fajr,
+    dhuhr,
+    asr,
+    maghrib,
+    isha,
+    latitude,
+    longitude,
+    locationName,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'prayer_times';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PrayerTime> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('fajr')) {
+      context.handle(
+        _fajrMeta,
+        fajr.isAcceptableOrUnknown(data['fajr']!, _fajrMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fajrMeta);
+    }
+    if (data.containsKey('dhuhr')) {
+      context.handle(
+        _dhuhrMeta,
+        dhuhr.isAcceptableOrUnknown(data['dhuhr']!, _dhuhrMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dhuhrMeta);
+    }
+    if (data.containsKey('asr')) {
+      context.handle(
+        _asrMeta,
+        asr.isAcceptableOrUnknown(data['asr']!, _asrMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_asrMeta);
+    }
+    if (data.containsKey('maghrib')) {
+      context.handle(
+        _maghribMeta,
+        maghrib.isAcceptableOrUnknown(data['maghrib']!, _maghribMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_maghribMeta);
+    }
+    if (data.containsKey('isha')) {
+      context.handle(
+        _ishaMeta,
+        isha.isAcceptableOrUnknown(data['isha']!, _ishaMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ishaMeta);
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(
+        _latitudeMeta,
+        latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_latitudeMeta);
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(
+        _longitudeMeta,
+        longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_longitudeMeta);
+    }
+    if (data.containsKey('location_name')) {
+      context.handle(
+        _locationNameMeta,
+        locationName.isAcceptableOrUnknown(
+          data['location_name']!,
+          _locationNameMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {date};
+  @override
+  PrayerTime map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PrayerTime(
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}date'],
+      )!,
+      fajr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}fajr'],
+      )!,
+      dhuhr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dhuhr'],
+      )!,
+      asr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}asr'],
+      )!,
+      maghrib: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}maghrib'],
+      )!,
+      isha: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}isha'],
+      )!,
+      latitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}latitude'],
+      )!,
+      longitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}longitude'],
+      )!,
+      locationName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location_name'],
+      ),
+    );
+  }
+
+  @override
+  $PrayerTimesTable createAlias(String alias) {
+    return $PrayerTimesTable(attachedDatabase, alias);
+  }
+}
+
+class PrayerTime extends DataClass implements Insertable<PrayerTime> {
+  final String date;
+  final String fajr;
+  final String dhuhr;
+  final String asr;
+  final String maghrib;
+  final String isha;
+  final double latitude;
+  final double longitude;
+  final String? locationName;
+  const PrayerTime({
+    required this.date,
+    required this.fajr,
+    required this.dhuhr,
+    required this.asr,
+    required this.maghrib,
+    required this.isha,
+    required this.latitude,
+    required this.longitude,
+    this.locationName,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['date'] = Variable<String>(date);
+    map['fajr'] = Variable<String>(fajr);
+    map['dhuhr'] = Variable<String>(dhuhr);
+    map['asr'] = Variable<String>(asr);
+    map['maghrib'] = Variable<String>(maghrib);
+    map['isha'] = Variable<String>(isha);
+    map['latitude'] = Variable<double>(latitude);
+    map['longitude'] = Variable<double>(longitude);
+    if (!nullToAbsent || locationName != null) {
+      map['location_name'] = Variable<String>(locationName);
+    }
+    return map;
+  }
+
+  PrayerTimesCompanion toCompanion(bool nullToAbsent) {
+    return PrayerTimesCompanion(
+      date: Value(date),
+      fajr: Value(fajr),
+      dhuhr: Value(dhuhr),
+      asr: Value(asr),
+      maghrib: Value(maghrib),
+      isha: Value(isha),
+      latitude: Value(latitude),
+      longitude: Value(longitude),
+      locationName: locationName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(locationName),
+    );
+  }
+
+  factory PrayerTime.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PrayerTime(
+      date: serializer.fromJson<String>(json['date']),
+      fajr: serializer.fromJson<String>(json['fajr']),
+      dhuhr: serializer.fromJson<String>(json['dhuhr']),
+      asr: serializer.fromJson<String>(json['asr']),
+      maghrib: serializer.fromJson<String>(json['maghrib']),
+      isha: serializer.fromJson<String>(json['isha']),
+      latitude: serializer.fromJson<double>(json['latitude']),
+      longitude: serializer.fromJson<double>(json['longitude']),
+      locationName: serializer.fromJson<String?>(json['locationName']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'date': serializer.toJson<String>(date),
+      'fajr': serializer.toJson<String>(fajr),
+      'dhuhr': serializer.toJson<String>(dhuhr),
+      'asr': serializer.toJson<String>(asr),
+      'maghrib': serializer.toJson<String>(maghrib),
+      'isha': serializer.toJson<String>(isha),
+      'latitude': serializer.toJson<double>(latitude),
+      'longitude': serializer.toJson<double>(longitude),
+      'locationName': serializer.toJson<String?>(locationName),
+    };
+  }
+
+  PrayerTime copyWith({
+    String? date,
+    String? fajr,
+    String? dhuhr,
+    String? asr,
+    String? maghrib,
+    String? isha,
+    double? latitude,
+    double? longitude,
+    Value<String?> locationName = const Value.absent(),
+  }) => PrayerTime(
+    date: date ?? this.date,
+    fajr: fajr ?? this.fajr,
+    dhuhr: dhuhr ?? this.dhuhr,
+    asr: asr ?? this.asr,
+    maghrib: maghrib ?? this.maghrib,
+    isha: isha ?? this.isha,
+    latitude: latitude ?? this.latitude,
+    longitude: longitude ?? this.longitude,
+    locationName: locationName.present ? locationName.value : this.locationName,
+  );
+  PrayerTime copyWithCompanion(PrayerTimesCompanion data) {
+    return PrayerTime(
+      date: data.date.present ? data.date.value : this.date,
+      fajr: data.fajr.present ? data.fajr.value : this.fajr,
+      dhuhr: data.dhuhr.present ? data.dhuhr.value : this.dhuhr,
+      asr: data.asr.present ? data.asr.value : this.asr,
+      maghrib: data.maghrib.present ? data.maghrib.value : this.maghrib,
+      isha: data.isha.present ? data.isha.value : this.isha,
+      latitude: data.latitude.present ? data.latitude.value : this.latitude,
+      longitude: data.longitude.present ? data.longitude.value : this.longitude,
+      locationName: data.locationName.present
+          ? data.locationName.value
+          : this.locationName,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PrayerTime(')
+          ..write('date: $date, ')
+          ..write('fajr: $fajr, ')
+          ..write('dhuhr: $dhuhr, ')
+          ..write('asr: $asr, ')
+          ..write('maghrib: $maghrib, ')
+          ..write('isha: $isha, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationName: $locationName')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    date,
+    fajr,
+    dhuhr,
+    asr,
+    maghrib,
+    isha,
+    latitude,
+    longitude,
+    locationName,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PrayerTime &&
+          other.date == this.date &&
+          other.fajr == this.fajr &&
+          other.dhuhr == this.dhuhr &&
+          other.asr == this.asr &&
+          other.maghrib == this.maghrib &&
+          other.isha == this.isha &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
+          other.locationName == this.locationName);
+}
+
+class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
+  final Value<String> date;
+  final Value<String> fajr;
+  final Value<String> dhuhr;
+  final Value<String> asr;
+  final Value<String> maghrib;
+  final Value<String> isha;
+  final Value<double> latitude;
+  final Value<double> longitude;
+  final Value<String?> locationName;
+  final Value<int> rowid;
+  const PrayerTimesCompanion({
+    this.date = const Value.absent(),
+    this.fajr = const Value.absent(),
+    this.dhuhr = const Value.absent(),
+    this.asr = const Value.absent(),
+    this.maghrib = const Value.absent(),
+    this.isha = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.locationName = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PrayerTimesCompanion.insert({
+    required String date,
+    required String fajr,
+    required String dhuhr,
+    required String asr,
+    required String maghrib,
+    required String isha,
+    required double latitude,
+    required double longitude,
+    this.locationName = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : date = Value(date),
+       fajr = Value(fajr),
+       dhuhr = Value(dhuhr),
+       asr = Value(asr),
+       maghrib = Value(maghrib),
+       isha = Value(isha),
+       latitude = Value(latitude),
+       longitude = Value(longitude);
+  static Insertable<PrayerTime> custom({
+    Expression<String>? date,
+    Expression<String>? fajr,
+    Expression<String>? dhuhr,
+    Expression<String>? asr,
+    Expression<String>? maghrib,
+    Expression<String>? isha,
+    Expression<double>? latitude,
+    Expression<double>? longitude,
+    Expression<String>? locationName,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (date != null) 'date': date,
+      if (fajr != null) 'fajr': fajr,
+      if (dhuhr != null) 'dhuhr': dhuhr,
+      if (asr != null) 'asr': asr,
+      if (maghrib != null) 'maghrib': maghrib,
+      if (isha != null) 'isha': isha,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
+      if (locationName != null) 'location_name': locationName,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PrayerTimesCompanion copyWith({
+    Value<String>? date,
+    Value<String>? fajr,
+    Value<String>? dhuhr,
+    Value<String>? asr,
+    Value<String>? maghrib,
+    Value<String>? isha,
+    Value<double>? latitude,
+    Value<double>? longitude,
+    Value<String?>? locationName,
+    Value<int>? rowid,
+  }) {
+    return PrayerTimesCompanion(
+      date: date ?? this.date,
+      fajr: fajr ?? this.fajr,
+      dhuhr: dhuhr ?? this.dhuhr,
+      asr: asr ?? this.asr,
+      maghrib: maghrib ?? this.maghrib,
+      isha: isha ?? this.isha,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      locationName: locationName ?? this.locationName,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (date.present) {
+      map['date'] = Variable<String>(date.value);
+    }
+    if (fajr.present) {
+      map['fajr'] = Variable<String>(fajr.value);
+    }
+    if (dhuhr.present) {
+      map['dhuhr'] = Variable<String>(dhuhr.value);
+    }
+    if (asr.present) {
+      map['asr'] = Variable<String>(asr.value);
+    }
+    if (maghrib.present) {
+      map['maghrib'] = Variable<String>(maghrib.value);
+    }
+    if (isha.present) {
+      map['isha'] = Variable<String>(isha.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<double>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<double>(longitude.value);
+    }
+    if (locationName.present) {
+      map['location_name'] = Variable<String>(locationName.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PrayerTimesCompanion(')
+          ..write('date: $date, ')
+          ..write('fajr: $fajr, ')
+          ..write('dhuhr: $dhuhr, ')
+          ..write('asr: $asr, ')
+          ..write('maghrib: $maghrib, ')
+          ..write('isha: $isha, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationName: $locationName, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -1120,9 +1681,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this,
   );
   late final $MonthPlansTable monthPlans = $MonthPlansTable(this);
+  late final $PrayerTimesTable prayerTimes = $PrayerTimesTable(this);
   late final SurahDao surahDao = SurahDao(this as AppDatabase);
   late final PoolEntryDao poolEntryDao = PoolEntryDao(this as AppDatabase);
   late final MonthPlanDao monthPlanDao = MonthPlanDao(this as AppDatabase);
+  late final PrayerTimeDao prayerTimeDao = PrayerTimeDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1131,6 +1694,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     surahs,
     surahPoolEntries,
     monthPlans,
+    prayerTimes,
   ];
 }
 
@@ -1978,6 +2542,284 @@ typedef $$MonthPlansTableProcessedTableManager =
       MonthPlanRow,
       PrefetchHooks Function()
     >;
+typedef $$PrayerTimesTableCreateCompanionBuilder =
+    PrayerTimesCompanion Function({
+      required String date,
+      required String fajr,
+      required String dhuhr,
+      required String asr,
+      required String maghrib,
+      required String isha,
+      required double latitude,
+      required double longitude,
+      Value<String?> locationName,
+      Value<int> rowid,
+    });
+typedef $$PrayerTimesTableUpdateCompanionBuilder =
+    PrayerTimesCompanion Function({
+      Value<String> date,
+      Value<String> fajr,
+      Value<String> dhuhr,
+      Value<String> asr,
+      Value<String> maghrib,
+      Value<String> isha,
+      Value<double> latitude,
+      Value<double> longitude,
+      Value<String?> locationName,
+      Value<int> rowid,
+    });
+
+class $$PrayerTimesTableFilterComposer
+    extends Composer<_$AppDatabase, $PrayerTimesTable> {
+  $$PrayerTimesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fajr => $composableBuilder(
+    column: $table.fajr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dhuhr => $composableBuilder(
+    column: $table.dhuhr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get asr => $composableBuilder(
+    column: $table.asr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get maghrib => $composableBuilder(
+    column: $table.maghrib,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get isha => $composableBuilder(
+    column: $table.isha,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get latitude => $composableBuilder(
+    column: $table.latitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get longitude => $composableBuilder(
+    column: $table.longitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get locationName => $composableBuilder(
+    column: $table.locationName,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PrayerTimesTableOrderingComposer
+    extends Composer<_$AppDatabase, $PrayerTimesTable> {
+  $$PrayerTimesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fajr => $composableBuilder(
+    column: $table.fajr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get dhuhr => $composableBuilder(
+    column: $table.dhuhr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get asr => $composableBuilder(
+    column: $table.asr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get maghrib => $composableBuilder(
+    column: $table.maghrib,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get isha => $composableBuilder(
+    column: $table.isha,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get latitude => $composableBuilder(
+    column: $table.latitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get longitude => $composableBuilder(
+    column: $table.longitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get locationName => $composableBuilder(
+    column: $table.locationName,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PrayerTimesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PrayerTimesTable> {
+  $$PrayerTimesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get fajr =>
+      $composableBuilder(column: $table.fajr, builder: (column) => column);
+
+  GeneratedColumn<String> get dhuhr =>
+      $composableBuilder(column: $table.dhuhr, builder: (column) => column);
+
+  GeneratedColumn<String> get asr =>
+      $composableBuilder(column: $table.asr, builder: (column) => column);
+
+  GeneratedColumn<String> get maghrib =>
+      $composableBuilder(column: $table.maghrib, builder: (column) => column);
+
+  GeneratedColumn<String> get isha =>
+      $composableBuilder(column: $table.isha, builder: (column) => column);
+
+  GeneratedColumn<double> get latitude =>
+      $composableBuilder(column: $table.latitude, builder: (column) => column);
+
+  GeneratedColumn<double> get longitude =>
+      $composableBuilder(column: $table.longitude, builder: (column) => column);
+
+  GeneratedColumn<String> get locationName => $composableBuilder(
+    column: $table.locationName,
+    builder: (column) => column,
+  );
+}
+
+class $$PrayerTimesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PrayerTimesTable,
+          PrayerTime,
+          $$PrayerTimesTableFilterComposer,
+          $$PrayerTimesTableOrderingComposer,
+          $$PrayerTimesTableAnnotationComposer,
+          $$PrayerTimesTableCreateCompanionBuilder,
+          $$PrayerTimesTableUpdateCompanionBuilder,
+          (
+            PrayerTime,
+            BaseReferences<_$AppDatabase, $PrayerTimesTable, PrayerTime>,
+          ),
+          PrayerTime,
+          PrefetchHooks Function()
+        > {
+  $$PrayerTimesTableTableManager(_$AppDatabase db, $PrayerTimesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PrayerTimesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PrayerTimesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PrayerTimesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> date = const Value.absent(),
+                Value<String> fajr = const Value.absent(),
+                Value<String> dhuhr = const Value.absent(),
+                Value<String> asr = const Value.absent(),
+                Value<String> maghrib = const Value.absent(),
+                Value<String> isha = const Value.absent(),
+                Value<double> latitude = const Value.absent(),
+                Value<double> longitude = const Value.absent(),
+                Value<String?> locationName = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PrayerTimesCompanion(
+                date: date,
+                fajr: fajr,
+                dhuhr: dhuhr,
+                asr: asr,
+                maghrib: maghrib,
+                isha: isha,
+                latitude: latitude,
+                longitude: longitude,
+                locationName: locationName,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String date,
+                required String fajr,
+                required String dhuhr,
+                required String asr,
+                required String maghrib,
+                required String isha,
+                required double latitude,
+                required double longitude,
+                Value<String?> locationName = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PrayerTimesCompanion.insert(
+                date: date,
+                fajr: fajr,
+                dhuhr: dhuhr,
+                asr: asr,
+                maghrib: maghrib,
+                isha: isha,
+                latitude: latitude,
+                longitude: longitude,
+                locationName: locationName,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PrayerTimesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PrayerTimesTable,
+      PrayerTime,
+      $$PrayerTimesTableFilterComposer,
+      $$PrayerTimesTableOrderingComposer,
+      $$PrayerTimesTableAnnotationComposer,
+      $$PrayerTimesTableCreateCompanionBuilder,
+      $$PrayerTimesTableUpdateCompanionBuilder,
+      (
+        PrayerTime,
+        BaseReferences<_$AppDatabase, $PrayerTimesTable, PrayerTime>,
+      ),
+      PrayerTime,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1988,6 +2830,8 @@ class $AppDatabaseManager {
       $$SurahPoolEntriesTableTableManager(_db, _db.surahPoolEntries);
   $$MonthPlansTableTableManager get monthPlans =>
       $$MonthPlansTableTableManager(_db, _db.monthPlans);
+  $$PrayerTimesTableTableManager get prayerTimes =>
+      $$PrayerTimesTableTableManager(_db, _db.prayerTimes);
 }
 
 mixin _$SurahDaoMixin on DatabaseAccessor<AppDatabase> {
@@ -2031,4 +2875,16 @@ class MonthPlanDaoManager {
   MonthPlanDaoManager(this._db);
   $$MonthPlansTableTableManager get monthPlans =>
       $$MonthPlansTableTableManager(_db.attachedDatabase, _db.monthPlans);
+}
+
+mixin _$PrayerTimeDaoMixin on DatabaseAccessor<AppDatabase> {
+  $PrayerTimesTable get prayerTimes => attachedDatabase.prayerTimes;
+  PrayerTimeDaoManager get managers => PrayerTimeDaoManager(this);
+}
+
+class PrayerTimeDaoManager {
+  final _$PrayerTimeDaoMixin _db;
+  PrayerTimeDaoManager(this._db);
+  $$PrayerTimesTableTableManager get prayerTimes =>
+      $$PrayerTimesTableTableManager(_db.attachedDatabase, _db.prayerTimes);
 }

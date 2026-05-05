@@ -149,6 +149,16 @@
   },
   "prayerAyatCount": "{count} ayat",
   "@prayerAyatCount": { "placeholders": { "count": {"type": "int"} } },
+  "homeNowPrayingBadge": "NOW PRAYING",
+  "homeUpNextBadge": "UP NEXT",
+  "homePrayerStartedAt": "started {time}",
+  "@homePrayerStartedAt": {
+    "placeholders": { "time": {"type": "String"} }
+  },
+  "homePrayerUntilNext": "IN {duration} UNTIL NEXT",
+  "@homePrayerUntilNext": {
+    "placeholders": { "duration": {"type": "String"} }
+  },
   "readerNoVerses": "No verses found.",
   "readerLoadErrorRetry": "Could not load verses. Tap to retry.",
   "readerSourceAttribution": "Quran text and translation source: quran.com (Quran Foundation).",
