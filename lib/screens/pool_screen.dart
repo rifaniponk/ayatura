@@ -55,16 +55,16 @@ class _PoolScreenState extends ConsumerState<PoolScreen> {
     final poolAsync = ref.watch(poolEntriesAsyncProvider);
     final surahsAsync = ref.watch(surahsAsyncProvider);
 
-    final fab = surahsAsync.maybeWhen(
-      data: (surahs) => surahs.isEmpty
-          ? null
-          : FloatingActionButton.extended(
-              onPressed: _openEditor,
-              icon: const Icon(Icons.add_rounded),
-              label: Text(s.hifdhFabAdd),
-            ),
-      orElse: () => null,
-    );
+    final fab = switch ((poolAsync, surahsAsync)) {
+      (AsyncData(value: final pool), AsyncData(value: final surahs))
+          when surahs.isNotEmpty && pool.isNotEmpty =>
+        FloatingActionButton.extended(
+          onPressed: _openEditor,
+          icon: const Icon(Icons.add_rounded),
+          label: Text(s.hifdhFabAdd),
+        ),
+      _ => null,
+    };
 
     // Nested inside AppShell's root Scaffold so the FAB is scoped to this tab
     // only. SnackBars from _PoolBody should use ScaffoldMessenger.of(context)
