@@ -311,70 +311,71 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
                     ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 6,
-                    children: [
-                      OutlinedButton.icon(
-                        onPressed: busy ? null : _onRegenerate,
-                        icon: busy
-                            ? const SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
+                if (effective != null)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 6,
+                      children: [
+                        OutlinedButton.icon(
+                          onPressed: busy ? null : _onRegenerate,
+                          icon: busy
+                              ? const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: AppColors.green,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.refresh_rounded,
+                                  size: 18,
                                   color: AppColors.green,
                                 ),
-                              )
-                            : const Icon(
-                                Icons.refresh_rounded,
-                                size: 18,
-                                color: AppColors.green,
-                              ),
-                        label: Text(
-                          s.monthRegenerateCompact,
-                          style: AppTextStyles.smallLabel.copyWith(
+                          label: Text(
+                            s.monthRegenerateCompact,
+                            style: AppTextStyles.smallLabel.copyWith(
+                              color: AppColors.green,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.green,
+                            side: const BorderSide(color: AppColors.green2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                            visualDensity: VisualDensity.compact,
+                          ),
+                        ),
+                        OutlinedButton.icon(
+                          onPressed: busy ? null : _onClearAllLocks,
+                          icon: const Icon(
+                            Icons.lock_open_rounded,
+                            size: 18,
                             color: AppColors.green,
                           ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.green,
-                          side: const BorderSide(color: AppColors.green2),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
+                          label: Text(
+                            s.monthClearAllLocks,
+                            style: AppTextStyles.smallLabel.copyWith(
+                              color: AppColors.green,
+                            ),
                           ),
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      ),
-                      OutlinedButton.icon(
-                        onPressed: busy ? null : _onClearAllLocks,
-                        icon: const Icon(
-                          Icons.lock_open_rounded,
-                          size: 18,
-                          color: AppColors.green,
-                        ),
-                        label: Text(
-                          s.monthClearAllLocks,
-                          style: AppTextStyles.smallLabel.copyWith(
-                            color: AppColors.green,
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.green,
+                            side: const BorderSide(color: AppColors.green2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                            visualDensity: VisualDensity.compact,
                           ),
                         ),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.green,
-                          side: const BorderSide(color: AppColors.green2),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
           ),
