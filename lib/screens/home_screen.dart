@@ -112,6 +112,17 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
     }
   }
 
+  Future<void> _toggleLock({
+    required int year,
+    required int month,
+    required int day,
+    required Prayer prayer,
+  }) async {
+    await ref
+        .read(monthPlanProvider.notifier)
+        .toggleSlotLock(year: year, month: month, day: day, prayer: prayer);
+  }
+
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
@@ -160,6 +171,12 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                 prayer: prayer,
                 slot: slot,
                 masterBySurahId: _masterById,
+                onToggleLock: () => _toggleLock(
+                  year: effective.year,
+                  month: effective.month,
+                  day: clampedDay,
+                  prayer: prayer,
+                ),
                 onTap: slot.surahs.isEmpty
                     ? null
                     : () => showQuranReaderSheet(

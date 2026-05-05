@@ -65,6 +65,32 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
     }
   }
 
+  Future<void> _onClearAllLocks() async {
+    final viewed = ref.read(viewedMonthProvider);
+    final cleared = await ref
+        .read(monthPlanProvider.notifier)
+        .clearLocksForMonth(year: viewed.year, month: viewed.month);
+    if (!mounted) return;
+    final s = S.of(context)!;
+    final message = cleared == 0
+        ? s.monthNoLocksToClear
+        : s.monthClearedLocksSnackbar(cleared);
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _toggleLock({
+    required int year,
+    required int month,
+    required int day,
+    required Prayer prayer,
+  }) async {
+    await ref
+        .read(monthPlanProvider.notifier)
+        .toggleSlotLock(year: year, month: month, day: day, prayer: prayer);
+  }
+
   bool _allSlotsLocked(DayPlan d) {
     for (final p in Prayer.values) {
       if (!d.slotFor(p).locked) return false;
@@ -218,6 +244,12 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
               isToday: isToday,
               isPastDay: isPast,
               allSlotsLocked: _allSlotsLocked(d),
+              onToggleLock: (prayer) => _toggleLock(
+                year: viewed.year,
+                month: viewed.month,
+                day: d.day,
+                prayer: prayer,
+              ),
             ),
           );
         },
@@ -281,37 +313,66 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
                 ),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: OutlinedButton.icon(
-                    onPressed: busy ? null : _onRegenerate,
-                    icon: busy
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: AppColors.green,
-                            ),
-                          )
-                        : const Icon(
-                            Icons.refresh_rounded,
-                            size: 18,
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 6,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: busy ? null : _onRegenerate,
+                        icon: busy
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: AppColors.green,
+                                ),
+                              )
+                            : const Icon(
+                                Icons.refresh_rounded,
+                                size: 18,
+                                color: AppColors.green,
+                              ),
+                        label: Text(
+                          s.monthRegenerateCompact,
+                          style: AppTextStyles.smallLabel.copyWith(
                             color: AppColors.green,
                           ),
-                    label: Text(
-                      s.monthRegenerateCompact,
-                      style: AppTextStyles.smallLabel.copyWith(
-                        color: AppColors.green,
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.green,
+                          side: const BorderSide(color: AppColors.green2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          visualDensity: VisualDensity.compact,
+                        ),
                       ),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.green,
-                      side: const BorderSide(color: AppColors.green2),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
+                      OutlinedButton.icon(
+                        onPressed: busy ? null : _onClearAllLocks,
+                        icon: const Icon(
+                          Icons.lock_open_rounded,
+                          size: 18,
+                          color: AppColors.green,
+                        ),
+                        label: Text(
+                          s.monthClearAllLocks,
+                          style: AppTextStyles.smallLabel.copyWith(
+                            color: AppColors.green,
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.green,
+                          side: const BorderSide(color: AppColors.green2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          visualDensity: VisualDensity.compact,
+                        ),
                       ),
-                      visualDensity: VisualDensity.compact,
-                    ),
+                    ],
                   ),
                 ),
               ],

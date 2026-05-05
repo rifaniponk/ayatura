@@ -329,6 +329,35 @@ class SId extends S {
   String get prayerNoReadings => 'Tidak ada bacaan yang ditugaskan';
 
   @override
+  String get lockSlotTooltip => 'Kunci slot';
+
+  @override
+  String get unlockSlotTooltip => 'Buka kunci slot';
+
+  @override
+  String get slotLockedSnackbar => 'Slot dikunci';
+
+  @override
+  String get slotUnlockedSnackbar => 'Kunci slot dibuka';
+
+  @override
+  String get monthClearAllLocks => 'Buka semua kunci';
+
+  @override
+  String get monthNoLocksToClear => 'Tidak ada slot terkunci untuk bulan ini.';
+
+  @override
+  String monthClearedLocksSnackbar(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count kunci dibuka',
+      one: '1 kunci dibuka',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String prayerAyatCount(int count) {
     return '$count ayat';
   }

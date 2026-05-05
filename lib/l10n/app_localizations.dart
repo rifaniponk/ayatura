@@ -601,6 +601,48 @@ abstract class S {
   /// **'No readings assigned'**
   String get prayerNoReadings;
 
+  /// No description provided for @lockSlotTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock slot'**
+  String get lockSlotTooltip;
+
+  /// No description provided for @unlockSlotTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock slot'**
+  String get unlockSlotTooltip;
+
+  /// No description provided for @slotLockedSnackbar.
+  ///
+  /// In en, this message translates to:
+  /// **'Slot locked'**
+  String get slotLockedSnackbar;
+
+  /// No description provided for @slotUnlockedSnackbar.
+  ///
+  /// In en, this message translates to:
+  /// **'Slot unlocked'**
+  String get slotUnlockedSnackbar;
+
+  /// No description provided for @monthClearAllLocks.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all locks'**
+  String get monthClearAllLocks;
+
+  /// No description provided for @monthNoLocksToClear.
+  ///
+  /// In en, this message translates to:
+  /// **'No locks to clear for this month.'**
+  String get monthNoLocksToClear;
+
+  /// No description provided for @monthClearedLocksSnackbar.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{Cleared 1 lock} other{Cleared {count} locks}}'**
+  String monthClearedLocksSnackbar(int count);
+
   /// No description provided for @prayerAyatCount.
   ///
   /// In en, this message translates to:

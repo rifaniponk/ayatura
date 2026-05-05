@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:surah_planner/data/models/plan.dart';
+import 'package:surah_planner/data/models/plan_surah.dart';
 import 'package:surah_planner/data/models/prayer.dart';
 import 'package:surah_planner/data/models/surah_pool_entry.dart';
 import 'package:surah_planner/data/services/month_plan_generator.dart';
@@ -93,6 +94,50 @@ void main() {
         second.planForDay(1)!.slotFor(Prayer.fajr).surahs,
         lockedFajr.surahs,
       );
+    });
+
+    test('first deck cycle excludes surahs currently locked somewhere', () {
+      final pool = [_entry(1, 1), _entry(2, 2), _entry(3, 3)];
+      final existing = MonthPlan(
+        month: 7,
+        year: 2026,
+        days: [
+          DayPlan(
+            day: 1,
+            prayers: {
+              Prayer.fajr: PrayerSlot(
+                locked: true,
+                surahs: const [PlanSurah(surahId: 1, isFullSurah: true)],
+              ),
+              for (final p in Prayer.values.where((p) => p != Prayer.fajr))
+                p: PrayerSlot(),
+            },
+          ),
+        ],
+      );
+
+      final plan = MonthPlanGenerator.generate(
+        month: 7,
+        year: 2026,
+        enabledPool: pool,
+        surahsPerPrayer: 1,
+        existingPlan: existing,
+      );
+
+      final dealt = <int>[];
+      for (final day in plan.days) {
+        for (final prayer in Prayer.values) {
+          if (day.day == 1 && prayer == Prayer.fajr) {
+            continue;
+          }
+          final slot = day.slotFor(prayer);
+          if (slot.surahs.isNotEmpty) {
+            dealt.add(slot.surahs.first.surahId);
+          }
+        }
+      }
+      final firstCycle = dealt.take(2).toSet();
+      expect(firstCycle, equals({2, 3}));
     });
 
     test('surahsPerPrayer caps slot size at requested count', () {

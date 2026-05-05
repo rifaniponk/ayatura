@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/models/plan.dart';
+import '../data/models/prayer.dart';
 import '../data/services/month_plan_generator.dart';
 import 'database_provider.dart';
 import 'settings_provider.dart';
@@ -94,6 +95,67 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
       await db.deletePlan(plan.year, plan.month);
     }
     state = const AsyncData(null);
+  }
+
+  Future<void> toggleSlotLock({
+    required int year,
+    required int month,
+    required int day,
+    required Prayer prayer,
+  }) async {
+    final current = state.value;
+    if (current == null || current.year != year || current.month != month) {
+      return;
+    }
+    final updatedDays = current.days.map((d) {
+      if (d.day != day) return d;
+      final existingSlot = d.slotFor(prayer);
+      final nextPrayers = Map<Prayer, PrayerSlot>.from(d.prayers)
+        ..[prayer] = existingSlot.copyWith(locked: !existingSlot.locked);
+      return d.copyWith(prayers: nextPrayers);
+    }).toList();
+    final next = MonthPlan(
+      month: current.month,
+      year: current.year,
+      days: updatedDays,
+    );
+    final db = ref.read(appDatabaseProvider);
+    await db.savePlan(next);
+    state = AsyncData(next);
+  }
+
+  Future<int> clearLocksForMonth({
+    required int year,
+    required int month,
+  }) async {
+    final current = state.value;
+    if (current == null || current.year != year || current.month != month) {
+      return 0;
+    }
+    var cleared = 0;
+    final updatedDays = current.days.map((d) {
+      var changed = false;
+      final nextPrayers = Map<Prayer, PrayerSlot>.from(d.prayers);
+      for (final prayer in Prayer.values) {
+        final slot = d.slotFor(prayer);
+        if (slot.locked) {
+          nextPrayers[prayer] = slot.copyWith(locked: false);
+          cleared++;
+          changed = true;
+        }
+      }
+      return changed ? d.copyWith(prayers: nextPrayers) : d;
+    }).toList();
+    if (cleared == 0) return 0;
+    final next = MonthPlan(
+      month: current.month,
+      year: current.year,
+      days: updatedDays,
+    );
+    final db = ref.read(appDatabaseProvider);
+    await db.savePlan(next);
+    state = AsyncData(next);
+    return cleared;
   }
 }
 

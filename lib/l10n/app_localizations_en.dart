@@ -330,6 +330,35 @@ class SEn extends S {
   String get prayerNoReadings => 'No readings assigned';
 
   @override
+  String get lockSlotTooltip => 'Lock slot';
+
+  @override
+  String get unlockSlotTooltip => 'Unlock slot';
+
+  @override
+  String get slotLockedSnackbar => 'Slot locked';
+
+  @override
+  String get slotUnlockedSnackbar => 'Slot unlocked';
+
+  @override
+  String get monthClearAllLocks => 'Clear all locks';
+
+  @override
+  String get monthNoLocksToClear => 'No locks to clear for this month.';
+
+  @override
+  String monthClearedLocksSnackbar(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Cleared $count locks',
+      one: 'Cleared 1 lock',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String prayerAyatCount(int count) {
     return '$count ayat';
   }

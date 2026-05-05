@@ -17,12 +17,14 @@ class PrayerCard extends StatelessWidget {
     required this.slot,
     required this.masterBySurahId,
     this.onTap,
+    this.onToggleLock,
   });
 
   final Prayer prayer;
   final PrayerSlot slot;
   final Map<int, Surah> masterBySurahId;
   final VoidCallback? onTap;
+  final VoidCallback? onToggleLock;
 
   String _localizedName(S s) => switch (prayer) {
     Prayer.fajr => s.prayerFajr,
@@ -55,7 +57,7 @@ class PrayerCard extends StatelessWidget {
             ),
           ],
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        padding: const EdgeInsets.fromLTRB(14, 2, 14, 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -65,14 +67,21 @@ class PrayerCard extends StatelessWidget {
                   _localizedName(s).toUpperCase(),
                   style: AppTextStyles.prayerLabel,
                 ),
-                if (slot.locked) ...[
-                  const SizedBox(width: 6),
-                  const Text('🔒', style: TextStyle(fontSize: 11)),
-                ],
+                if (slot.locked) ...[const SizedBox(width: 6)],
                 const Spacer(),
+                IconButton(
+                  icon: Icon(
+                    slot.locked ? Icons.lock_rounded : Icons.lock_open_rounded,
+                    size: 18,
+                    color: slot.locked ? AppColors.gold : AppColors.ink3,
+                  ),
+                  tooltip: slot.locked
+                      ? s.unlockSlotTooltip
+                      : s.lockSlotTooltip,
+                  onPressed: onToggleLock,
+                ),
               ],
             ),
-            const SizedBox(height: 8),
             if (slot.surahs.isEmpty)
               Text(
                 s.prayerNoReadings,
