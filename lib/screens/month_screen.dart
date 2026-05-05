@@ -80,6 +80,26 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
+  Future<void> _toggleLock({
+    required int year,
+    required int month,
+    required int day,
+    required Prayer prayer,
+    required bool currentlyLocked,
+  }) async {
+    await ref
+        .read(monthPlanProvider.notifier)
+        .toggleSlotLock(year: year, month: month, day: day, prayer: prayer);
+    if (!mounted) return;
+    final s = S.of(context)!;
+    final message = currentlyLocked
+        ? s.slotUnlockedSnackbar
+        : s.slotLockedSnackbar;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
   bool _allSlotsLocked(DayPlan d) {
     for (final p in Prayer.values) {
       if (!d.slotFor(p).locked) return false;
@@ -233,6 +253,13 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
               isToday: isToday,
               isPastDay: isPast,
               allSlotsLocked: _allSlotsLocked(d),
+              onToggleLock: (prayer) => _toggleLock(
+                year: viewed.year,
+                month: viewed.month,
+                day: d.day,
+                prayer: prayer,
+                currentlyLocked: d.slotFor(prayer).locked,
+              ),
             ),
           );
         },

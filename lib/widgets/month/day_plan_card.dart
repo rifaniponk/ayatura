@@ -23,6 +23,7 @@ class DayPlanCard extends StatelessWidget {
     required this.isToday,
     required this.isPastDay,
     required this.allSlotsLocked,
+    required this.onToggleLock,
   });
 
   final DayPlan dayPlan;
@@ -32,6 +33,7 @@ class DayPlanCard extends StatelessWidget {
   final bool isToday;
   final bool isPastDay;
   final bool allSlotsLocked;
+  final ValueChanged<Prayer> onToggleLock;
 
   static bool calendarDayIsPast(int y, int m, int d, DateTime now) {
     final t = DateTime(now.year, now.month, now.day);
@@ -149,6 +151,7 @@ class DayPlanCard extends StatelessWidget {
               s: s,
               lang: lang,
               masterBySurahId: masterBySurahId,
+              onToggleLock: () => onToggleLock(Prayer.values[i]),
             ),
           ],
         ],
@@ -203,6 +206,7 @@ class _CompactPrayerRow extends StatelessWidget {
     required this.s,
     required this.lang,
     required this.masterBySurahId,
+    required this.onToggleLock,
   });
 
   final Prayer prayer;
@@ -210,6 +214,7 @@ class _CompactPrayerRow extends StatelessWidget {
   final S s;
   final String lang;
   final Map<int, Surah> masterBySurahId;
+  final VoidCallback onToggleLock;
 
   static String _segment(PlanSurah ps, Surah? m, String lang, S s) {
     final name = m?.localizedName(lang) ?? 'Surah ${ps.surahId}';
@@ -263,6 +268,19 @@ class _CompactPrayerRow extends StatelessWidget {
             ),
           ),
           Expanded(child: Text(line, style: valueStyle, softWrap: true)),
+          const SizedBox(width: 6),
+          IconButton(
+            visualDensity: VisualDensity.compact,
+            constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+            padding: EdgeInsets.zero,
+            icon: Icon(
+              slot.locked ? Icons.lock_rounded : Icons.lock_open_rounded,
+              size: 16,
+              color: slot.locked ? AppColors.gold : AppColors.ink3,
+            ),
+            tooltip: slot.locked ? s.unlockSlotTooltip : s.lockSlotTooltip,
+            onPressed: onToggleLock,
+          ),
         ],
       ),
     );
