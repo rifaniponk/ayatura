@@ -39,7 +39,8 @@ class MonthPlanDao extends DatabaseAccessor<AppDatabase>
         planJson: jsonEncode(plan.toJson()),
       ),
       onConflict: DoUpdate(
-        (old) => MonthPlansCompanion(planJson: Value(jsonEncode(plan.toJson()))),
+        (old) =>
+            MonthPlansCompanion(planJson: Value(jsonEncode(plan.toJson()))),
       ),
     );
   }

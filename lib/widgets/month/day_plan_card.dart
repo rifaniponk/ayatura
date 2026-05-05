@@ -281,7 +281,9 @@ class _CompactPrayerRow extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Expanded(child: Text(line, style: valueStyle, softWrap: true)),
+                    Expanded(
+                      child: Text(line, style: valueStyle, softWrap: true),
+                    ),
                   ],
                 ),
               ),

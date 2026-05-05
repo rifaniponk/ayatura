@@ -9,12 +9,11 @@ import 'surah_data_providers.dart';
 
 typedef YearMonth = ({int year, int month});
 
-final monthPlanByYearMonthProvider = FutureProvider.family<MonthPlan?, YearMonth>(
-  (ref, ym) {
-    final db = ref.watch(appDatabaseProvider);
-    return db.loadPlan(ym.year, ym.month);
-  },
-);
+final monthPlanByYearMonthProvider =
+    FutureProvider.family<MonthPlan?, YearMonth>((ref, ym) {
+      final db = ref.watch(appDatabaseProvider);
+      return db.loadPlan(ym.year, ym.month);
+    });
 
 /// True while [MonthPlanNotifier.regenerate] is running (Month tab button UX).
 class MonthPlanRegenerateBusy extends Notifier<bool> {

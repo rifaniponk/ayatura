@@ -107,6 +107,8 @@
   "editorAddButton": "Add to hifdh list",
   "editorSaveButton": "Save",
   "editorNoSurahsAvailable": "No surahs available.",
+  "editorPickerSearchHint": "Search by surah name",
+  "editorPickerNoResults": "No results",
 
   "editorModeNormal": "Normal",
   "editorModeBulkByJuz": "Bulk by Juz",

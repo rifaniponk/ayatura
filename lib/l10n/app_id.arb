@@ -61,6 +61,8 @@
   "editorAddButton": "Tambah ke daftar hafalan",
   "editorSaveButton": "Simpan",
   "editorNoSurahsAvailable": "Tidak ada surah yang tersedia.",
+  "editorPickerSearchHint": "Cari nama surah",
+  "editorPickerNoResults": "Tidak ada hasil",
   "editorModeNormal": "Biasa",
   "editorModeBulkByJuz": "Massal per juz",
   "editorJuzLabel": "Juz",
