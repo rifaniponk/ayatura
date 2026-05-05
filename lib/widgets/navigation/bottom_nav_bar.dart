@@ -48,10 +48,13 @@ class AppBottomNavBar extends StatelessWidget {
         children: List.generate(items.length, (i) {
           final isActive = i == currentIndex;
           return Expanded(
-            child: GestureDetector(
-              onTap: () => onTap(i),
-              behavior: HitTestBehavior.opaque,
-              child: _NavItemWidget(item: items[i], isActive: isActive),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => onTap(i),
+                customBorder: const RoundedRectangleBorder(),
+                child: _NavItemWidget(item: items[i], isActive: isActive),
+              ),
             ),
           );
         }),
@@ -76,31 +79,43 @@ class _NavItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final disableAnimations = MediaQuery.disableAnimationsOf(context);
+    final duration = disableAnimations
+        ? Duration.zero
+        : const Duration(milliseconds: 180);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
-          curve: Curves.easeOut,
-          width: 52,
-          height: 32,
-          decoration: BoxDecoration(
-            gradient: isActive ? AppColors.buttonGradient : null,
-            color: isActive ? null : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(
-            isActive ? (item.activeIcon ?? item.icon) : item.icon,
-            size: 22,
-            color: isActive ? AppColors.white : AppColors.bottomNavInactive,
+        AnimatedScale(
+          scale: isActive ? 1 : 0.94,
+          duration: duration,
+          curve: Curves.easeOutBack,
+          child: AnimatedContainer(
+            duration: duration,
+            curve: Curves.easeOut,
+            width: 52,
+            height: 32,
+            decoration: BoxDecoration(
+              gradient: isActive ? AppColors.buttonGradient : null,
+              color: isActive ? null : Colors.transparent,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              isActive ? (item.activeIcon ?? item.icon) : item.icon,
+              size: 22,
+              color: isActive ? AppColors.white : AppColors.bottomNavInactive,
+            ),
           ),
         ),
         const SizedBox(height: 3),
-        Text(
-          item.label,
+        AnimatedDefaultTextStyle(
+          duration: duration,
+          curve: Curves.easeOut,
           style: AppTextStyles.navLabel.copyWith(
             color: isActive ? AppColors.green : AppColors.bottomNavInactive,
           ),
+          child: Text(item.label),
         ),
       ],
     );
