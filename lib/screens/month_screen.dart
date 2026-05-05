@@ -12,6 +12,7 @@ import '../providers/providers.dart';
 import '../widgets/common/gradient_app_bar.dart';
 import '../widgets/common/gradient_button.dart';
 import '../widgets/month/day_plan_card.dart';
+import '../widgets/home/quran_reader_sheet.dart';
 
 /// Month review: browse any allowed month, see full per-prayer assignments,
 /// regenerate for the viewed month, auto-scroll to today on the current month.
@@ -241,6 +242,16 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
                 day: d.day,
                 prayer: prayer,
               ),
+              onTapPrayer: (prayer) {
+                final slot = d.slotFor(prayer);
+                if (slot.surahs.isEmpty) return;
+                showQuranReaderSheet(
+                  context,
+                  prayer: prayer,
+                  slot: slot,
+                  masterById: masterById,
+                );
+              },
             ),
           );
         },

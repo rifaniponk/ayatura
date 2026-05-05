@@ -24,6 +24,7 @@ class DayPlanCard extends StatelessWidget {
     required this.isPastDay,
     required this.allSlotsLocked,
     required this.onToggleLock,
+    required this.onTapPrayer,
   });
 
   final DayPlan dayPlan;
@@ -34,6 +35,7 @@ class DayPlanCard extends StatelessWidget {
   final bool isPastDay;
   final bool allSlotsLocked;
   final ValueChanged<Prayer> onToggleLock;
+  final ValueChanged<Prayer> onTapPrayer;
 
   static bool calendarDayIsPast(int y, int m, int d, DateTime now) {
     final t = DateTime(now.year, now.month, now.day);
@@ -152,6 +154,7 @@ class DayPlanCard extends StatelessWidget {
               lang: lang,
               masterBySurahId: masterBySurahId,
               onToggleLock: () => onToggleLock(Prayer.values[i]),
+              onTap: () => onTapPrayer(Prayer.values[i]),
             ),
           ],
         ],
@@ -207,6 +210,7 @@ class _CompactPrayerRow extends StatelessWidget {
     required this.lang,
     required this.masterBySurahId,
     required this.onToggleLock,
+    required this.onTap,
   });
 
   final Prayer prayer;
@@ -215,6 +219,7 @@ class _CompactPrayerRow extends StatelessWidget {
   final String lang;
   final Map<int, Surah> masterBySurahId;
   final VoidCallback onToggleLock;
+  final VoidCallback onTap;
 
   static String _segment(PlanSurah ps, Surah? m, String lang, S s) {
     final name = m?.localizedName(lang) ?? 'Surah ${ps.surahId}';
@@ -255,19 +260,33 @@ class _CompactPrayerRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: _kPrayerColWidth,
-            child: Text(
-              prayer.shortLabel,
-              style: AppTextStyles.prayerLabel.copyWith(
-                fontSize: 10.5,
-                letterSpacing: 0.6,
-                height: 1.2,
-                color: AppColors.green,
+          Expanded(
+            child: InkWell(
+              onTap: slot.surahs.isEmpty ? null : onTap,
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: _kPrayerColWidth,
+                      child: Text(
+                        prayer.shortLabel,
+                        style: AppTextStyles.prayerLabel.copyWith(
+                          fontSize: 10.5,
+                          letterSpacing: 0.6,
+                          height: 1.2,
+                          color: AppColors.green,
+                        ),
+                      ),
+                    ),
+                    Expanded(child: Text(line, style: valueStyle, softWrap: true)),
+                  ],
+                ),
               ),
             ),
           ),
-          Expanded(child: Text(line, style: valueStyle, softWrap: true)),
           const SizedBox(width: 6),
           IconButton(
             visualDensity: VisualDensity.compact,
