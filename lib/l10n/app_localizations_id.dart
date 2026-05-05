@@ -248,6 +248,12 @@ class SId extends S {
   String get editorNoSurahsAvailable => 'Tidak ada surah yang tersedia.';
 
   @override
+  String get editorPickerSearchHint => 'Cari nama surah';
+
+  @override
+  String get editorPickerNoResults => 'Tidak ada hasil';
+
+  @override
   String get editorModeNormal => 'Biasa';
 
   @override

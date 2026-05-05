@@ -463,6 +463,18 @@ abstract class S {
   /// **'No surahs available.'**
   String get editorNoSurahsAvailable;
 
+  /// No description provided for @editorPickerSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by surah name'**
+  String get editorPickerSearchHint;
+
+  /// No description provided for @editorPickerNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results'**
+  String get editorPickerNoResults;
+
   /// No description provided for @editorModeNormal.
   ///
   /// In en, this message translates to:

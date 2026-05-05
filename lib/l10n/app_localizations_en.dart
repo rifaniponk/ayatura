@@ -248,6 +248,12 @@ class SEn extends S {
   String get editorNoSurahsAvailable => 'No surahs available.';
 
   @override
+  String get editorPickerSearchHint => 'Search by surah name';
+
+  @override
+  String get editorPickerNoResults => 'No results';
+
+  @override
   String get editorModeNormal => 'Normal';
 
   @override
