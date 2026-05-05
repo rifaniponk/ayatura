@@ -244,6 +244,10 @@ class _PoolSegmentEditorSheetState
     }
 
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    final disableAnimations = MediaQuery.disableAnimationsOf(context);
+    final modeSwitchDuration = disableAnimations
+        ? Duration.zero
+        : const Duration(milliseconds: 280);
 
     return Padding(
       padding: EdgeInsets.only(left: 20, right: 20, bottom: bottomInset + 20),
@@ -281,54 +285,87 @@ class _PoolSegmentEditorSheetState
             ),
             const SizedBox(height: 16),
           ],
-          if (_isAdd && _bulkMode)
-            _BulkByJuzPanel(
-              saving: _saving,
-              selectedJuz: _selectedJuz,
-              surahs: surahs,
-              lang: Localizations.localeOf(context).languageCode,
-              checkedIds: _bulkCheckedSurahIds,
-              onJuzChanged: _onJuzChanged,
-              onToggleSurah: (id, checked) {
-                setState(() {
-                  if (checked) {
-                    _bulkCheckedSurahIds.add(id);
-                  } else {
-                    _bulkCheckedSurahIds.remove(id);
-                  }
-                });
+          AnimatedSize(
+            duration: modeSwitchDuration,
+            curve: Curves.easeInOut,
+            child: AnimatedSwitcher(
+              duration: modeSwitchDuration,
+              switchInCurve: Curves.easeOutCubic,
+              switchOutCurve: Curves.easeInCubic,
+              transitionBuilder: (child, animation) {
+                final isBulkChild = child.key == const ValueKey('bulk_mode');
+                final enteringOffset = disableAnimations
+                    ? Offset.zero
+                    : (_bulkMode
+                          ? (isBulkChild
+                                ? const Offset(0, 0.08)
+                                : const Offset(0, -0.08))
+                          : (isBulkChild
+                                ? const Offset(0, -0.08)
+                                : const Offset(0, 0.08)));
+
+                return FadeTransition(
+                  opacity: animation,
+                  child: SlideTransition(
+                    position: Tween<Offset>(
+                      begin: enteringOffset,
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  ),
+                );
               },
-              onSelectAll: _bulkSelectAll,
-              onDeselectAll: _bulkDeselectAll,
-              onSubmit: _submitBulk,
-            )
-          else
-            SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: _NormalSegmentFields(
-                  saving: _saving,
-                  surahs: surahs,
-                  surahId: _surahId!,
-                  fullSurah: _fullSurah,
-                  master: _surah,
-                  existing: widget.existing,
-                  startCtl: _startCtl,
-                  endCtl: _endCtl,
-                  formKey: _formKey,
-                  duplicateError: _duplicateError,
-                  onSurahChanged: (v) => setState(() {
-                    _surahId = v;
-                    _duplicateError = null;
-                  }),
-                  onFullSurahChanged: (v) => setState(() {
-                    _fullSurah = v;
-                    _duplicateError = null;
-                  }),
-                  onSubmit: _submit,
-                ),
-              ),
+              child: (_isAdd && _bulkMode)
+                  ? _BulkByJuzPanel(
+                      key: const ValueKey('bulk_mode'),
+                      saving: _saving,
+                      selectedJuz: _selectedJuz,
+                      surahs: surahs,
+                      lang: Localizations.localeOf(context).languageCode,
+                      checkedIds: _bulkCheckedSurahIds,
+                      onJuzChanged: _onJuzChanged,
+                      onToggleSurah: (id, checked) {
+                        setState(() {
+                          if (checked) {
+                            _bulkCheckedSurahIds.add(id);
+                          } else {
+                            _bulkCheckedSurahIds.remove(id);
+                          }
+                        });
+                      },
+                      onSelectAll: _bulkSelectAll,
+                      onDeselectAll: _bulkDeselectAll,
+                      onSubmit: _submitBulk,
+                    )
+                  : SingleChildScrollView(
+                      key: const ValueKey('normal_mode'),
+                      child: Form(
+                        key: _formKey,
+                        child: _NormalSegmentFields(
+                          saving: _saving,
+                          surahs: surahs,
+                          surahId: _surahId!,
+                          fullSurah: _fullSurah,
+                          master: _surah,
+                          existing: widget.existing,
+                          startCtl: _startCtl,
+                          endCtl: _endCtl,
+                          formKey: _formKey,
+                          duplicateError: _duplicateError,
+                          onSurahChanged: (v) => setState(() {
+                            _surahId = v;
+                            _duplicateError = null;
+                          }),
+                          onFullSurahChanged: (v) => setState(() {
+                            _fullSurah = v;
+                            _duplicateError = null;
+                          }),
+                          onSubmit: _submit,
+                        ),
+                      ),
+                    ),
             ),
+          ),
           SizedBox(height: MediaQuery.paddingOf(context).bottom),
         ],
       ),
@@ -471,6 +508,7 @@ class _NormalSegmentFields extends StatelessWidget {
 
 class _BulkByJuzPanel extends ConsumerWidget {
   const _BulkByJuzPanel({
+    super.key,
     required this.saving,
     required this.selectedJuz,
     required this.surahs,
