@@ -57,6 +57,10 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
 
   late Map<int, Surah> _masterById;
   final ScrollController _weekStripController = ScrollController();
+  final ScrollController _listController = ScrollController();
+  final Map<Prayer, GlobalKey> _prayerKeys = {
+    for (final prayer in Prayer.values) prayer: GlobalKey(),
+  };
   late DateTime _clockNow;
   Timer? _clockTimer;
 
@@ -85,6 +89,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
   void dispose() {
     _clockTimer?.cancel();
     _weekStripController.dispose();
+    _listController.dispose();
     super.dispose();
   }
 
@@ -157,6 +162,21 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
       tomorrowRow: prayerTimesResult?.tomorrow,
     );
 
+    void scrollToCurrentPrayer() {
+      if (!isSelectedToday) return;
+      final currentPrayer = cardState.currentPrayer;
+      if (currentPrayer == null) return;
+      final targetKey = _prayerKeys[currentPrayer];
+      final targetContext = targetKey?.currentContext;
+      if (targetContext == null || !_listController.hasClients) return;
+      Scrollable.ensureVisible(
+        targetContext,
+        alignment: 0.2,
+        duration: const Duration(milliseconds: 320),
+        curve: Curves.easeOutCubic,
+      );
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_weekStripController.hasClients) return;
       final itemExtent = _dayTileWidth + _dayTileGap;
@@ -174,7 +194,22 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
       );
     });
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      scrollToCurrentPrayer();
+    });
+
+    ref.listen(navIndexProvider, (previous, next) {
+      if (next == 0) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          scrollToCurrentPrayer();
+        });
+      }
+    });
+
     return ListView(
+      controller: _listController,
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
       children: [
         if (effective != null) ...[
@@ -237,6 +272,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                 PrayerSlot();
             final status = cardState.statusFor(prayer, S.of(context)!);
             return Padding(
+              key: _prayerKeys[prayer],
               padding: const EdgeInsets.only(bottom: 12),
               child: PrayerCard(
                 prayer: prayer,
