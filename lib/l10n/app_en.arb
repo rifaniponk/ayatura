@@ -135,6 +135,16 @@
   "prayerMaghrib": "Maghrib",
   "prayerIsha": "Isha",
   "prayerNoReadings": "No readings assigned",
+  "lockSlotTooltip": "Lock slot",
+  "unlockSlotTooltip": "Unlock slot",
+  "slotLockedSnackbar": "Slot locked",
+  "slotUnlockedSnackbar": "Slot unlocked",
+  "monthClearAllLocks": "Clear all locks",
+  "monthNoLocksToClear": "No locks to clear for this month.",
+  "monthClearedLocksSnackbar": "{count, plural, one{Cleared 1 lock} other{Cleared {count} locks}}",
+  "@monthClearedLocksSnackbar": {
+    "placeholders": { "count": {"type": "int"} }
+  },
   "prayerAyatCount": "{count} ayat",
   "@prayerAyatCount": { "placeholders": { "count": {"type": "int"} } },
   "readerNoVerses": "No verses found.",

@@ -90,5 +90,31 @@ void main() {
       await db.deletePlan(plan.year, plan.month);
       expect(await db.loadLatestPlan(), isNull);
     });
+
+    test('locked slot survives persistence round-trip', () async {
+      final plan = MonthPlan(
+        month: 8,
+        year: 2026,
+        days: [
+          DayPlan(
+            day: 1,
+            prayers: {
+              Prayer.isha: PrayerSlot(
+                locked: true,
+                surahs: const [PlanSurah(surahId: 67, isFullSurah: true)],
+              ),
+            },
+          ),
+        ],
+      );
+      await db.savePlan(plan);
+      final loaded = await db.loadLatestPlan();
+      expect(loaded, isNotNull);
+      expect(loaded!.planForDay(1)!.slotFor(Prayer.isha).locked, isTrue);
+      expect(
+        loaded.planForDay(1)!.slotFor(Prayer.isha).surahs.first.surahId,
+        67,
+      );
+    });
   });
 }
