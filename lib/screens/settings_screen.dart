@@ -121,19 +121,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               const SizedBox(height: 32),
               ref
-                      .watch(packageInfoProvider)
-                      .whenData(
-                        (info) => Text(
-                          'v${info.version} (${info.buildNumber})',
-                          textAlign: TextAlign.center,
-                          style: AppTextStyles.meta.copyWith(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onSurface.withValues(alpha: 0.35),
-                          ),
-                        ),
-                      ) ??
-                  const SizedBox.shrink(),
+                  .watch(packageInfoProvider)
+                  .maybeWhen(
+                    data: (info) => Text(
+                      'v${info.version} (${info.buildNumber})',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.meta.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.35),
+                      ),
+                    ),
+                    orElse: () => const SizedBox.shrink(),
+                  ),
             ],
           ),
         ),
