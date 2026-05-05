@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
+import '../core/theme/app_colors.dart';
 import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
 import '../data/models/plan.dart';
@@ -9,7 +11,6 @@ import '../data/models/surah.dart';
 import '../data/models/surah_pool_entry.dart';
 import '../providers/providers.dart';
 import '../widgets/common/empty_state.dart';
-import '../widgets/common/gradient_app_bar.dart';
 import '../widgets/common/gradient_button.dart';
 import '../widgets/home/quran_reader_sheet.dart';
 import '../widgets/prayer/prayer_card.dart';
@@ -19,59 +20,20 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final s = S.of(context)!;
     final surahsAsync = ref.watch(surahsAsyncProvider);
     final poolAsync = ref.watch(poolEntriesAsyncProvider);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const _HomeGradientAppBar(),
-        Expanded(
-          child: switch ((surahsAsync, poolAsync)) {
-            (AsyncError(:final error), _) || (_, AsyncError(:final error)) =>
-              Center(child: Text(s.errorGeneric('$error'))),
-            (AsyncData(value: final surahs), AsyncData(value: final pool)) =>
-              surahs.isEmpty
-                  ? Center(child: Text(s.noSurahsLoaded))
-                  : _HomeBody(surahs: surahs, pool: pool),
-            _ => const Center(child: CircularProgressIndicator()),
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class _HomeGradientAppBar extends ConsumerWidget
-    implements PreferredSizeWidget {
-  const _HomeGradientAppBar();
-
-  @override
-  Size get preferredSize => const Size.fromHeight(80);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context)!;
-    final surahsAsync = ref.watch(surahsAsyncProvider);
-    final subtitle = surahsAsync.maybeWhen(
-      data: (surahs) {
-        if (surahs.isEmpty) return s.noSurahsLoaded;
-        final poolAsync = ref.watch(poolEntriesAsyncProvider);
-        return poolAsync.maybeWhen(
-          data: (pool) =>
-              s.appBarSubtitleChaptersPool(surahs.length, pool.length),
-          orElse: () => s.appBarSubtitleChaptersLoading(surahs.length),
-        );
-      },
-      orElse: () => null,
-    );
-
-    return GradientAppBar(
-      title: s.appTitle,
-      subtitle: subtitle,
-      showLogo: true,
-    );
+    return switch ((surahsAsync, poolAsync)) {
+      (AsyncError(:final error), _) || (_, AsyncError(:final error)) => Center(
+        child: Text(s.errorGeneric('$error')),
+      ),
+      (AsyncData(value: final surahs), AsyncData(value: final pool)) =>
+        surahs.isEmpty
+            ? Center(child: Text(s.noSurahsLoaded))
+            : _HomeBody(surahs: surahs, pool: pool),
+      _ => const Center(child: CircularProgressIndicator()),
+    };
   }
 }
 
@@ -86,7 +48,11 @@ class _HomeBody extends ConsumerStatefulWidget {
 }
 
 class _HomeBodyState extends ConsumerState<_HomeBody> {
+  static const double _dayTileWidth = 50;
+  static const double _dayTileGap = 14;
+
   late Map<int, Surah> _masterById;
+  final ScrollController _weekStripController = ScrollController();
 
   @override
   void initState() {
@@ -100,6 +66,12 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
     if (old.surahs != widget.surahs) {
       _masterById = {for (final s in widget.surahs) s.id: s};
     }
+  }
+
+  @override
+  void dispose() {
+    _weekStripController.dispose();
+    super.dispose();
   }
 
   Future<void> _generate() async {
@@ -149,18 +121,94 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
         ? DateTime(effective.year, effective.month + 1, 0).day
         : DateTime(now.year, now.month + 1, 0).day;
     final clampedDay = selectedDay.clamp(1, daysInMonth);
+    final selectedDate = effective != null
+        ? DateTime(effective.year, effective.month, clampedDay)
+        : DateTime(now.year, now.month, clampedDay);
+    final localeTag = Localizations.localeOf(context).toLanguageTag();
+    final titleDate = DateFormat(
+      'EEEE, d MMMM',
+      localeTag,
+    ).format(selectedDate);
+    final isSelectedToday =
+        selectedDate.year == now.year &&
+        selectedDate.month == now.month &&
+        selectedDate.day == now.day;
+    const String? locationName = null;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_weekStripController.hasClients) return;
+      final itemExtent = _dayTileWidth + _dayTileGap;
+      final targetCenter = (clampedDay - 1) * itemExtent + (_dayTileWidth / 2);
+      final viewportCenter =
+          _weekStripController.position.viewportDimension / 2;
+      final rawOffset = targetCenter - viewportCenter;
+      final maxOffset = _weekStripController.position.maxScrollExtent;
+      final nextOffset = rawOffset.clamp(0.0, maxOffset);
+      if ((_weekStripController.offset - nextOffset).abs() < 1) return;
+      _weekStripController.animateTo(
+        nextOffset,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
+      );
+    });
 
     return ListView(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
       children: [
         if (effective != null) ...[
-          _DaySelectorRow(
+          _WeekStrip(
+            controller: _weekStripController,
+            year: effective.year,
+            month: effective.month,
             selectedDay: clampedDay,
             daysInMonth: daysInMonth,
+            today: now,
             onChanged: (d) =>
                 ref.read(selectedPlanDayProvider.notifier).setDay(d),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
+          if (isSelectedToday)
+            Text(
+              S.of(context)!.monthTodayChip,
+              style: AppTextStyles.sectionEyebrow.copyWith(
+                color: AppColors.ink3,
+                letterSpacing: 1.5,
+              ),
+            ),
+          if (isSelectedToday) const SizedBox(height: 4),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  titleDate,
+                  style: AppTextStyles.sectionHeadingSerif.copyWith(
+                    color: AppColors.green,
+                    fontSize: 24,
+                    height: 1.05,
+                  ),
+                ),
+              ),
+              if (locationName != null)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.greenOverlay06,
+                    borderRadius: BorderRadius.circular(99),
+                  ),
+                  child: Text(
+                    '• $locationName',
+                    style: AppTextStyles.smallLabel.copyWith(
+                      color: AppColors.ink3,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 14),
           ...Prayer.values.map((prayer) {
             final slot =
                 effective.planForDay(clampedDay)?.slotFor(prayer) ??
@@ -209,42 +257,108 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
   }
 }
 
-class _DaySelectorRow extends StatelessWidget {
-  const _DaySelectorRow({
+class _WeekStrip extends StatelessWidget {
+  const _WeekStrip({
+    required this.controller,
+    required this.year,
+    required this.month,
     required this.selectedDay,
     required this.daysInMonth,
+    required this.today,
     required this.onChanged,
   });
 
+  final ScrollController controller;
+  final int year;
+  final int month;
   final int selectedDay;
   final int daysInMonth;
+  final DateTime today;
   final ValueChanged<int> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final s = S.of(context)!;
-    return Row(
-      children: [
-        Text(s.dayLabel, style: AppTextStyles.sectionHeadingSerif),
-        const SizedBox(width: 12),
-        IconButton.filledTonal(
-          onPressed: selectedDay > 1 ? () => onChanged(selectedDay - 1) : null,
-          icon: const Icon(Icons.chevron_left_rounded),
-        ),
-        Expanded(
-          child: Text(
-            s.dayOfMonth(selectedDay, daysInMonth),
-            textAlign: TextAlign.center,
-            style: AppTextStyles.cardLabel,
-          ),
-        ),
-        IconButton.filledTonal(
-          onPressed: selectedDay < daysInMonth
-              ? () => onChanged(selectedDay + 1)
-              : null,
-          icon: const Icon(Icons.chevron_right_rounded),
-        ),
-      ],
+    final localeTag = Localizations.localeOf(context).toLanguageTag();
+    return SizedBox(
+      height: 66,
+      child: ListView.separated(
+        controller: controller,
+        scrollDirection: Axis.horizontal,
+        itemCount: daysInMonth,
+        separatorBuilder: (_, _) =>
+            const SizedBox(width: _HomeBodyState._dayTileGap),
+        itemBuilder: (context, index) {
+          final day = index + 1;
+          final date = DateTime(year, month, day);
+          final weekday = DateFormat(
+            'EEE',
+            localeTag,
+          ).format(date).toUpperCase();
+          final selected = day == selectedDay;
+          final isToday =
+              date.year == today.year &&
+              date.month == today.month &&
+              date.day == today.day;
+
+          return SizedBox(
+            width: _HomeBodyState._dayTileWidth,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(14),
+              onTap: () => onChanged(day),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
+                padding: const EdgeInsets.fromLTRB(6, 6, 6, 5),
+                decoration: BoxDecoration(
+                  gradient: selected ? AppColors.buttonGradient : null,
+                  color: selected ? null : Colors.transparent,
+                  borderRadius: BorderRadius.circular(14),
+                  border: selected ? Border.all(color: AppColors.green2) : null,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      weekday,
+                      style: AppTextStyles.smallLabel.copyWith(
+                        fontSize: 9,
+                        letterSpacing: 0.8,
+                        color: selected ? AppColors.white : AppColors.ink3,
+                        fontWeight: selected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      '$day',
+                      style: AppTextStyles.cardLabel.copyWith(
+                        color: selected ? AppColors.white : AppColors.ink,
+                        fontSize: 19,
+                        fontWeight: selected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    AnimatedOpacity(
+                      opacity: isToday ? 1 : 0,
+                      duration: const Duration(milliseconds: 180),
+                      child: Container(
+                        width: 5,
+                        height: 5,
+                        decoration: const BoxDecoration(
+                          color: AppColors.gold,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
