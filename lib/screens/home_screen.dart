@@ -310,11 +310,9 @@ class _WeekStrip extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(6, 6, 6, 5),
                 decoration: BoxDecoration(
                   gradient: selected ? AppColors.buttonGradient : null,
-                  color: selected ? null : AppColors.white,
+                  color: selected ? null : Colors.transparent,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: selected ? AppColors.green2 : AppColors.border,
-                  ),
+                  border: selected ? Border.all(color: AppColors.green2) : null,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -325,7 +323,9 @@ class _WeekStrip extends StatelessWidget {
                         fontSize: 9,
                         letterSpacing: 0.8,
                         color: selected ? AppColors.white : AppColors.ink3,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: selected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: 3),
@@ -334,6 +334,9 @@ class _WeekStrip extends StatelessWidget {
                       style: AppTextStyles.cardLabel.copyWith(
                         color: selected ? AppColors.white : AppColors.ink,
                         fontSize: 19,
+                        fontWeight: selected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: 3),
