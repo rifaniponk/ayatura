@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -51,14 +53,24 @@ class _HomeBody extends ConsumerStatefulWidget {
 class _HomeBodyState extends ConsumerState<_HomeBody> {
   static const double _dayTileWidth = 50;
   static const double _dayTileGap = 14;
+  static const Duration _countdownRefreshInterval = Duration(seconds: 20);
 
   late Map<int, Surah> _masterById;
   final ScrollController _weekStripController = ScrollController();
+  late DateTime _clockNow;
+  Timer? _clockTimer;
 
   @override
   void initState() {
     super.initState();
     _masterById = {for (final s in widget.surahs) s.id: s};
+    _clockNow = DateTime.now();
+    _clockTimer = Timer.periodic(_countdownRefreshInterval, (_) {
+      if (!mounted) return;
+      setState(() {
+        _clockNow = DateTime.now();
+      });
+    });
   }
 
   @override
@@ -71,6 +83,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
 
   @override
   void dispose() {
+    _clockTimer?.cancel();
     _weekStripController.dispose();
     super.dispose();
   }
@@ -98,7 +111,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
+    final now = _clockNow;
     final prayerTimesAsync = ref.watch(prayerTimesSyncProvider);
     final planAsync = ref.watch(monthPlanProvider);
     final plan = planAsync.when(
@@ -403,12 +416,14 @@ class _PrayerCardStatus {
 
 class _PrayerCardState {
   const _PrayerCardState({
+    required this.referenceNow,
     required this.times,
     required this.currentPrayer,
     required this.upcomingPrayer,
     required this.tomorrowFajr,
   });
 
+  final DateTime referenceNow;
   final Map<Prayer, DateTime> times;
   final Prayer? currentPrayer;
   final Prayer? upcomingPrayer;
@@ -420,7 +435,8 @@ class _PrayerCardState {
     PrayerTime? tomorrowRow,
   }) {
     if (todayRow == null) {
-      return const _PrayerCardState(
+      return _PrayerCardState(
+        referenceNow: DateTime.fromMillisecondsSinceEpoch(0),
         times: {},
         currentPrayer: null,
         upcomingPrayer: null,
@@ -462,6 +478,7 @@ class _PrayerCardState {
       }
     }
     return _PrayerCardState(
+      referenceNow: now,
       times: parsed,
       currentPrayer: current,
       upcomingPrayer: upcoming,
@@ -518,15 +535,14 @@ class _PrayerCardState {
   double _windowProgress(DateTime start, DateTime end) {
     final totalMs = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
     if (totalMs <= 0) return 0;
-    final nowMs = DateTime.now().millisecondsSinceEpoch;
+    final nowMs = referenceNow.millisecondsSinceEpoch;
     final elapsed = (nowMs - start.millisecondsSinceEpoch).clamp(0, totalMs);
     return elapsed / totalMs;
   }
 
   String? _countdownTo(DateTime? at) {
     if (at == null) return null;
-    final now = DateTime.now();
-    var diff = at.difference(now);
+    var diff = at.difference(referenceNow);
     if (diff.isNegative) return null;
     final hours = diff.inHours;
     diff -= Duration(hours: hours);
