@@ -32,9 +32,6 @@ class PrayerTimesSyncService {
   static const _aladhanMethod = '20';
 
   Future<PrayerTimesSyncResult?> syncAndLoadToday() async {
-    final location = await _resolveLocation();
-    if (location == null) return null;
-
     final today = _dayOnly(DateTime.now());
     final days = List<DateTime>.generate(
       7,
@@ -43,7 +40,32 @@ class PrayerTimesSyncService {
     );
     final dayKeys = days.map(_isoDate).toList(growable: false);
     final existing = await _db.prayerTimesByDates(dayKeys);
-    final missingDays = days.where((day) => !existing.containsKey(_isoDate(day)));
+    final missingDays = days
+        .where((day) => !existing.containsKey(_isoDate(day)))
+        .toList(growable: false);
+
+    // Cache-first: skip all network calls when all requested dates are present.
+    if (missingDays.isEmpty) {
+      final todayRow = existing[_isoDate(today)];
+      if (todayRow == null) return null;
+      return PrayerTimesSyncResult(
+        today: todayRow,
+        tomorrow: existing[_isoDate(today.add(const Duration(days: 1)))],
+        locationName: todayRow.locationName,
+      );
+    }
+
+    final location = await _resolveLocation();
+    if (location == null) {
+      // Graceful fallback: return cached rows (if any) when refresh is impossible.
+      final todayRow = existing[_isoDate(today)];
+      if (todayRow == null) return null;
+      return PrayerTimesSyncResult(
+        today: todayRow,
+        tomorrow: existing[_isoDate(today.add(const Duration(days: 1)))],
+        locationName: todayRow.locationName,
+      );
+    }
 
     for (final day in missingDays) {
       final timings = await _fetchTiming(day: day, location: location);
