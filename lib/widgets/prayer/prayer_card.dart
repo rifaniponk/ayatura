@@ -156,128 +156,130 @@ class PrayerCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                    Row(
-                      children: [
-                        if (hasBadge)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(99),
-                              border: Border.all(
-                                color: AppColors.goldOverlay30,
+                        Row(
+                          children: [
+                            if (hasBadge)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(99),
+                                  border: Border.all(
+                                    color: AppColors.goldOverlay30,
+                                  ),
+                                  color: const Color(0x262C6B52),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const _NowPrayingDot(),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      badgeLabel!,
+                                      style: AppTextStyles.prayerCardBadge
+                                          .copyWith(color: AppColors.gold),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              color: const Color(0x262C6B52),
+                            const Spacer(),
+                            IconButton(
+                              icon: Icon(
+                                slot.locked
+                                    ? Icons.lock_rounded
+                                    : Icons.lock_open_rounded,
+                                size: 18,
+                                color: slot.locked
+                                    ? AppColors.gold
+                                    : AppColors.white,
+                              ),
+                              tooltip: slot.locked
+                                  ? s.unlockSlotTooltip
+                                  : s.lockSlotTooltip,
+                              onPressed: onToggleLock,
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const _NowPrayingDot(),
-                                const SizedBox(width: 8),
-                                Text(
-                                  badgeLabel!,
-                                  style: AppTextStyles.prayerCardBadge.copyWith(
-                                    color: AppColors.gold,
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              _localizedName(s),
+                              style: AppTextStyles.prayerCurrentTitle.copyWith(
+                                color: AppColors.gold,
+                              ),
+                            ),
+                            if (subtitle != null) ...[
+                              const SizedBox(width: 10),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Text(
+                                  subtitle!,
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    color: const Color(0xCCE7EEEA),
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        const Spacer(),
-                        IconButton(
-                          icon: Icon(
-                            slot.locked
-                                ? Icons.lock_rounded
-                                : Icons.lock_open_rounded,
-                            size: 18,
-                            color: slot.locked
-                                ? AppColors.gold
-                                : AppColors.white,
-                          ),
-                          tooltip: slot.locked
-                              ? s.unlockSlotTooltip
-                              : s.lockSlotTooltip,
-                          onPressed: onToggleLock,
+                              ),
+                            ],
+                          ],
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          _localizedName(s),
-                          style: AppTextStyles.prayerCurrentTitle.copyWith(
+                        const SizedBox(height: 10),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(99),
+                          child: LinearProgressIndicator(
+                            minHeight: 6,
+                            value: progress?.clamp(0.0, 1.0) ?? 0.0,
+                            backgroundColor: const Color(0x3AFFFFFF),
                             color: AppColors.gold,
                           ),
                         ),
-                        if (subtitle != null) ...[
-                          const SizedBox(width: 10),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Text(
-                              subtitle!,
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                color: const Color(0xCCE7EEEA),
-                                fontWeight: FontWeight.w700,
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(child: const SizedBox.shrink()),
+                            if (progressRightLabel != null)
+                              Text(
+                                progressRightLabel!,
+                                style: AppTextStyles.prayerCardProgressMeta
+                                    .copyWith(
+                                      color: AppColors.gold,
+                                      fontWeight: FontWeight.w800,
+                                    ),
                               ),
-                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(color: const Color(0x3382A78E)),
+                            color: const Color(0x16000504),
                           ),
-                        ],
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(99),
-                      child: LinearProgressIndicator(
-                        minHeight: 6,
-                        value: progress?.clamp(0.0, 1.0) ?? 0.0,
-                        backgroundColor: const Color(0x3AFFFFFF),
-                        color: AppColors.gold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(child: const SizedBox.shrink()),
-                        if (progressRightLabel != null)
-                          Text(
-                            progressRightLabel!,
-                            style: AppTextStyles.prayerCardProgressMeta
-                                .copyWith(
-                                  color: AppColors.gold,
-                                  fontWeight: FontWeight.w800,
+                          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ..._buildSurahRows(
+                                s: s,
+                                lang: lang,
+                                textColor: AppColors.white,
+                                metaColor: const Color(0xB7FFFFFF),
+                                indexGradient: const LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Color(0xFF7C9252),
+                                    Color(0xFF3A6F5D),
+                                  ],
                                 ),
+                              ),
+                            ],
                           ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: const Color(0x3382A78E)),
-                        color: const Color(0x16000504),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ..._buildSurahRows(
-                            s: s,
-                            lang: lang,
-                            textColor: AppColors.white,
-                            metaColor: const Color(0xB7FFFFFF),
-                            indexGradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Color(0xFF7C9252), Color(0xFF3A6F5D)],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        ),
                       ],
                     ),
                   ),
@@ -336,7 +338,6 @@ class PrayerCard extends StatelessWidget {
                       _localizedName(s),
                       style: AppTextStyles.prayerHighlightedTitle.copyWith(
                         color: isCurrent ? AppColors.gold : AppColors.green,
-                        fontSize: isUpcoming ? 22 : null,
                       ),
                     ),
                   const Spacer(),

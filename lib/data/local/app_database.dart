@@ -94,7 +94,8 @@ class AppDatabase extends _$AppDatabase {
   Future<Map<String, PrayerTime>> prayerTimesByDates(Iterable<String> dates) =>
       prayerTimeDao.byDates(dates);
 
-  Future<PrayerTime?> prayerTimeByDate(String date) => prayerTimeDao.byDate(date);
+  Future<PrayerTime?> prayerTimeByDate(String date) =>
+      prayerTimeDao.byDate(date);
 
   Future<void> upsertPrayerTime(PrayerTimesCompanion row) =>
       prayerTimeDao.upsert(row);

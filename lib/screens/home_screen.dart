@@ -156,7 +156,9 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
         selectedDate.day == now.day;
     final prayerTimesResult = prayerTimesAsync.asData?.value;
     final prayerTimesToday = isSelectedToday ? prayerTimesResult?.today : null;
-    final locationName = isSelectedToday ? prayerTimesResult?.locationName : null;
+    final locationName = isSelectedToday
+        ? prayerTimesResult?.locationName
+        : null;
     final cardState = _PrayerCardState.from(
       now: now,
       todayRow: prayerTimesToday,
@@ -469,6 +471,7 @@ class _PrayerCardState {
   final Prayer? currentPrayer;
   final Prayer? upcomingPrayer;
   final DateTime? tomorrowFajr;
+
   /// End of Fajr window; when set, Fajr is only "current" between Fajr and sunrise.
   final DateTime? sunrise;
 
@@ -549,7 +552,9 @@ class _PrayerCardState {
       times: parsed,
       currentPrayer: current,
       upcomingPrayer: upcoming,
-      tomorrowFajr: tomorrowRow == null ? null : parseOn(now.add(const Duration(days: 1)), tomorrowRow.fajr),
+      tomorrowFajr: tomorrowRow == null
+          ? null
+          : parseOn(now.add(const Duration(days: 1)), tomorrowRow.fajr),
       sunrise: sunriseAt,
     );
   }
@@ -570,7 +575,9 @@ class _PrayerCardState {
             : s.homePrayerStartedAt(displayTimeFor(prayer)!),
         progress: progress,
         progressLeft: null,
-        progressRight: trailing == null ? null : s.homePrayerUntilNext(trailing),
+        progressRight: trailing == null
+            ? null
+            : s.homePrayerUntilNext(trailing),
         highlight: PrayerCardHighlight.current,
       );
     }

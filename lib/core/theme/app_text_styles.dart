@@ -56,17 +56,17 @@ abstract final class AppTextStyles {
   /// Prayer name for highlighted secondary cards.
   static const TextStyle prayerHighlightedTitle = TextStyle(
     fontFamily: _serif,
-    fontSize: 30,
+    fontSize: 18,
     fontWeight: FontWeight.w700,
     height: 1.0,
-    color: AppColors.green,
+    color: AppColors.gold,
   );
 
   /// Surah row title inside prayer cards.
   static const TextStyle surahNamePrayerCard = TextStyle(
     fontFamily: _serif,
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
     color: AppColors.ink,
   );
 
