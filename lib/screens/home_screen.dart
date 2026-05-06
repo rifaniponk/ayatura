@@ -15,7 +15,6 @@ import '../data/models/surah.dart';
 import '../data/models/surah_pool_entry.dart';
 import '../providers/providers.dart';
 import '../widgets/common/empty_state.dart';
-import '../widgets/common/gradient_button.dart';
 import '../widgets/home/quran_reader_sheet.dart';
 import '../widgets/prayer/prayer_card.dart';
 
@@ -93,16 +92,6 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
     _weekStripController.dispose();
     _listController.dispose();
     super.dispose();
-  }
-
-  Future<void> _generate() async {
-    final ok = await ref.read(monthPlanProvider.notifier).regenerate();
-    if (!mounted) return;
-    if (!ok) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(S.of(context)!.snackbarNeedTwoSegments)),
-      );
-    }
   }
 
   Future<void> _toggleLock({
@@ -339,13 +328,6 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                 ),
               );
             }),
-            const SizedBox(height: 8),
-            GradientButton(
-              label: S.of(context)!.regeneratePlan,
-              icon: Icons.auto_awesome_rounded,
-              onPressed: enabledCount >= 2 ? _generate : null,
-              enabled: enabledCount >= 2,
-            ),
           ] else ...[
             if (enabledCount < 2)
               EmptyState(
@@ -355,7 +337,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
             else
               EmptyState(
                 variant: EmptyStateVariant.noPlan,
-                onAction: _generate,
+                onAction: () => ref.read(navIndexProvider.notifier).setIndex(1),
               ),
           ],
         ],
