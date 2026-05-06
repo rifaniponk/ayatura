@@ -436,6 +436,9 @@ class _NormalSegmentFields extends StatelessWidget {
                     context: context,
                     isScrollControlled: true,
                     showDragHandle: true,
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.sizeOf(context).height * 0.85,
+                    ),
                     builder: (ctx) => _SurahPickerSheet(
                       surahs: surahs,
                       selectedSurahId: surahId,
@@ -546,6 +549,7 @@ class _SurahPickerSheetState extends State<_SurahPickerSheet> {
   Widget build(BuildContext context) {
     final s = S.of(context)!;
     final languageCode = Localizations.localeOf(context).languageCode;
+    final maxScrollableContentHeight = MediaQuery.sizeOf(context).height * 0.8;
     final query = _searchCtl.text.trim().toLowerCase();
     final filtered = query.isEmpty
         ? widget.surahs
@@ -597,115 +601,122 @@ class _SurahPickerSheetState extends State<_SurahPickerSheet> {
             ),
             const SizedBox(height: 8),
             Flexible(
-              child: filtered.isEmpty
-                  ? Center(
-                      child: Text(
-                        s.editorPickerNoResults,
-                        style: AppTextStyles.body,
-                      ),
-                    )
-                  : GridView.builder(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.only(bottom: 6),
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 210,
-                            mainAxisExtent: 60,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 8,
-                          ),
-                      itemCount: filtered.length,
-                      itemBuilder: (context, index) {
-                        final surah = filtered[index];
-                        final selected = surah.id == widget.selectedSurahId;
-                        return Material(
-                          color: selected ? AppColors.green2 : AppColors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: BorderSide(
-                              color: selected
-                                  ? AppColors.green2
-                                  : AppColors.border,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: maxScrollableContentHeight,
+                ),
+                child: filtered.isEmpty
+                    ? Center(
+                        child: Text(
+                          s.editorPickerNoResults,
+                          style: AppTextStyles.body,
+                        ),
+                      )
+                    : GridView.builder(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 210,
+                              mainAxisExtent: 60,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
                             ),
-                          ),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(10),
-                            onTap: () => Navigator.of(context).pop(surah.id),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 6,
+                        itemCount: filtered.length,
+                        itemBuilder: (context, index) {
+                          final surah = filtered[index];
+                          final selected = surah.id == widget.selectedSurahId;
+                          return Material(
+                            color: selected
+                                ? AppColors.green2
+                                : AppColors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: BorderSide(
+                                color: selected
+                                    ? AppColors.green2
+                                    : AppColors.border,
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        '#${surah.id}',
-                                        style: AppTextStyles.meta.copyWith(
-                                          color: selected
-                                              ? AppColors.white
-                                              : AppColors.ink3,
+                            ),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(10),
+                              onTap: () => Navigator.of(context).pop(surah.id),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '#${surah.id}',
+                                          style: AppTextStyles.meta.copyWith(
+                                            color: selected
+                                                ? AppColors.white
+                                                : AppColors.ink3,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            surah.arabicName,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.end,
-                                            textDirection: TextDirection.rtl,
-                                            style: AppTextStyles.meta.copyWith(
-                                              color: selected
-                                                  ? AppColors.white
-                                                  : AppColors.ink2,
-                                              fontWeight: FontWeight.w600,
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              surah.arabicName,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.end,
+                                              textDirection: TextDirection.rtl,
+                                              style: AppTextStyles.meta
+                                                  .copyWith(
+                                                    color: selected
+                                                        ? AppColors.white
+                                                        : AppColors.ink2,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          surah.localizedName(languageCode),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: AppTextStyles.body.copyWith(
-                                            color: selected
-                                                ? AppColors.white
-                                                : AppColors.ink,
-                                            fontWeight: selected
-                                                ? FontWeight.w700
-                                                : FontWeight.w500,
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            surah.localizedName(languageCode),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppTextStyles.body.copyWith(
+                                              color: selected
+                                                  ? AppColors.white
+                                                  : AppColors.ink,
+                                              fontWeight: selected
+                                                  ? FontWeight.w700
+                                                  : FontWeight.w500,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      if (selected) ...[
-                                        const SizedBox(width: 6),
-                                        Icon(
-                                          Icons.check_circle_rounded,
-                                          size: 16,
-                                          color: AppColors.white,
-                                        ),
+                                        if (selected) ...[
+                                          const SizedBox(width: 6),
+                                          Icon(
+                                            Icons.check_circle_rounded,
+                                            size: 16,
+                                            color: AppColors.white,
+                                          ),
+                                        ],
                                       ],
-                                    ],
-                                  ),
-                                ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          );
+                        },
+                      ),
+              ),
             ),
           ],
         ),
