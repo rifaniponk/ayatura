@@ -369,6 +369,22 @@ class SId extends S {
   }
 
   @override
+  String get homeNowPrayingBadge => 'SEDANG SHALAT';
+
+  @override
+  String get homeUpNextBadge => 'BERIKUTNYA';
+
+  @override
+  String homePrayerStartedAt(String time) {
+    return 'mulai $time';
+  }
+
+  @override
+  String homePrayerUntilNext(String duration) {
+    return '$duration LAGI MENUJU BERIKUTNYA';
+  }
+
+  @override
   String get readerNoVerses => 'Ayat tidak ditemukan.';
 
   @override

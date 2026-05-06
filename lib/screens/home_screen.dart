@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_text_styles.dart';
+import '../data/local/app_database.dart';
+import '../data/services/prayer_times_sync_service.dart';
 import '../l10n/app_localizations.dart';
 import '../data/models/plan.dart';
 import '../data/models/prayer.dart';
@@ -11,7 +15,6 @@ import '../data/models/surah.dart';
 import '../data/models/surah_pool_entry.dart';
 import '../providers/providers.dart';
 import '../widgets/common/empty_state.dart';
-import '../widgets/common/gradient_button.dart';
 import '../widgets/home/quran_reader_sheet.dart';
 import '../widgets/prayer/prayer_card.dart';
 
@@ -50,14 +53,29 @@ class _HomeBody extends ConsumerStatefulWidget {
 class _HomeBodyState extends ConsumerState<_HomeBody> {
   static const double _dayTileWidth = 50;
   static const double _dayTileGap = 14;
+  static const Duration _countdownRefreshInterval = Duration(seconds: 20);
 
   late Map<int, Surah> _masterById;
   final ScrollController _weekStripController = ScrollController();
+  final ScrollController _listController = ScrollController();
+  final Map<Prayer, GlobalKey> _prayerKeys = {
+    for (final prayer in Prayer.values) prayer: GlobalKey(),
+  };
+  late DateTime _clockNow;
+  Timer? _clockTimer;
+  bool _shouldScrollToCurrentPrayer = true;
 
   @override
   void initState() {
     super.initState();
     _masterById = {for (final s in widget.surahs) s.id: s};
+    _clockNow = DateTime.now();
+    _clockTimer = Timer.periodic(_countdownRefreshInterval, (_) {
+      if (!mounted) return;
+      setState(() {
+        _clockNow = DateTime.now();
+      });
+    });
   }
 
   @override
@@ -70,18 +88,10 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
 
   @override
   void dispose() {
+    _clockTimer?.cancel();
     _weekStripController.dispose();
+    _listController.dispose();
     super.dispose();
-  }
-
-  Future<void> _generate() async {
-    final ok = await ref.read(monthPlanProvider.notifier).regenerate();
-    if (!mounted) return;
-    if (!ok) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(S.of(context)!.snackbarNeedTwoSegments)),
-      );
-    }
   }
 
   Future<void> _toggleLock({
@@ -95,9 +105,23 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
         .toggleSlotLock(year: year, month: month, day: day, prayer: prayer);
   }
 
+  Future<void> _forceRefreshPrayerTimes() async {
+    await ref.read(seededDatabaseProvider.future);
+    final db = ref.read(appDatabaseProvider);
+    await PrayerTimesSyncService(db).syncAndLoadToday(forceRefresh: true);
+    ref.invalidate(prayerTimesSyncProvider);
+    if (mounted) {
+      setState(() {
+        _clockNow = DateTime.now();
+        _shouldScrollToCurrentPrayer = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
+    final now = _clockNow;
+    final prayerTimesAsync = ref.watch(prayerTimesSyncProvider);
     final planAsync = ref.watch(monthPlanProvider);
     final plan = planAsync.when(
       skipLoadingOnReload: true,
@@ -133,7 +157,38 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
         selectedDate.year == now.year &&
         selectedDate.month == now.month &&
         selectedDate.day == now.day;
-    const String? locationName = null;
+    final todayDateOnly = DateTime(now.year, now.month, now.day);
+    final selectedDateOnly = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+    );
+    final isViewingPastDay = selectedDateOnly.isBefore(todayDateOnly);
+    final prayerTimesResult = prayerTimesAsync.asData?.value;
+    final prayerTimesToday = isSelectedToday ? prayerTimesResult?.today : null;
+    final locationName = isSelectedToday
+        ? prayerTimesResult?.locationName
+        : null;
+    final cardState = _PrayerCardState.from(
+      now: now,
+      todayRow: prayerTimesToday,
+      tomorrowRow: prayerTimesResult?.tomorrow,
+    );
+
+    void scrollToCurrentPrayer() {
+      if (!isSelectedToday) return;
+      final currentPrayer = cardState.currentPrayer;
+      if (currentPrayer == null) return;
+      final targetKey = _prayerKeys[currentPrayer];
+      final targetContext = targetKey?.currentContext;
+      if (targetContext == null || !_listController.hasClients) return;
+      Scrollable.ensureVisible(
+        targetContext,
+        alignment: 0.2,
+        duration: const Duration(milliseconds: 320),
+        curve: Curves.easeOutCubic,
+      );
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_weekStripController.hasClients) return;
@@ -152,107 +207,150 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
       );
     });
 
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
-      children: [
-        if (effective != null) ...[
-          _WeekStrip(
-            controller: _weekStripController,
-            year: effective.year,
-            month: effective.month,
-            selectedDay: clampedDay,
-            daysInMonth: daysInMonth,
-            today: now,
-            onChanged: (d) =>
-                ref.read(selectedPlanDayProvider.notifier).setDay(d),
-          ),
-          const SizedBox(height: 14),
-          if (isSelectedToday)
-            Text(
-              S.of(context)!.monthTodayChip,
-              style: AppTextStyles.sectionEyebrow.copyWith(
-                color: AppColors.ink3,
-                letterSpacing: 1.5,
-              ),
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_shouldScrollToCurrentPrayer) return;
+      _shouldScrollToCurrentPrayer = false;
+      scrollToCurrentPrayer();
+    });
+
+    ref.listen(navIndexProvider, (previous, next) {
+      if (next == 0) {
+        _shouldScrollToCurrentPrayer = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted || !_shouldScrollToCurrentPrayer) return;
+          _shouldScrollToCurrentPrayer = false;
+          scrollToCurrentPrayer();
+        });
+      }
+    });
+
+    return RefreshIndicator(
+      onRefresh: _forceRefreshPrayerTimes,
+      child: ListView(
+        controller: _listController,
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
+        children: [
+          if (effective != null) ...[
+            _WeekStrip(
+              controller: _weekStripController,
+              year: effective.year,
+              month: effective.month,
+              selectedDay: clampedDay,
+              daysInMonth: daysInMonth,
+              today: now,
+              onChanged: (d) =>
+                  ref.read(selectedPlanDayProvider.notifier).setDay(d),
             ),
-          if (isSelectedToday) const SizedBox(height: 4),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  titleDate,
-                  style: AppTextStyles.sectionHeadingSerif.copyWith(
-                    color: AppColors.green,
-                    fontSize: 24,
-                    height: 1.05,
-                  ),
+            const SizedBox(height: 14),
+            if (isSelectedToday)
+              Text(
+                S.of(context)!.monthTodayChip,
+                style: AppTextStyles.sectionEyebrow.copyWith(
+                  color: AppColors.ink3,
+                  letterSpacing: 1.5,
                 ),
               ),
-              if (locationName != null)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.greenOverlay06,
-                    borderRadius: BorderRadius.circular(99),
-                  ),
+            if (isSelectedToday) const SizedBox(height: 4),
+            Row(
+              children: [
+                Expanded(
                   child: Text(
-                    '• $locationName',
-                    style: AppTextStyles.smallLabel.copyWith(
-                      color: AppColors.ink3,
-                      fontWeight: FontWeight.w700,
+                    titleDate,
+                    style: AppTextStyles.sectionHeadingSerif.copyWith(
+                      color: AppColors.green,
+                      fontSize: 24,
+                      height: 1.05,
                     ),
                   ),
                 ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          ...Prayer.values.map((prayer) {
-            final slot =
-                effective.planForDay(clampedDay)?.slotFor(prayer) ??
-                PrayerSlot();
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: PrayerCard(
-                prayer: prayer,
-                slot: slot,
-                masterBySurahId: _masterById,
-                onToggleLock: () => _toggleLock(
-                  year: effective.year,
-                  month: effective.month,
-                  day: clampedDay,
+                if (locationName != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.greenOverlay06,
+                      borderRadius: BorderRadius.circular(99),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: AppColors.green2,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          locationName,
+                          style: AppTextStyles.smallLabel.copyWith(
+                            color: AppColors.ink3,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            ...Prayer.values.map((prayer) {
+              final slot =
+                  effective.planForDay(clampedDay)?.slotFor(prayer) ??
+                  PrayerSlot();
+              final status = isViewingPastDay
+                  ? const _PrayerCardStatus(highlight: PrayerCardHighlight.past)
+                  : cardState.statusFor(prayer, S.of(context)!);
+              return Padding(
+                key: _prayerKeys[prayer],
+                padding: const EdgeInsets.only(bottom: 12),
+                child: PrayerCard(
                   prayer: prayer,
+                  slot: slot,
+                  masterBySurahId: _masterById,
+                  prayerTime: cardState.displayTimeFor(prayer),
+                  highlight: status.highlight,
+                  badgeLabel: status.badge,
+                  trailingMeta: status.trailing,
+                  subtitle: status.subtitle,
+                  progress: status.progress,
+                  progressLeftLabel: status.progressLeft,
+                  progressRightLabel: status.progressRight,
+                  onToggleLock: () => _toggleLock(
+                    year: effective.year,
+                    month: effective.month,
+                    day: clampedDay,
+                    prayer: prayer,
+                  ),
+                  onTap: slot.surahs.isEmpty
+                      ? null
+                      : () => showQuranReaderSheet(
+                          context,
+                          prayer: prayer,
+                          slot: slot,
+                          masterById: _masterById,
+                        ),
                 ),
-                onTap: slot.surahs.isEmpty
-                    ? null
-                    : () => showQuranReaderSheet(
-                        context,
-                        prayer: prayer,
-                        slot: slot,
-                        masterById: _masterById,
-                      ),
+              );
+            }),
+          ] else ...[
+            if (enabledCount < 2)
+              EmptyState(
+                variant: EmptyStateVariant.hifdhListTooSmall,
+                onAction: () => ref.read(navIndexProvider.notifier).setIndex(2),
+              )
+            else
+              EmptyState(
+                variant: EmptyStateVariant.noPlan,
+                onAction: () => ref.read(navIndexProvider.notifier).setIndex(1),
               ),
-            );
-          }),
-          const SizedBox(height: 8),
-          GradientButton(
-            label: S.of(context)!.regeneratePlan,
-            icon: Icons.auto_awesome_rounded,
-            onPressed: enabledCount >= 2 ? _generate : null,
-            enabled: enabledCount >= 2,
-          ),
-        ] else ...[
-          if (enabledCount < 2)
-            EmptyState(
-              variant: EmptyStateVariant.hifdhListTooSmall,
-              onAction: () => ref.read(navIndexProvider.notifier).setIndex(2),
-            )
-          else
-            EmptyState(variant: EmptyStateVariant.noPlan, onAction: _generate),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
@@ -360,5 +458,220 @@ class _WeekStrip extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+class _PrayerCardStatus {
+  const _PrayerCardStatus({
+    this.badge,
+    this.trailing,
+    this.subtitle,
+    this.progress,
+    this.progressLeft,
+    this.progressRight,
+    this.highlight = PrayerCardHighlight.normal,
+  });
+
+  final String? badge;
+  final String? trailing;
+  final String? subtitle;
+  final double? progress;
+  final String? progressLeft;
+  final String? progressRight;
+  final PrayerCardHighlight highlight;
+}
+
+class _PrayerCardState {
+  const _PrayerCardState({
+    required this.referenceNow,
+    required this.times,
+    required this.currentPrayer,
+    required this.upcomingPrayer,
+    required this.tomorrowFajr,
+    required this.sunrise,
+  });
+
+  final DateTime referenceNow;
+  final Map<Prayer, DateTime> times;
+  final Prayer? currentPrayer;
+  final Prayer? upcomingPrayer;
+  final DateTime? tomorrowFajr;
+
+  /// End of Fajr window; when set, Fajr is only "current" between Fajr and sunrise.
+  final DateTime? sunrise;
+
+  static _PrayerCardState from({
+    required DateTime now,
+    PrayerTime? todayRow,
+    PrayerTime? tomorrowRow,
+  }) {
+    if (todayRow == null) {
+      return _PrayerCardState(
+        referenceNow: DateTime.fromMillisecondsSinceEpoch(0),
+        times: {},
+        currentPrayer: null,
+        upcomingPrayer: null,
+        tomorrowFajr: null,
+        sunrise: null,
+      );
+    }
+
+    final parsed = <Prayer, DateTime>{};
+    DateTime? parseOn(DateTime day, String hhmm) {
+      final chunks = hhmm.split(':');
+      if (chunks.length < 2) return null;
+      final h = int.tryParse(chunks[0]);
+      final m = int.tryParse(chunks[1]);
+      if (h == null || m == null) return null;
+      return DateTime(day.year, day.month, day.day, h, m);
+    }
+
+    void add(Prayer prayer, String hhmm) {
+      final parsedAt = parseOn(now, hhmm);
+      if (parsedAt == null) return;
+      parsed[prayer] = parsedAt;
+    }
+
+    add(Prayer.fajr, todayRow.fajr);
+    add(Prayer.dhuhr, todayRow.dhuhr);
+    add(Prayer.asr, todayRow.asr);
+    add(Prayer.maghrib, todayRow.maghrib);
+    add(Prayer.isha, todayRow.isha);
+
+    final sunriseRaw = todayRow.sunrise;
+    final sunriseAt = sunriseRaw != null && sunriseRaw.isNotEmpty
+        ? parseOn(now, sunriseRaw)
+        : null;
+
+    final fajrAt = parsed[Prayer.fajr];
+
+    Prayer? current;
+    if (fajrAt != null &&
+        sunriseAt != null &&
+        !now.isBefore(fajrAt) &&
+        now.isBefore(sunriseAt)) {
+      current = Prayer.fajr;
+    } else {
+      for (final prayer in Prayer.values) {
+        final at = parsed[prayer];
+        if (at == null) continue;
+        if (at.isAfter(now)) break;
+        // Without sunrise data, keep legacy behaviour (Fajr current until Dhuhr).
+        if (prayer == Prayer.fajr && sunriseAt != null) continue;
+        current = prayer;
+      }
+    }
+
+    Prayer? upcoming;
+    for (final prayer in Prayer.values) {
+      final at = parsed[prayer];
+      if (at == null) continue;
+      if (at.isAfter(now)) {
+        upcoming = prayer;
+        break;
+      }
+    }
+
+    return _PrayerCardState(
+      referenceNow: now,
+      times: parsed,
+      currentPrayer: current,
+      upcomingPrayer: upcoming,
+      tomorrowFajr: tomorrowRow == null
+          ? null
+          : parseOn(now.add(const Duration(days: 1)), tomorrowRow.fajr),
+      sunrise: sunriseAt,
+    );
+  }
+
+  _PrayerCardStatus statusFor(Prayer prayer, S s) {
+    if (times.isEmpty) return const _PrayerCardStatus();
+    if (prayer == currentPrayer) {
+      final currentAt = times[prayer];
+      final nextAt = nextTimeAfterCurrent();
+      final progress = (currentAt != null && nextAt != null)
+          ? _windowProgress(currentAt, nextAt)
+          : null;
+      final trailing = _countdownTo(nextAt);
+      return _PrayerCardStatus(
+        badge: s.homeNowPrayingBadge,
+        subtitle: displayTimeFor(prayer) == null
+            ? null
+            : s.homePrayerStartedAt(displayTimeFor(prayer)!),
+        progress: progress,
+        progressLeft: null,
+        progressRight: trailing == null
+            ? null
+            : s.homePrayerUntilNext(trailing),
+        highlight: PrayerCardHighlight.current,
+      );
+    }
+    if (prayer == upcomingPrayer) {
+      return _PrayerCardStatus(
+        badge: s.homeUpNextBadge,
+        trailing: _countdownTo(times[prayer]),
+        highlight: PrayerCardHighlight.upcoming,
+      );
+    }
+    final isPast = _isPastPrayer(prayer);
+    return _PrayerCardStatus(
+      highlight: isPast ? PrayerCardHighlight.past : PrayerCardHighlight.normal,
+    );
+  }
+
+  bool _isPastPrayer(Prayer prayer) {
+    final at = times[prayer];
+    if (at == null) return false;
+    if (prayer == Prayer.fajr) {
+      if (sunrise != null) {
+        if (referenceNow.isBefore(at)) return false;
+        return !referenceNow.isBefore(sunrise!);
+      }
+      if (currentPrayer != null) {
+        return at.isBefore(times[currentPrayer!]!);
+      }
+      return referenceNow.isAfter(at);
+    }
+    if (currentPrayer != null) {
+      return at.isBefore(times[currentPrayer!]!);
+    }
+    return false;
+  }
+
+  String? displayTimeFor(Prayer prayer) {
+    final at = times[prayer];
+    if (at == null) return null;
+    return DateFormat('HH:mm').format(at);
+  }
+
+  DateTime? nextTimeAfterCurrent() {
+    if (currentPrayer == null) return null;
+    if (currentPrayer == Prayer.fajr &&
+        sunrise != null &&
+        referenceNow.isBefore(sunrise!)) {
+      return sunrise;
+    }
+    if (upcomingPrayer != null) return times[upcomingPrayer!];
+    return tomorrowFajr;
+  }
+
+  double _windowProgress(DateTime start, DateTime end) {
+    final totalMs = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
+    if (totalMs <= 0) return 0;
+    final nowMs = referenceNow.millisecondsSinceEpoch;
+    final elapsed = (nowMs - start.millisecondsSinceEpoch).clamp(0, totalMs);
+    return elapsed / totalMs;
+  }
+
+  String? _countdownTo(DateTime? at) {
+    if (at == null) return null;
+    var diff = at.difference(referenceNow);
+    if (diff.isNegative) return null;
+    final hours = diff.inHours;
+    diff -= Duration(hours: hours);
+    final minutes = diff.inMinutes;
+    if (hours > 0) return '${hours}H ${minutes}M';
+    if (minutes <= 0) return null;
+    return '${minutes}M';
   }
 }

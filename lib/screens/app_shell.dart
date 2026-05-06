@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/nav_provider.dart';
+import '../providers/prayer_times_provider.dart';
 import '../widgets/navigation/bottom_nav_bar.dart';
 import 'home_screen.dart';
 import 'month_screen.dart';
@@ -24,12 +25,16 @@ class AppShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(prayerTimesSyncProvider);
     final navIndex = ref
         .watch(navIndexProvider)
         .clamp(0, AppShell._tabs.length - 1);
 
     return Scaffold(
-      body: IndexedStack(index: navIndex, children: AppShell._tabs),
+      body: SafeArea(
+        bottom: false,
+        child: IndexedStack(index: navIndex, children: AppShell._tabs),
+      ),
       bottomNavigationBar: AppBottomNavBar(
         currentIndex: navIndex,
         onTap: (i) => ref.read(navIndexProvider.notifier).setIndex(i),

@@ -661,6 +661,30 @@ abstract class S {
   /// **'{count} ayat'**
   String prayerAyatCount(int count);
 
+  /// No description provided for @homeNowPrayingBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'NOW PRAYING'**
+  String get homeNowPrayingBadge;
+
+  /// No description provided for @homeUpNextBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'UP NEXT'**
+  String get homeUpNextBadge;
+
+  /// No description provided for @homePrayerStartedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'started {time}'**
+  String homePrayerStartedAt(String time);
+
+  /// No description provided for @homePrayerUntilNext.
+  ///
+  /// In en, this message translates to:
+  /// **'IN {duration} UNTIL NEXT'**
+  String homePrayerUntilNext(String duration);
+
   /// No description provided for @readerNoVerses.
   ///
   /// In en, this message translates to:

@@ -8,24 +8,26 @@ import '../models/surah.dart';
 import '../models/surah_pool_entry.dart';
 
 import 'tables/month_plans_table.dart';
+import 'tables/prayer_times_table.dart';
 import 'tables/pool_entries_table.dart';
 import 'tables/surahs_table.dart';
 
 part 'daos/surah_dao.dart';
 part 'daos/pool_entry_dao.dart';
 part 'daos/month_plan_dao.dart';
+part 'daos/prayer_time_dao.dart';
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: [Surahs, SurahPoolEntries, MonthPlans],
-  daos: [SurahDao, PoolEntryDao, MonthPlanDao],
+  tables: [Surahs, SurahPoolEntries, MonthPlans, PrayerTimes],
+  daos: [SurahDao, PoolEntryDao, MonthPlanDao, PrayerTimeDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
     : super(executor ?? driftDatabase(name: 'surah_planner'));
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -45,6 +47,12 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 5) {
         await m.createTable(monthPlans);
+      }
+      if (from < 6) {
+        await m.createTable(prayerTimes);
+      }
+      if (from < 7) {
+        await m.addColumn(prayerTimes, prayerTimes.sunrise);
       }
     },
   );
@@ -82,4 +90,13 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> deletePlan(int year, int month) =>
       monthPlanDao.deletePlan(year, month);
+
+  Future<Map<String, PrayerTime>> prayerTimesByDates(Iterable<String> dates) =>
+      prayerTimeDao.byDates(dates);
+
+  Future<PrayerTime?> prayerTimeByDate(String date) =>
+      prayerTimeDao.byDate(date);
+
+  Future<void> upsertPrayerTime(PrayerTimesCompanion row) =>
+      prayerTimeDao.upsert(row);
 }
