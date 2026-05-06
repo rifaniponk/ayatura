@@ -409,6 +409,13 @@ class SId extends S {
       'Jumlah surah per slot shalat. Buat ulang rencana untuk menerapkan.';
 
   @override
+  String get settingsLockPastPrayers => 'Kunci shalat yang sudah lewat';
+
+  @override
+  String get settingsLockPastPrayersSubtitle =>
+      'Pertahankan slot shalat sebelum hari ini saat membuat ulang rencana.';
+
+  @override
   String get settingsLanguage => 'Bahasa';
 
   @override

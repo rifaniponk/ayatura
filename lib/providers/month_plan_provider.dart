@@ -63,6 +63,15 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
     final targetYear = year ?? clock.year;
     final db = ref.read(appDatabaseProvider);
     final existingForTarget = await db.loadPlan(targetYear, targetMonth);
+    final lockPastPrayers = ref.read(lockPastPrayersProvider);
+    final shouldLockPastDays =
+        lockPastPrayers &&
+        targetYear == clock.year &&
+        targetMonth == clock.month &&
+        existingForTarget != null;
+    final preprocessedExistingPlan = shouldLockPastDays
+        ? _lockPastDays(existingForTarget, clock.day)
+        : existingForTarget;
 
     ref.read(monthPlanRegenerateBusyProvider.notifier).state = true;
     try {
@@ -72,7 +81,7 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
         year: targetYear,
         enabledPool: enabled,
         surahsPerPrayer: surahsPerPrayer,
-        existingPlan: existingForTarget,
+        existingPlan: preprocessedExistingPlan,
       );
 
       await db.savePlan(next);
@@ -95,6 +104,23 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
     } finally {
       ref.read(monthPlanRegenerateBusyProvider.notifier).state = false;
     }
+  }
+
+  MonthPlan _lockPastDays(MonthPlan plan, int todayDay) {
+    final updatedDays = plan.days.map((dayPlan) {
+      if (dayPlan.day >= todayDay) return dayPlan;
+      var changed = false;
+      final nextPrayers = Map<Prayer, PrayerSlot>.from(dayPlan.prayers);
+      for (final prayer in Prayer.values) {
+        final slot = dayPlan.slotFor(prayer);
+        if (!slot.locked) {
+          nextPrayers[prayer] = slot.copyWith(locked: true);
+          changed = true;
+        }
+      }
+      return changed ? dayPlan.copyWith(prayers: nextPrayers) : dayPlan;
+    }).toList();
+    return MonthPlan(month: plan.month, year: plan.year, days: updatedDays);
   }
 
   Future<void> clear() async {

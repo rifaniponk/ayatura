@@ -105,6 +105,8 @@
   "settingsPreferences": "Preferensi",
   "settingsSurahsPerPrayer": "Surah per shalat",
   "settingsSurahsPerPrayerSubtitle": "Jumlah surah per slot shalat. Buat ulang rencana untuk menerapkan.",
+  "settingsLockPastPrayers": "Kunci shalat yang sudah lewat",
+  "settingsLockPastPrayersSubtitle": "Pertahankan slot shalat sebelum hari ini saat membuat ulang rencana.",
   "settingsLanguage": "Bahasa",
   "settingsLanguageSubtitle": "Pilih bahasa yang kamu inginkan",
   "settingsAbout": "Tentang",

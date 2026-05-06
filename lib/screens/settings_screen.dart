@@ -22,6 +22,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final s = S.of(context)!;
     final locale = ref.watch(localeProvider);
     final surahsPerPrayer = ref.watch(surahsPerPrayerProvider);
+    final lockPastPrayers = ref.watch(lockPastPrayersProvider);
     final packageInfoAsync = ref.watch(packageInfoProvider);
 
     return Column(
@@ -34,6 +35,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               Text(
                 s.settingsPreferences,
                 style: AppTextStyles.sectionHeadingSerif,
+              ),
+              const SizedBox(height: 12),
+              Card(
+                child: SwitchListTile(
+                  title: Text(
+                    s.settingsLockPastPrayers,
+                    style: AppTextStyles.cardLabel,
+                  ),
+                  subtitle: Text(
+                    s.settingsLockPastPrayersSubtitle,
+                    style: AppTextStyles.meta,
+                  ),
+                  value: lockPastPrayers,
+                  onChanged: (value) =>
+                      ref.read(lockPastPrayersProvider.notifier).set(value),
+                ),
               ),
               const SizedBox(height: 12),
               Card(

@@ -167,6 +167,8 @@
   "settingsPreferences": "Preferences",
   "settingsSurahsPerPrayer": "Surahs per prayer",
   "settingsSurahsPerPrayerSubtitle": "Number of surahs per prayer slot. Regenerate to apply.",
+  "settingsLockPastPrayers": "Lock past prayers",
+  "settingsLockPastPrayersSubtitle": "Preserve prayer slots from days before today when regenerating.",
   "settingsLanguage": "Language",
   "settingsLanguageSubtitle": "Choose your preferred language",
   "settingsAbout": "About",
