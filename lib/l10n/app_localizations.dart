@@ -727,6 +727,18 @@ abstract class S {
   /// **'Number of surahs per prayer slot. Regenerate to apply.'**
   String get settingsSurahsPerPrayerSubtitle;
 
+  /// No description provided for @settingsLockPastPrayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock past prayers'**
+  String get settingsLockPastPrayers;
+
+  /// No description provided for @settingsLockPastPrayersSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Preserve prayer slots from days before today when regenerating.'**
+  String get settingsLockPastPrayersSubtitle;
+
   /// No description provided for @settingsLanguage.
   ///
   /// In en, this message translates to:

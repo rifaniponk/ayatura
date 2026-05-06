@@ -409,6 +409,13 @@ class SEn extends S {
       'Number of surahs per prayer slot. Regenerate to apply.';
 
   @override
+  String get settingsLockPastPrayers => 'Lock past prayers';
+
+  @override
+  String get settingsLockPastPrayersSubtitle =>
+      'Preserve prayer slots from days before today when regenerating.';
+
+  @override
   String get settingsLanguage => 'Language';
 
   @override
