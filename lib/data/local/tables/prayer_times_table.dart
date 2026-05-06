@@ -9,6 +9,9 @@ class PrayerTimes extends Table {
   TextColumn get maghrib => text()();
   TextColumn get isha => text()();
 
+  /// End of Fajr observance window (not a salah slot in the app UI).
+  TextColumn get sunrise => text().nullable()();
+
   RealColumn get latitude => real()();
   RealColumn get longitude => real()();
   TextColumn get locationName => text().nullable()();

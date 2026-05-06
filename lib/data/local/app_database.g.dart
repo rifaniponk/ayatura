@@ -1174,6 +1174,17 @@ class $PrayerTimesTable extends PrayerTimes
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _sunriseMeta = const VerificationMeta(
+    'sunrise',
+  );
+  @override
+  late final GeneratedColumn<String> sunrise = GeneratedColumn<String>(
+    'sunrise',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _latitudeMeta = const VerificationMeta(
     'latitude',
   );
@@ -1215,6 +1226,7 @@ class $PrayerTimesTable extends PrayerTimes
     asr,
     maghrib,
     isha,
+    sunrise,
     latitude,
     longitude,
     locationName,
@@ -1279,6 +1291,12 @@ class $PrayerTimesTable extends PrayerTimes
     } else if (isInserting) {
       context.missing(_ishaMeta);
     }
+    if (data.containsKey('sunrise')) {
+      context.handle(
+        _sunriseMeta,
+        sunrise.isAcceptableOrUnknown(data['sunrise']!, _sunriseMeta),
+      );
+    }
     if (data.containsKey('latitude')) {
       context.handle(
         _latitudeMeta,
@@ -1337,6 +1355,10 @@ class $PrayerTimesTable extends PrayerTimes
         DriftSqlType.string,
         data['${effectivePrefix}isha'],
       )!,
+      sunrise: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sunrise'],
+      ),
       latitude: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}latitude'],
@@ -1365,6 +1387,9 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
   final String asr;
   final String maghrib;
   final String isha;
+
+  /// End of Fajr observance window (not a salah slot in the app UI).
+  final String? sunrise;
   final double latitude;
   final double longitude;
   final String? locationName;
@@ -1375,6 +1400,7 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
     required this.asr,
     required this.maghrib,
     required this.isha,
+    this.sunrise,
     required this.latitude,
     required this.longitude,
     this.locationName,
@@ -1388,6 +1414,9 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
     map['asr'] = Variable<String>(asr);
     map['maghrib'] = Variable<String>(maghrib);
     map['isha'] = Variable<String>(isha);
+    if (!nullToAbsent || sunrise != null) {
+      map['sunrise'] = Variable<String>(sunrise);
+    }
     map['latitude'] = Variable<double>(latitude);
     map['longitude'] = Variable<double>(longitude);
     if (!nullToAbsent || locationName != null) {
@@ -1404,6 +1433,9 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
       asr: Value(asr),
       maghrib: Value(maghrib),
       isha: Value(isha),
+      sunrise: sunrise == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sunrise),
       latitude: Value(latitude),
       longitude: Value(longitude),
       locationName: locationName == null && nullToAbsent
@@ -1424,6 +1456,7 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
       asr: serializer.fromJson<String>(json['asr']),
       maghrib: serializer.fromJson<String>(json['maghrib']),
       isha: serializer.fromJson<String>(json['isha']),
+      sunrise: serializer.fromJson<String?>(json['sunrise']),
       latitude: serializer.fromJson<double>(json['latitude']),
       longitude: serializer.fromJson<double>(json['longitude']),
       locationName: serializer.fromJson<String?>(json['locationName']),
@@ -1439,6 +1472,7 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
       'asr': serializer.toJson<String>(asr),
       'maghrib': serializer.toJson<String>(maghrib),
       'isha': serializer.toJson<String>(isha),
+      'sunrise': serializer.toJson<String?>(sunrise),
       'latitude': serializer.toJson<double>(latitude),
       'longitude': serializer.toJson<double>(longitude),
       'locationName': serializer.toJson<String?>(locationName),
@@ -1452,6 +1486,7 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
     String? asr,
     String? maghrib,
     String? isha,
+    Value<String?> sunrise = const Value.absent(),
     double? latitude,
     double? longitude,
     Value<String?> locationName = const Value.absent(),
@@ -1462,6 +1497,7 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
     asr: asr ?? this.asr,
     maghrib: maghrib ?? this.maghrib,
     isha: isha ?? this.isha,
+    sunrise: sunrise.present ? sunrise.value : this.sunrise,
     latitude: latitude ?? this.latitude,
     longitude: longitude ?? this.longitude,
     locationName: locationName.present ? locationName.value : this.locationName,
@@ -1474,6 +1510,7 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
       asr: data.asr.present ? data.asr.value : this.asr,
       maghrib: data.maghrib.present ? data.maghrib.value : this.maghrib,
       isha: data.isha.present ? data.isha.value : this.isha,
+      sunrise: data.sunrise.present ? data.sunrise.value : this.sunrise,
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
       locationName: data.locationName.present
@@ -1491,6 +1528,7 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
           ..write('asr: $asr, ')
           ..write('maghrib: $maghrib, ')
           ..write('isha: $isha, ')
+          ..write('sunrise: $sunrise, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
           ..write('locationName: $locationName')
@@ -1506,6 +1544,7 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
     asr,
     maghrib,
     isha,
+    sunrise,
     latitude,
     longitude,
     locationName,
@@ -1520,6 +1559,7 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
           other.asr == this.asr &&
           other.maghrib == this.maghrib &&
           other.isha == this.isha &&
+          other.sunrise == this.sunrise &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
           other.locationName == this.locationName);
@@ -1532,6 +1572,7 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
   final Value<String> asr;
   final Value<String> maghrib;
   final Value<String> isha;
+  final Value<String?> sunrise;
   final Value<double> latitude;
   final Value<double> longitude;
   final Value<String?> locationName;
@@ -1543,6 +1584,7 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
     this.asr = const Value.absent(),
     this.maghrib = const Value.absent(),
     this.isha = const Value.absent(),
+    this.sunrise = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
     this.locationName = const Value.absent(),
@@ -1555,6 +1597,7 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
     required String asr,
     required String maghrib,
     required String isha,
+    this.sunrise = const Value.absent(),
     required double latitude,
     required double longitude,
     this.locationName = const Value.absent(),
@@ -1574,6 +1617,7 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
     Expression<String>? asr,
     Expression<String>? maghrib,
     Expression<String>? isha,
+    Expression<String>? sunrise,
     Expression<double>? latitude,
     Expression<double>? longitude,
     Expression<String>? locationName,
@@ -1586,6 +1630,7 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
       if (asr != null) 'asr': asr,
       if (maghrib != null) 'maghrib': maghrib,
       if (isha != null) 'isha': isha,
+      if (sunrise != null) 'sunrise': sunrise,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
       if (locationName != null) 'location_name': locationName,
@@ -1600,6 +1645,7 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
     Value<String>? asr,
     Value<String>? maghrib,
     Value<String>? isha,
+    Value<String?>? sunrise,
     Value<double>? latitude,
     Value<double>? longitude,
     Value<String?>? locationName,
@@ -1612,6 +1658,7 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
       asr: asr ?? this.asr,
       maghrib: maghrib ?? this.maghrib,
       isha: isha ?? this.isha,
+      sunrise: sunrise ?? this.sunrise,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       locationName: locationName ?? this.locationName,
@@ -1640,6 +1687,9 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
     if (isha.present) {
       map['isha'] = Variable<String>(isha.value);
     }
+    if (sunrise.present) {
+      map['sunrise'] = Variable<String>(sunrise.value);
+    }
     if (latitude.present) {
       map['latitude'] = Variable<double>(latitude.value);
     }
@@ -1664,6 +1714,7 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
           ..write('asr: $asr, ')
           ..write('maghrib: $maghrib, ')
           ..write('isha: $isha, ')
+          ..write('sunrise: $sunrise, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
           ..write('locationName: $locationName, ')
@@ -2550,6 +2601,7 @@ typedef $$PrayerTimesTableCreateCompanionBuilder =
       required String asr,
       required String maghrib,
       required String isha,
+      Value<String?> sunrise,
       required double latitude,
       required double longitude,
       Value<String?> locationName,
@@ -2563,6 +2615,7 @@ typedef $$PrayerTimesTableUpdateCompanionBuilder =
       Value<String> asr,
       Value<String> maghrib,
       Value<String> isha,
+      Value<String?> sunrise,
       Value<double> latitude,
       Value<double> longitude,
       Value<String?> locationName,
@@ -2605,6 +2658,11 @@ class $$PrayerTimesTableFilterComposer
 
   ColumnFilters<String> get isha => $composableBuilder(
     column: $table.isha,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sunrise => $composableBuilder(
+    column: $table.sunrise,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2663,6 +2721,11 @@ class $$PrayerTimesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get sunrise => $composableBuilder(
+    column: $table.sunrise,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<double> get latitude => $composableBuilder(
     column: $table.latitude,
     builder: (column) => ColumnOrderings(column),
@@ -2705,6 +2768,9 @@ class $$PrayerTimesTableAnnotationComposer
 
   GeneratedColumn<String> get isha =>
       $composableBuilder(column: $table.isha, builder: (column) => column);
+
+  GeneratedColumn<String> get sunrise =>
+      $composableBuilder(column: $table.sunrise, builder: (column) => column);
 
   GeneratedColumn<double> get latitude =>
       $composableBuilder(column: $table.latitude, builder: (column) => column);
@@ -2755,6 +2821,7 @@ class $$PrayerTimesTableTableManager
                 Value<String> asr = const Value.absent(),
                 Value<String> maghrib = const Value.absent(),
                 Value<String> isha = const Value.absent(),
+                Value<String?> sunrise = const Value.absent(),
                 Value<double> latitude = const Value.absent(),
                 Value<double> longitude = const Value.absent(),
                 Value<String?> locationName = const Value.absent(),
@@ -2766,6 +2833,7 @@ class $$PrayerTimesTableTableManager
                 asr: asr,
                 maghrib: maghrib,
                 isha: isha,
+                sunrise: sunrise,
                 latitude: latitude,
                 longitude: longitude,
                 locationName: locationName,
@@ -2779,6 +2847,7 @@ class $$PrayerTimesTableTableManager
                 required String asr,
                 required String maghrib,
                 required String isha,
+                Value<String?> sunrise = const Value.absent(),
                 required double latitude,
                 required double longitude,
                 Value<String?> locationName = const Value.absent(),
@@ -2790,6 +2859,7 @@ class $$PrayerTimesTableTableManager
                 asr: asr,
                 maghrib: maghrib,
                 isha: isha,
+                sunrise: sunrise,
                 latitude: latitude,
                 longitude: longitude,
                 locationName: locationName,

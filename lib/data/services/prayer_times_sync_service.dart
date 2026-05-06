@@ -52,6 +52,7 @@ class PrayerTimesSyncService {
         PrayerTimesCompanion.insert(
           date: _isoDate(day),
           fajr: timings.fajr,
+          sunrise: Value(timings.sunrise.isEmpty ? null : timings.sunrise),
           dhuhr: timings.dhuhr,
           asr: timings.asr,
           maghrib: timings.maghrib,
@@ -132,6 +133,7 @@ class PrayerTimesSyncService {
       if (timings == null) return null;
       return _ApiTiming(
         fajr: _cleanTime(timings['Fajr']),
+        sunrise: _cleanTime(timings['Sunrise']),
         dhuhr: _cleanTime(timings['Dhuhr']),
         asr: _cleanTime(timings['Asr']),
         maghrib: _cleanTime(timings['Maghrib']),
@@ -174,6 +176,7 @@ class _ResolvedLocation {
 class _ApiTiming {
   const _ApiTiming({
     required this.fajr,
+    required this.sunrise,
     required this.dhuhr,
     required this.asr,
     required this.maghrib,
@@ -181,6 +184,7 @@ class _ApiTiming {
   });
 
   final String fajr;
+  final String sunrise;
   final String dhuhr;
   final String asr;
   final String maghrib;

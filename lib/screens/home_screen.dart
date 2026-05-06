@@ -461,6 +461,7 @@ class _PrayerCardState {
     required this.currentPrayer,
     required this.upcomingPrayer,
     required this.tomorrowFajr,
+    required this.sunrise,
   });
 
   final DateTime referenceNow;
@@ -468,6 +469,8 @@ class _PrayerCardState {
   final Prayer? currentPrayer;
   final Prayer? upcomingPrayer;
   final DateTime? tomorrowFajr;
+  /// End of Fajr window; when set, Fajr is only "current" between Fajr and sunrise.
+  final DateTime? sunrise;
 
   static _PrayerCardState from({
     required DateTime now,
@@ -481,6 +484,7 @@ class _PrayerCardState {
         currentPrayer: null,
         upcomingPrayer: null,
         tomorrowFajr: null,
+        sunrise: null,
       );
     }
 
@@ -506,23 +510,47 @@ class _PrayerCardState {
     add(Prayer.maghrib, todayRow.maghrib);
     add(Prayer.isha, todayRow.isha);
 
+    final sunriseRaw = todayRow.sunrise;
+    final sunriseAt = sunriseRaw != null && sunriseRaw.isNotEmpty
+        ? parseOn(now, sunriseRaw)
+        : null;
+
+    final fajrAt = parsed[Prayer.fajr];
+
     Prayer? current;
+    if (fajrAt != null &&
+        sunriseAt != null &&
+        !now.isBefore(fajrAt) &&
+        now.isBefore(sunriseAt)) {
+      current = Prayer.fajr;
+    } else {
+      for (final prayer in Prayer.values) {
+        final at = parsed[prayer];
+        if (at == null) continue;
+        if (at.isAfter(now)) break;
+        // Without sunrise data, keep legacy behaviour (Fajr current until Dhuhr).
+        if (prayer == Prayer.fajr && sunriseAt != null) continue;
+        current = prayer;
+      }
+    }
+
     Prayer? upcoming;
     for (final prayer in Prayer.values) {
       final at = parsed[prayer];
       if (at == null) continue;
-      if (at.isBefore(now) || at.isAtSameMomentAs(now)) {
-        current = prayer;
-      } else {
-        upcoming ??= prayer;
+      if (at.isAfter(now)) {
+        upcoming = prayer;
+        break;
       }
     }
+
     return _PrayerCardState(
       referenceNow: now,
       times: parsed,
       currentPrayer: current,
       upcomingPrayer: upcoming,
       tomorrowFajr: tomorrowRow == null ? null : parseOn(now.add(const Duration(days: 1)), tomorrowRow.fajr),
+      sunrise: sunriseAt,
     );
   }
 
@@ -553,11 +581,29 @@ class _PrayerCardState {
         highlight: PrayerCardHighlight.upcoming,
       );
     }
-    final at = times[prayer];
-    final isPast = at != null && currentPrayer != null && at.isBefore(times[currentPrayer!]!);
+    final isPast = _isPastPrayer(prayer);
     return _PrayerCardStatus(
       highlight: isPast ? PrayerCardHighlight.past : PrayerCardHighlight.normal,
     );
+  }
+
+  bool _isPastPrayer(Prayer prayer) {
+    final at = times[prayer];
+    if (at == null) return false;
+    if (prayer == Prayer.fajr) {
+      if (sunrise != null) {
+        if (referenceNow.isBefore(at)) return false;
+        return !referenceNow.isBefore(sunrise!);
+      }
+      if (currentPrayer != null) {
+        return at.isBefore(times[currentPrayer!]!);
+      }
+      return referenceNow.isAfter(at);
+    }
+    if (currentPrayer != null) {
+      return at.isBefore(times[currentPrayer!]!);
+    }
+    return false;
   }
 
   String? displayTimeFor(Prayer prayer) {
@@ -568,6 +614,11 @@ class _PrayerCardState {
 
   DateTime? nextTimeAfterCurrent() {
     if (currentPrayer == null) return null;
+    if (currentPrayer == Prayer.fajr &&
+        sunrise != null &&
+        referenceNow.isBefore(sunrise!)) {
+      return sunrise;
+    }
     if (upcomingPrayer != null) return times[upcomingPrayer!];
     return tomorrowFajr;
   }

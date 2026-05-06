@@ -27,7 +27,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'surah_planner'));
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -50,6 +50,9 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 6) {
         await m.createTable(prayerTimes);
+      }
+      if (from < 7) {
+        await m.addColumn(prayerTimes, prayerTimes.sunrise);
       }
     },
   );
