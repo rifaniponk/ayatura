@@ -1,0 +1,14 @@
+---
+description: Enforce Dart class/file and formatting commit rules
+alwaysApply: true
+---
+
+- Keep one class per Dart file.
+- Do not create multi-class Dart files.
+- When touching a legacy multi-class Dart file, split classes into separate files.
+- Before any commit, run `dart format .`.
+- Include formatter-produced changes in the commit.
+- Do not hardcode user-facing strings; add/use localization entries from `lib/l10n`.
+- Use design tokens from `lib/core/theme/*` for color and typography (including font sizes).
+- Avoid introducing new ad-hoc colors or font sizes unless required.
+- If required, add new tokens under `lib/core/theme` first, then use those tokens.
