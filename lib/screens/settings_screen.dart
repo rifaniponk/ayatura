@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
-import '../providers/locale_provider.dart';
-import '../providers/package_info_provider.dart';
-import '../providers/settings_provider.dart';
+import '../providers/core/locale_provider.dart';
+import '../providers/core/package_info_provider.dart';
+import '../providers/core/settings_provider.dart';
 import '../widgets/common/app_dropdown_button.dart';
 
 /// Preferences and data actions — placeholders until wired to persistence.

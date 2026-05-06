@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/models/quran_verse.dart';
-import '../data/services/quran_verse_service.dart';
+import '../../data/models/quran_verse.dart';
+import '../../data/services/quran_verse_service.dart';
 
 class QuranVerseRequest {
   const QuranVerseRequest({

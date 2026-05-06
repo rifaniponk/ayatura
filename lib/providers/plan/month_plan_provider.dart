@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/models/plan.dart';
-import '../data/models/prayer.dart';
-import '../data/services/month_plan_generator.dart';
-import 'database_provider.dart';
+import '../../data/models/plan.dart';
+import '../../data/models/prayer.dart';
+import '../../data/services/month_plan_generator.dart';
+import '../core/database_provider.dart';
 import 'month_plan_regenerate_busy_provider.dart';
 import 'selected_plan_day_provider.dart';
-import 'settings_provider.dart';
-import 'surah_data_providers.dart';
+import '../core/settings_provider.dart';
+import '../quran/surah_data_providers.dart';
 
 typedef YearMonth = ({int year, int month});
 

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/plan_config.dart';
+import '../../core/plan_config.dart';
 import 'shared_preferences_provider.dart';
 
 export 'lock_past_prayers_provider.dart';
