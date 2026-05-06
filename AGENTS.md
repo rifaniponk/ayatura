@@ -1,0 +1,27 @@
+# Agent Instructions
+
+These rules apply to all AI coding agents working in this repository.
+
+## Dart File Structure
+
+- Never place multiple classes in one Dart file.
+- Keep exactly one class per file.
+- If a touched file still has multiple classes, split them into separate files.
+
+## Commit Gate
+
+- Always run `dart format .` before creating any commit.
+- If formatting changes files, include those changes in the same commit.
+- Do not commit unless the format step has been executed.
+
+## Localization
+
+- Do not hardcode user-facing text in widgets, screens, dialogs, snackbars, or labels.
+- Add and use translation keys via `lib/l10n`.
+- Any newly introduced UI text must be localized through the app localization system.
+
+## Design System (Color & Typography)
+
+- Use existing design tokens from `lib/core/theme/*` for colors and typography.
+- Do not introduce new ad-hoc color values or font sizes unless truly necessary.
+- If a new color or typography token is required, add it under `lib/core/theme` first, then consume it from there.
