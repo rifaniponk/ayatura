@@ -316,7 +316,9 @@ class PrayerCard extends StatelessWidget {
                       child: Text(
                         badgeLabel!,
                         style: AppTextStyles.prayerCardBadge.copyWith(
-                          color: isCurrent ? AppColors.gold : AppColors.green,
+                          color: (isCurrent || isUpcoming)
+                              ? AppColors.gold
+                              : AppColors.green,
                           letterSpacing: 0.8,
                         ),
                       ),
@@ -334,6 +336,7 @@ class PrayerCard extends StatelessWidget {
                       _localizedName(s),
                       style: AppTextStyles.prayerHighlightedTitle.copyWith(
                         color: isCurrent ? AppColors.gold : AppColors.green,
+                        fontSize: isUpcoming ? 22 : null,
                       ),
                     ),
                   const Spacer(),
@@ -349,8 +352,11 @@ class PrayerCard extends StatelessWidget {
                     Text(
                       trailingMeta!,
                       style: AppTextStyles.smallLabel.copyWith(
-                        color: isCurrent ? AppColors.gold : AppColors.ink2,
+                        color: (isCurrent || isUpcoming)
+                            ? AppColors.gold
+                            : AppColors.ink2,
                         fontWeight: FontWeight.w700,
+                        fontSize: isUpcoming ? 11 : null,
                       ),
                     ),
                   ],
