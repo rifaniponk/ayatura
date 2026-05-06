@@ -59,7 +59,7 @@ class PrayerCard extends StatelessWidget {
     final isCurrent = highlight == PrayerCardHighlight.current;
     final isUpcoming = highlight == PrayerCardHighlight.upcoming;
     final isPast = highlight == PrayerCardHighlight.past;
-    final cardOpacity = isPast ? 0.72 : 1.0;
+    final cardOpacity = isPast ? 0.5 : 1.0;
     final hasBadge = badgeLabel != null && badgeLabel!.isNotEmpty;
 
     final cardDecoration = switch (highlight) {

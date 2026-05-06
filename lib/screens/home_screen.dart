@@ -157,6 +157,13 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
         selectedDate.year == now.year &&
         selectedDate.month == now.month &&
         selectedDate.day == now.day;
+    final todayDateOnly = DateTime(now.year, now.month, now.day);
+    final selectedDateOnly = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+    );
+    final isViewingPastDay = selectedDateOnly.isBefore(todayDateOnly);
     final prayerTimesResult = prayerTimesAsync.asData?.value;
     final prayerTimesToday = isSelectedToday ? prayerTimesResult?.today : null;
     final locationName = isSelectedToday
@@ -295,7 +302,9 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
               final slot =
                   effective.planForDay(clampedDay)?.slotFor(prayer) ??
                   PrayerSlot();
-              final status = cardState.statusFor(prayer, S.of(context)!);
+              final status = isViewingPastDay
+                  ? const _PrayerCardStatus(highlight: PrayerCardHighlight.past)
+                  : cardState.statusFor(prayer, S.of(context)!);
               return Padding(
                 key: _prayerKeys[prayer],
                 padding: const EdgeInsets.only(bottom: 12),
