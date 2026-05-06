@@ -4,6 +4,8 @@ import '../data/models/plan.dart';
 import '../data/models/prayer.dart';
 import '../data/services/month_plan_generator.dart';
 import 'database_provider.dart';
+import 'month_plan_regenerate_busy_provider.dart';
+import 'selected_plan_day_provider.dart';
 import 'settings_provider.dart';
 import 'surah_data_providers.dart';
 
@@ -14,29 +16,6 @@ final monthPlanByYearMonthProvider =
       final db = ref.watch(appDatabaseProvider);
       return db.loadPlan(ym.year, ym.month);
     });
-
-/// True while [MonthPlanNotifier.regenerate] is running (Month tab button UX).
-class MonthPlanRegenerateBusy extends Notifier<bool> {
-  @override
-  bool build() => false;
-}
-
-final monthPlanRegenerateBusyProvider =
-    NotifierProvider<MonthPlanRegenerateBusy, bool>(
-      MonthPlanRegenerateBusy.new,
-    );
-
-/// Current calendar day highlighted on Home (1–31).
-class SelectedPlanDayNotifier extends Notifier<int> {
-  @override
-  int build() => DateTime.now().day;
-
-  void setDay(int value) => state = value;
-}
-
-final selectedPlanDayProvider = NotifierProvider<SelectedPlanDayNotifier, int>(
-  SelectedPlanDayNotifier.new,
-);
 
 /// Month plan loaded from Drift on startup and persisted on regenerate.
 class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {

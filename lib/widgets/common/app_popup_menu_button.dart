@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_text_styles.dart';
 
+part 'app_popup_menu_item.dart';
+
 /// Surah Planner popup menu: matches [ThemeData.cardTheme] surface and shape,
 /// no M3 surface tint, [AppTextStyles.body] for labels.
 class AppPopupMenuButton<T> extends StatelessWidget {
@@ -81,29 +83,4 @@ class AppPopupMenuButton<T> extends StatelessWidget {
       ),
     );
   }
-}
-
-/// [PopupMenuItem] with app label typography; set [destructive] for
-/// [ColorScheme.error] text (e.g. delete).
-class AppPopupMenuItem<T> extends PopupMenuItem<T> {
-  AppPopupMenuItem({
-    super.key,
-    required super.value,
-    required Widget child,
-    super.onTap,
-    super.enabled,
-    super.height,
-    super.padding,
-    bool destructive = false,
-  }) : super(
-         child: Builder(
-           builder: (context) {
-             final base = AppTextStyles.body;
-             final style = destructive
-                 ? base.copyWith(color: Theme.of(context).colorScheme.error)
-                 : base;
-             return DefaultTextStyle.merge(style: style, child: child);
-           },
-         ),
-       );
 }
