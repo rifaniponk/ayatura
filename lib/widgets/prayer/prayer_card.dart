@@ -360,14 +360,6 @@ class PrayerCard extends StatelessWidget {
                       ),
                     ),
                   ],
-                  if (!hasBadge && isPast) ...[
-                    const SizedBox(width: 6),
-                    Icon(
-                      Icons.check_circle_rounded,
-                      size: 16,
-                      color: isCurrent ? AppColors.gold : AppColors.green2,
-                    ),
-                  ],
                   IconButton(
                     icon: Icon(
                       slot.locked
