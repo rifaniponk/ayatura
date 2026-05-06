@@ -189,13 +189,16 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
         orElse: () => const <Surah>[],
       );
       final masterById = {for (final x in masterList) x.id: x};
+      final visibleDays = effective.days
+          .where((d) => d.prayers.values.any((slot) => slot.surahs.isNotEmpty))
+          .toList();
 
       body = ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.fromLTRB(14, 8, 14, 20),
-        itemCount: effective.days.length,
+        itemCount: visibleDays.length,
         itemBuilder: (context, i) {
-          final d = effective.days[i];
+          final d = visibleDays[i];
           final isToday = DayPlanCard.isCalendarToday(
             viewed.year,
             viewed.month,
