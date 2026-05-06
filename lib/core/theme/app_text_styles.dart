@@ -47,7 +47,7 @@ abstract final class AppTextStyles {
   /// Large heading used in highlighted current prayer card (e.g. "Isha").
   static const TextStyle prayerCurrentTitle = TextStyle(
     fontFamily: _serif,
-    fontSize: 42,
+    fontSize: 30,
     fontWeight: FontWeight.w700,
     height: 1.0,
     color: AppColors.gold,

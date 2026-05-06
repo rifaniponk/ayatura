@@ -202,7 +202,7 @@ class PrayerCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 2),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -215,7 +215,7 @@ class PrayerCard extends StatelessWidget {
                             if (subtitle != null) ...[
                               const SizedBox(width: 10),
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
+                                padding: const EdgeInsets.only(bottom: 2),
                                 child: Text(
                                   subtitle!,
                                   style: AppTextStyles.bodyMedium.copyWith(
