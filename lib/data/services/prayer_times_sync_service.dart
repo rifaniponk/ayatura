@@ -31,7 +31,9 @@ class PrayerTimesSyncService {
   static const _aladhanHost = 'api.aladhan.com';
   static const _aladhanMethod = '20';
 
-  Future<PrayerTimesSyncResult?> syncAndLoadToday() async {
+  Future<PrayerTimesSyncResult?> syncAndLoadToday({
+    bool forceRefresh = false,
+  }) async {
     final today = _dayOnly(DateTime.now());
     final days = List<DateTime>.generate(
       7,
@@ -40,12 +42,14 @@ class PrayerTimesSyncService {
     );
     final dayKeys = days.map(_isoDate).toList(growable: false);
     final existing = await _db.prayerTimesByDates(dayKeys);
-    final missingDays = days
-        .where((day) => !existing.containsKey(_isoDate(day)))
-        .toList(growable: false);
+    final missingDays = forceRefresh
+        ? days
+        : days
+              .where((day) => !existing.containsKey(_isoDate(day)))
+              .toList(growable: false);
 
     // Cache-first: skip all network calls when all requested dates are present.
-    if (missingDays.isEmpty) {
+    if (!forceRefresh && missingDays.isEmpty) {
       final todayRow = existing[_isoDate(today)];
       if (todayRow == null) return null;
       return PrayerTimesSyncResult(

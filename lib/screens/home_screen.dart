@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_text_styles.dart';
 import '../data/local/app_database.dart';
+import '../data/services/prayer_times_sync_service.dart';
 import '../l10n/app_localizations.dart';
 import '../data/models/plan.dart';
 import '../data/models/prayer.dart';
@@ -115,6 +116,19 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
         .toggleSlotLock(year: year, month: month, day: day, prayer: prayer);
   }
 
+  Future<void> _forceRefreshPrayerTimes() async {
+    await ref.read(seededDatabaseProvider.future);
+    final db = ref.read(appDatabaseProvider);
+    await PrayerTimesSyncService(db).syncAndLoadToday(forceRefresh: true);
+    ref.invalidate(prayerTimesSyncProvider);
+    if (mounted) {
+      setState(() {
+        _clockNow = DateTime.now();
+        _shouldScrollToCurrentPrayer = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final now = _clockNow;
@@ -214,118 +228,124 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
       }
     });
 
-    return ListView(
-      controller: _listController,
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
-      children: [
-        if (effective != null) ...[
-          _WeekStrip(
-            controller: _weekStripController,
-            year: effective.year,
-            month: effective.month,
-            selectedDay: clampedDay,
-            daysInMonth: daysInMonth,
-            today: now,
-            onChanged: (d) =>
-                ref.read(selectedPlanDayProvider.notifier).setDay(d),
-          ),
-          const SizedBox(height: 14),
-          if (isSelectedToday)
-            Text(
-              S.of(context)!.monthTodayChip,
-              style: AppTextStyles.sectionEyebrow.copyWith(
-                color: AppColors.ink3,
-                letterSpacing: 1.5,
-              ),
+    return RefreshIndicator(
+      onRefresh: _forceRefreshPrayerTimes,
+      child: ListView(
+        controller: _listController,
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
+        children: [
+          if (effective != null) ...[
+            _WeekStrip(
+              controller: _weekStripController,
+              year: effective.year,
+              month: effective.month,
+              selectedDay: clampedDay,
+              daysInMonth: daysInMonth,
+              today: now,
+              onChanged: (d) =>
+                  ref.read(selectedPlanDayProvider.notifier).setDay(d),
             ),
-          if (isSelectedToday) const SizedBox(height: 4),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  titleDate,
-                  style: AppTextStyles.sectionHeadingSerif.copyWith(
-                    color: AppColors.green,
-                    fontSize: 24,
-                    height: 1.05,
-                  ),
+            const SizedBox(height: 14),
+            if (isSelectedToday)
+              Text(
+                S.of(context)!.monthTodayChip,
+                style: AppTextStyles.sectionEyebrow.copyWith(
+                  color: AppColors.ink3,
+                  letterSpacing: 1.5,
                 ),
               ),
-              if (locationName != null)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.greenOverlay06,
-                    borderRadius: BorderRadius.circular(99),
-                  ),
+            if (isSelectedToday) const SizedBox(height: 4),
+            Row(
+              children: [
+                Expanded(
                   child: Text(
-                    '• $locationName',
-                    style: AppTextStyles.smallLabel.copyWith(
-                      color: AppColors.ink3,
-                      fontWeight: FontWeight.w700,
+                    titleDate,
+                    style: AppTextStyles.sectionHeadingSerif.copyWith(
+                      color: AppColors.green,
+                      fontSize: 24,
+                      height: 1.05,
                     ),
                   ),
                 ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          ...Prayer.values.map((prayer) {
-            final slot =
-                effective.planForDay(clampedDay)?.slotFor(prayer) ??
-                PrayerSlot();
-            final status = cardState.statusFor(prayer, S.of(context)!);
-            return Padding(
-              key: _prayerKeys[prayer],
-              padding: const EdgeInsets.only(bottom: 12),
-              child: PrayerCard(
-                prayer: prayer,
-                slot: slot,
-                masterBySurahId: _masterById,
-                prayerTime: cardState.displayTimeFor(prayer),
-                highlight: status.highlight,
-                badgeLabel: status.badge,
-                trailingMeta: status.trailing,
-                subtitle: status.subtitle,
-                progress: status.progress,
-                progressLeftLabel: status.progressLeft,
-                progressRightLabel: status.progressRight,
-                onToggleLock: () => _toggleLock(
-                  year: effective.year,
-                  month: effective.month,
-                  day: clampedDay,
-                  prayer: prayer,
-                ),
-                onTap: slot.surahs.isEmpty
-                    ? null
-                    : () => showQuranReaderSheet(
-                        context,
-                        prayer: prayer,
-                        slot: slot,
-                        masterById: _masterById,
+                if (locationName != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.greenOverlay06,
+                      borderRadius: BorderRadius.circular(99),
+                    ),
+                    child: Text(
+                      '• $locationName',
+                      style: AppTextStyles.smallLabel.copyWith(
+                        color: AppColors.ink3,
+                        fontWeight: FontWeight.w700,
                       ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            ...Prayer.values.map((prayer) {
+              final slot =
+                  effective.planForDay(clampedDay)?.slotFor(prayer) ??
+                  PrayerSlot();
+              final status = cardState.statusFor(prayer, S.of(context)!);
+              return Padding(
+                key: _prayerKeys[prayer],
+                padding: const EdgeInsets.only(bottom: 12),
+                child: PrayerCard(
+                  prayer: prayer,
+                  slot: slot,
+                  masterBySurahId: _masterById,
+                  prayerTime: cardState.displayTimeFor(prayer),
+                  highlight: status.highlight,
+                  badgeLabel: status.badge,
+                  trailingMeta: status.trailing,
+                  subtitle: status.subtitle,
+                  progress: status.progress,
+                  progressLeftLabel: status.progressLeft,
+                  progressRightLabel: status.progressRight,
+                  onToggleLock: () => _toggleLock(
+                    year: effective.year,
+                    month: effective.month,
+                    day: clampedDay,
+                    prayer: prayer,
+                  ),
+                  onTap: slot.surahs.isEmpty
+                      ? null
+                      : () => showQuranReaderSheet(
+                          context,
+                          prayer: prayer,
+                          slot: slot,
+                          masterById: _masterById,
+                        ),
+                ),
+              );
+            }),
+            const SizedBox(height: 8),
+            GradientButton(
+              label: S.of(context)!.regeneratePlan,
+              icon: Icons.auto_awesome_rounded,
+              onPressed: enabledCount >= 2 ? _generate : null,
+              enabled: enabledCount >= 2,
+            ),
+          ] else ...[
+            if (enabledCount < 2)
+              EmptyState(
+                variant: EmptyStateVariant.hifdhListTooSmall,
+                onAction: () => ref.read(navIndexProvider.notifier).setIndex(2),
+              )
+            else
+              EmptyState(
+                variant: EmptyStateVariant.noPlan,
+                onAction: _generate,
               ),
-            );
-          }),
-          const SizedBox(height: 8),
-          GradientButton(
-            label: S.of(context)!.regeneratePlan,
-            icon: Icons.auto_awesome_rounded,
-            onPressed: enabledCount >= 2 ? _generate : null,
-            enabled: enabledCount >= 2,
-          ),
-        ] else ...[
-          if (enabledCount < 2)
-            EmptyState(
-              variant: EmptyStateVariant.hifdhListTooSmall,
-              onAction: () => ref.read(navIndexProvider.notifier).setIndex(2),
-            )
-          else
-            EmptyState(variant: EmptyStateVariant.noPlan, onAction: _generate),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
