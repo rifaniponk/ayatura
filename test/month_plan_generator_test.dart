@@ -197,14 +197,8 @@ void main() {
         now: DateTime(2026, 5, 6),
       );
 
-      expect(
-        plan.planForDay(5)!.slotFor(Prayer.fajr).surahs,
-        isEmpty,
-      );
-      expect(
-        plan.planForDay(6)!.slotFor(Prayer.fajr).surahs,
-        isNotEmpty,
-      );
+      expect(plan.planForDay(5)!.slotFor(Prayer.fajr).surahs, isEmpty);
+      expect(plan.planForDay(6)!.slotFor(Prayer.fajr).surahs, isNotEmpty);
     });
 
     test('current month preserves existing past-day unlocked slots', () {
