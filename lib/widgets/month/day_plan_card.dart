@@ -258,7 +258,7 @@ class _CompactPrayerRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 3, bottom: 3),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: InkWell(
@@ -290,17 +290,27 @@ class _CompactPrayerRow extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 6),
-          IconButton(
-            visualDensity: VisualDensity.compact,
-            constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
-            padding: EdgeInsets.zero,
-            icon: Icon(
-              slot.locked ? Icons.lock_rounded : Icons.lock_open_rounded,
-              size: 16,
-              color: slot.locked ? AppColors.gold : AppColors.ink3,
+          SizedBox(
+            width: 24,
+            height: 24,
+            child: IconButton(
+              visualDensity: VisualDensity.compact,
+              constraints: const BoxConstraints.tightFor(width: 24, height: 24),
+              style: IconButton.styleFrom(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                minimumSize: const Size(24, 24),
+                maximumSize: const Size(24, 24),
+                padding: EdgeInsets.zero,
+              ),
+              padding: EdgeInsets.zero,
+              icon: Icon(
+                slot.locked ? Icons.lock_rounded : Icons.lock_open_rounded,
+                size: 16,
+                color: slot.locked ? AppColors.gold : AppColors.ink3,
+              ),
+              tooltip: slot.locked ? s.unlockSlotTooltip : s.lockSlotTooltip,
+              onPressed: onToggleLock,
             ),
-            tooltip: slot.locked ? s.unlockSlotTooltip : s.lockSlotTooltip,
-            onPressed: onToggleLock,
           ),
         ],
       ),
