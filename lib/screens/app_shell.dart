@@ -31,7 +31,10 @@ class AppShell extends ConsumerWidget {
         .clamp(0, AppShell._tabs.length - 1);
 
     return Scaffold(
-      body: IndexedStack(index: navIndex, children: AppShell._tabs),
+      body: SafeArea(
+        bottom: false,
+        child: IndexedStack(index: navIndex, children: AppShell._tabs),
+      ),
       bottomNavigationBar: AppBottomNavBar(
         currentIndex: navIndex,
         onTap: (i) => ref.read(navIndexProvider.notifier).setIndex(i),
