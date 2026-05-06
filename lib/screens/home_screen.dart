@@ -145,9 +145,34 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
         ? DateTime(effective.year, effective.month + 1, 0).day
         : DateTime(now.year, now.month + 1, 0).day;
     final clampedDay = selectedDay.clamp(1, daysInMonth);
+    final availableDays = effective == null
+        ? <int>{}
+        : effective.days
+              .where(
+                (d) => d.prayers.values.any((slot) => slot.surahs.isNotEmpty),
+              )
+              .map((d) => d.day)
+              .toSet();
+    final resolvedDay = availableDays.isEmpty
+        ? clampedDay
+        : (availableDays.contains(clampedDay)
+              ? clampedDay
+              : (() {
+                  final sorted = availableDays.toList()..sort();
+                  for (final day in sorted) {
+                    if (day >= clampedDay) return day;
+                  }
+                  return sorted.first;
+                })());
+    if (resolvedDay != clampedDay) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ref.read(selectedPlanDayProvider.notifier).setDay(resolvedDay);
+      });
+    }
     final selectedDate = effective != null
-        ? DateTime(effective.year, effective.month, clampedDay)
-        : DateTime(now.year, now.month, clampedDay);
+        ? DateTime(effective.year, effective.month, resolvedDay)
+        : DateTime(now.year, now.month, resolvedDay);
     final localeTag = Localizations.localeOf(context).toLanguageTag();
     final titleDate = DateFormat(
       'EEEE, d MMMM',
@@ -193,7 +218,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_weekStripController.hasClients) return;
       final itemExtent = _dayTileWidth + _dayTileGap;
-      final targetCenter = (clampedDay - 1) * itemExtent + (_dayTileWidth / 2);
+      final targetCenter = (resolvedDay - 1) * itemExtent + (_dayTileWidth / 2);
       final viewportCenter =
           _weekStripController.position.viewportDimension / 2;
       final rawOffset = targetCenter - viewportCenter;
@@ -235,9 +260,10 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
               controller: _weekStripController,
               year: effective.year,
               month: effective.month,
-              selectedDay: clampedDay,
+              selectedDay: resolvedDay,
               daysInMonth: daysInMonth,
               today: now,
+              availableDays: availableDays,
               onChanged: (d) =>
                   ref.read(selectedPlanDayProvider.notifier).setDay(d),
             ),
@@ -300,7 +326,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
             const SizedBox(height: 14),
             ...Prayer.values.map((prayer) {
               final slot =
-                  effective.planForDay(clampedDay)?.slotFor(prayer) ??
+                  effective.planForDay(resolvedDay)?.slotFor(prayer) ??
                   PrayerSlot();
               final status = isViewingPastDay
                   ? const _PrayerCardStatus(highlight: PrayerCardHighlight.past)
@@ -323,7 +349,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                   onToggleLock: () => _toggleLock(
                     year: effective.year,
                     month: effective.month,
-                    day: clampedDay,
+                    day: resolvedDay,
                     prayer: prayer,
                   ),
                   onTap: slot.surahs.isEmpty
@@ -363,6 +389,7 @@ class _WeekStrip extends StatelessWidget {
     required this.selectedDay,
     required this.daysInMonth,
     required this.today,
+    required this.availableDays,
     required this.onChanged,
   });
 
@@ -372,6 +399,7 @@ class _WeekStrip extends StatelessWidget {
   final int selectedDay;
   final int daysInMonth;
   final DateTime today;
+  final Set<int> availableDays;
   final ValueChanged<int> onChanged;
 
   @override
@@ -393,6 +421,7 @@ class _WeekStrip extends StatelessWidget {
             localeTag,
           ).format(date).toUpperCase();
           final selected = day == selectedDay;
+          final isAvailable = availableDays.contains(day);
           final isToday =
               date.year == today.year &&
               date.month == today.month &&
@@ -402,7 +431,7 @@ class _WeekStrip extends StatelessWidget {
             width: _HomeBodyState._dayTileWidth,
             child: InkWell(
               borderRadius: BorderRadius.circular(14),
-              onTap: () => onChanged(day),
+              onTap: isAvailable ? () => onChanged(day) : null,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 180),
                 padding: const EdgeInsets.fromLTRB(6, 6, 6, 5),
@@ -420,7 +449,11 @@ class _WeekStrip extends StatelessWidget {
                       style: AppTextStyles.smallLabel.copyWith(
                         fontSize: 9,
                         letterSpacing: 0.8,
-                        color: selected ? AppColors.white : AppColors.ink3,
+                        color: selected
+                            ? AppColors.white
+                            : (isAvailable
+                                  ? AppColors.ink3
+                                  : AppColors.ink3.withValues(alpha: 0.45)),
                         fontWeight: selected
                             ? FontWeight.w700
                             : FontWeight.w500,
@@ -430,7 +463,11 @@ class _WeekStrip extends StatelessWidget {
                     Text(
                       '$day',
                       style: AppTextStyles.cardLabel.copyWith(
-                        color: selected ? AppColors.white : AppColors.ink,
+                        color: selected
+                            ? AppColors.white
+                            : (isAvailable
+                                  ? AppColors.ink
+                                  : AppColors.ink3.withValues(alpha: 0.45)),
                         fontSize: 19,
                         fontWeight: selected
                             ? FontWeight.w700
