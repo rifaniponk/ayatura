@@ -277,12 +277,26 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                       color: AppColors.greenOverlay06,
                       borderRadius: BorderRadius.circular(99),
                     ),
-                    child: Text(
-                      '• $locationName',
-                      style: AppTextStyles.smallLabel.copyWith(
-                        color: AppColors.ink3,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: AppColors.green2,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          locationName,
+                          style: AppTextStyles.smallLabel.copyWith(
+                            color: AppColors.ink3,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
               ],
