@@ -11,7 +11,7 @@ import '../l10n/app_localizations.dart';
 import '../providers/providers.dart';
 import '../widgets/common/gradient_button.dart';
 import '../widgets/month/day_plan_card.dart';
-import '../widgets/home/quran_reader_sheet.dart';
+import '../widgets/quran_reader/quran_reader_sheet.dart';
 
 /// Month review: browse any allowed month, see full per-prayer assignments,
 /// regenerate for the viewed month, auto-scroll to today on the current month.

@@ -2,17 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-class QuranVerse {
-  const QuranVerse({
-    required this.verseNumber,
-    required this.arabicText,
-    required this.translation,
-  });
-
-  final int verseNumber;
-  final String arabicText;
-  final String translation;
-}
+import '../models/quran_verse.dart';
 
 class QuranVerseService {
   QuranVerseService({http.Client? client}) : _client = client ?? http.Client();
