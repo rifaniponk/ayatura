@@ -9,6 +9,8 @@ SurahPoolEntry _entry(int id, int surahId) =>
     SurahPoolEntry(id: id, surahId: surahId, isFullSurah: true);
 
 void main() {
+  final testNow = DateTime(2026, 1, 15);
+
   group('MonthPlanGenerator', () {
     test('all pool entries appear before any repeats (round-robin)', () {
       final pool = [_entry(1, 1), _entry(2, 2), _entry(3, 3), _entry(4, 4)];
@@ -17,6 +19,7 @@ void main() {
         year: 2026,
         enabledPool: pool,
         surahsPerPrayer: 4,
+        now: testNow,
       );
 
       // Collect surahIds dealt sequentially across all slots.
@@ -45,6 +48,7 @@ void main() {
         year: 2026,
         enabledPool: [],
         surahsPerPrayer: 2,
+        now: testNow,
       );
       expect(plan.days.length, 28);
       final slot = plan.planForDay(1)!.slotFor(Prayer.fajr);
@@ -58,6 +62,7 @@ void main() {
         year: 2026,
         enabledPool: pool,
         surahsPerPrayer: 2,
+        now: testNow,
       );
       final slot = plan.planForDay(15)!.slotFor(Prayer.asr);
       expect(slot.surahs.single.surahId, 5);
@@ -70,6 +75,7 @@ void main() {
         year: 2026,
         enabledPool: pool,
         surahsPerPrayer: 2,
+        now: testNow,
       );
       final day1 = first.planForDay(1)!;
       final lockedFajr = day1.slotFor(Prayer.fajr).copyWith(locked: true);
@@ -87,6 +93,7 @@ void main() {
         enabledPool: pool,
         surahsPerPrayer: 2,
         existingPlan: existing,
+        now: testNow,
       );
 
       expect(second.planForDay(1)!.slotFor(Prayer.fajr).locked, true);
@@ -122,6 +129,7 @@ void main() {
         enabledPool: pool,
         surahsPerPrayer: 1,
         existingPlan: existing,
+        now: testNow,
       );
 
       final dealt = <int>[];
@@ -154,6 +162,7 @@ void main() {
         year: 2026,
         enabledPool: pool,
         surahsPerPrayer: 2,
+        now: testNow,
       );
       for (final day in plan.days) {
         for (final prayer in Prayer.values) {
@@ -170,12 +179,64 @@ void main() {
         year: 2026,
         enabledPool: pool,
         surahsPerPrayer: 4,
+        now: testNow,
       );
       for (final day in plan.days) {
         for (final prayer in Prayer.values) {
           expect(day.slotFor(prayer).surahs.length, 2);
         }
       }
+    });
+
+    test('current month generates new slots starting from today', () {
+      final plan = MonthPlanGenerator.generate(
+        month: 5,
+        year: 2026,
+        enabledPool: [_entry(1, 1), _entry(2, 2)],
+        surahsPerPrayer: 1,
+        now: DateTime(2026, 5, 6),
+      );
+
+      expect(
+        plan.planForDay(5)!.slotFor(Prayer.fajr).surahs,
+        isEmpty,
+      );
+      expect(
+        plan.planForDay(6)!.slotFor(Prayer.fajr).surahs,
+        isNotEmpty,
+      );
+    });
+
+    test('current month preserves existing past-day unlocked slots', () {
+      final existing = MonthPlan(
+        month: 5,
+        year: 2026,
+        days: [
+          DayPlan(
+            day: 1,
+            prayers: {
+              Prayer.fajr: PrayerSlot(
+                surahs: const [PlanSurah(surahId: 99, isFullSurah: true)],
+              ),
+              for (final p in Prayer.values.where((p) => p != Prayer.fajr))
+                p: PrayerSlot(),
+            },
+          ),
+        ],
+      );
+
+      final plan = MonthPlanGenerator.generate(
+        month: 5,
+        year: 2026,
+        enabledPool: [_entry(1, 1), _entry(2, 2)],
+        surahsPerPrayer: 1,
+        existingPlan: existing,
+        now: DateTime(2026, 5, 6),
+      );
+
+      final day1Fajr = plan.planForDay(1)!.slotFor(Prayer.fajr);
+      expect(day1Fajr.locked, false);
+      expect(day1Fajr.surahs.single.surahId, 99);
     });
   });
 }

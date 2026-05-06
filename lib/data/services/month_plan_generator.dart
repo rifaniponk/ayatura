@@ -25,7 +25,11 @@ abstract final class MonthPlanGenerator {
     required List<SurahPoolEntry> enabledPool,
     required int surahsPerPrayer,
     MonthPlan? existingPlan,
+    DateTime? now,
   }) {
+    final current = now ?? DateTime.now();
+    final isCurrentMonth = current.month == month && current.year == year;
+    final generationStartDay = isCurrentMonth ? current.day : 1;
     final daysInMonth = DateTime(year, month + 1, 0).day;
     final days = <DayPlan>[];
 
@@ -74,6 +78,19 @@ abstract final class MonthPlanGenerator {
 
     for (var day = 1; day <= daysInMonth; day++) {
       final existing = existingPlan?.planForDay(day);
+      if (day < generationStartDay) {
+        if (existing != null) {
+          days.add(existing);
+        } else {
+          days.add(
+            DayPlan(
+              day: day,
+              prayers: {for (final p in Prayer.values) p: PrayerSlot()},
+            ),
+          );
+        }
+        continue;
+      }
       final prayers = <Prayer, PrayerSlot>{};
 
       for (final prayer in Prayer.values) {
