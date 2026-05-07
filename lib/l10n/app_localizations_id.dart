@@ -97,6 +97,10 @@ class SId extends S {
   String get monthNoPlanSubtitle => 'Ketuk Buat ulang untuk membuatnya.';
 
   @override
+  String get monthNoPlanPastSubtitle =>
+      'Rencana hanya bisa dibuat untuk bulan ini atau bulan mendatang.';
+
+  @override
   String monthRegeneratePlanFor(String monthYear) {
     return 'Buat ulang rencana untuk $monthYear';
   }

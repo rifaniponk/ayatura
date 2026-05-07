@@ -54,6 +54,7 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
 
   Future<void> _onRegenerate() async {
     final viewed = ref.read(viewedMonthProvider);
+    if (_isPastMonth(viewed.year, viewed.month)) return;
     final ok = await ref
         .read(monthPlanProvider.notifier)
         .regenerate(month: viewed.month, year: viewed.year);
@@ -98,6 +99,11 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
     return true;
   }
 
+  bool _isPastMonth(int year, int month) {
+    final now = DateTime.now();
+    return year * 12 + month < now.year * 12 + now.month;
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = S.of(context)!;
@@ -114,6 +120,21 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
     );
     final effective = plan;
     final busy = ref.watch(monthPlanRegenerateBusyProvider);
+    final canRegenerateForViewedMonth = !_isPastMonth(
+      viewed.year,
+      viewed.month,
+    );
+    final prevMonth = DateTime(viewed.year, viewed.month - 1);
+    final prevMonthHasPlanAsync = ref.watch(
+      monthPlanExistsByYearMonthProvider((
+        year: prevMonth.year,
+        month: prevMonth.month,
+      )),
+    );
+    final prevMonthHasPlan = prevMonthHasPlanAsync.maybeWhen(
+      data: (hasPlan) => hasPlan,
+      orElse: () => false,
+    );
 
     ref.listen(viewedMonthProvider, (previous, next) {
       if (previous != null && previous != next) {
@@ -165,20 +186,24 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                s.monthNoPlanSubtitle,
+                canRegenerateForViewedMonth
+                    ? s.monthNoPlanSubtitle
+                    : s.monthNoPlanPastSubtitle,
                 style: AppTextStyles.body.copyWith(
                   color: AppColors.ink3,
                   fontSize: 13,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 24),
-              GradientButton(
-                label: s.monthRegeneratePlanFor(monthYearStr),
-                onPressed: _onRegenerate,
-                enabled: !busy,
-                icon: Icons.auto_awesome_rounded,
-              ),
+              if (canRegenerateForViewedMonth) ...[
+                const SizedBox(height: 24),
+                GradientButton(
+                  label: s.monthRegeneratePlanFor(monthYearStr),
+                  onPressed: _onRegenerate,
+                  enabled: !busy,
+                  icon: Icons.auto_awesome_rounded,
+                ),
+              ],
             ],
           ),
         ),
@@ -244,7 +269,9 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
       );
     }
 
-    final canPrev = viewedMonthCanGoPrev(viewed);
+    final prevMonthIsPast = _isPastMonth(prevMonth.year, prevMonth.month);
+    final canPrev =
+        viewedMonthCanGoPrev(viewed) && (!prevMonthIsPast || prevMonthHasPlan);
     final canNext = viewedMonthCanGoNext(viewed);
 
     return Column(
@@ -266,10 +293,10 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
                                 .read(viewedMonthProvider.notifier)
                                 .goToPrev()
                           : null,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.chevron_left_rounded,
                         size: 28,
-                        color: AppColors.green,
+                        color: canPrev ? AppColors.green : AppColors.ink3,
                       ),
                     ),
                     Expanded(
@@ -286,10 +313,10 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
                                 .read(viewedMonthProvider.notifier)
                                 .goToNext()
                           : null,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.chevron_right_rounded,
                         size: 28,
-                        color: AppColors.green,
+                        color: canNext ? AppColors.green : AppColors.ink3,
                       ),
                     ),
                   ],
@@ -301,38 +328,39 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
                       spacing: 8,
                       runSpacing: 6,
                       children: [
-                        OutlinedButton.icon(
-                          onPressed: busy ? null : _onRegenerate,
-                          icon: busy
-                              ? const SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
+                        if (canRegenerateForViewedMonth)
+                          OutlinedButton.icon(
+                            onPressed: busy ? null : _onRegenerate,
+                            icon: busy
+                                ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: AppColors.green,
+                                    ),
+                                  )
+                                : const Icon(
+                                    Icons.refresh_rounded,
+                                    size: 18,
                                     color: AppColors.green,
                                   ),
-                                )
-                              : const Icon(
-                                  Icons.refresh_rounded,
-                                  size: 18,
-                                  color: AppColors.green,
-                                ),
-                          label: Text(
-                            s.monthRegenerateCompact,
-                            style: AppTextStyles.smallLabel.copyWith(
-                              color: AppColors.green,
+                            label: Text(
+                              s.monthRegenerateCompact,
+                              style: AppTextStyles.smallLabel.copyWith(
+                                color: AppColors.green,
+                              ),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppColors.green,
+                              side: const BorderSide(color: AppColors.green2),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              visualDensity: VisualDensity.compact,
                             ),
                           ),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.green,
-                            side: const BorderSide(color: AppColors.green2),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            visualDensity: VisualDensity.compact,
-                          ),
-                        ),
                         OutlinedButton.icon(
                           onPressed: busy ? null : _onClearAllLocks,
                           icon: const Icon(

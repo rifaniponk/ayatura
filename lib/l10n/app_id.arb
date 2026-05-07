@@ -22,6 +22,7 @@
   "monthRegenerateCompact": "Buat ulang",
   "monthNoPlanTitle": "Belum ada rencana untuk {monthYear}",
   "monthNoPlanSubtitle": "Ketuk Buat ulang untuk membuatnya.",
+  "monthNoPlanPastSubtitle": "Rencana hanya bisa dibuat untuk bulan ini atau bulan mendatang.",
   "monthRegeneratePlanFor": "Buat ulang rencana untuk {monthYear}",
   "monthTodayChip": "Hari ini",
   "monthFullSurah": "Surah penuh",

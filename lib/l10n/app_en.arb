@@ -47,6 +47,7 @@
   "monthNoPlanTitle": "No plan for {monthYear}",
   "@monthNoPlanTitle": { "placeholders": { "monthYear": {"type": "String"} } },
   "monthNoPlanSubtitle": "Tap Regenerate to create one.",
+  "monthNoPlanPastSubtitle": "Plans can only be generated for the current or a future month.",
   "monthRegeneratePlanFor": "Regenerate Plan for {monthYear}",
   "@monthRegeneratePlanFor": { "placeholders": { "monthYear": {"type": "String"} } },
   "monthTodayChip": "Today",

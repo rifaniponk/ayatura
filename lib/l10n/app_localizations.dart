@@ -229,6 +229,12 @@ abstract class S {
   /// **'Tap Regenerate to create one.'**
   String get monthNoPlanSubtitle;
 
+  /// No description provided for @monthNoPlanPastSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Plans can only be generated for the current or a future month.'**
+  String get monthNoPlanPastSubtitle;
+
   /// No description provided for @monthRegeneratePlanFor.
   ///
   /// In en, this message translates to:

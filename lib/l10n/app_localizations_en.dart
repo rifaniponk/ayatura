@@ -98,6 +98,10 @@ class SEn extends S {
   String get monthNoPlanSubtitle => 'Tap Regenerate to create one.';
 
   @override
+  String get monthNoPlanPastSubtitle =>
+      'Plans can only be generated for the current or a future month.';
+
+  @override
   String monthRegeneratePlanFor(String monthYear) {
     return 'Regenerate Plan for $monthYear';
   }
