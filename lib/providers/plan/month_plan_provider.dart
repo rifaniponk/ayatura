@@ -17,6 +17,13 @@ final monthPlanByYearMonthProvider =
       return db.loadPlan(ym.year, ym.month);
     });
 
+final monthPlanExistsByYearMonthProvider =
+    FutureProvider.family<bool, YearMonth>((ref, ym) async {
+      final db = ref.watch(appDatabaseProvider);
+      final plan = await db.loadPlan(ym.year, ym.month);
+      return plan != null;
+    });
+
 /// Month plan loaded from Drift on startup and persisted on regenerate.
 class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
   @override
