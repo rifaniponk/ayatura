@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/nav_provider.dart';
-import '../providers/prayer_times_provider.dart';
+import '../providers/core/nav_provider.dart';
+import '../providers/prayer/prayer_times_provider.dart';
 import '../widgets/navigation/bottom_nav_bar.dart';
 import 'home_screen.dart';
 import 'month_screen.dart';

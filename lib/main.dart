@@ -6,8 +6,8 @@ import 'package:surah_planner/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/theme/app_theme.dart';
-import 'providers/locale_provider.dart';
-import 'providers/shared_preferences_provider.dart';
+import 'providers/core/locale_provider.dart';
+import 'providers/core/shared_preferences_provider.dart';
 import 'screens/app_shell.dart';
 
 Future<void> main() async {

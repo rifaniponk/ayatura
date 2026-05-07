@@ -1,11 +1,11 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/local/app_database.dart';
-import '../data/models/surah_pool_entry.dart';
-import 'database_provider.dart';
-import 'month_plan_provider.dart';
-import 'surah_data_providers.dart';
+import '../../data/local/app_database.dart';
+import '../../data/models/surah_pool_entry.dart';
+import '../core/database_provider.dart';
+import '../plan/month_plan_provider.dart';
+import '../quran/surah_data_providers.dart';
 
 void _invalidatePoolAndPlan(WidgetRef ref) {
   ref.invalidate(poolEntriesAsyncProvider);

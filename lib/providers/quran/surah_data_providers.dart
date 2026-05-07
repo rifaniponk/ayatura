@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/models/surah.dart';
-import '../data/models/surah_pool_entry.dart';
-import '../data/services/surah_seed_service.dart';
-import 'database_provider.dart';
+import '../../data/models/surah.dart';
+import '../../data/models/surah_pool_entry.dart';
+import '../../data/services/surah_seed_service.dart';
+import '../core/database_provider.dart';
 
 /// Ensures bundled JSON seed ran; lazy until first read of this future.
 ///
