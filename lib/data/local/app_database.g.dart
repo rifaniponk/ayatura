@@ -80,6 +80,30 @@ class $SurahsTable extends Surahs with TableInfo<$SurahsTable, SurahRow> {
     requiredDuringInsert: false,
     defaultValue: const Constant(1),
   );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -89,6 +113,8 @@ class $SurahsTable extends Surahs with TableInfo<$SurahsTable, SurahRow> {
     ayatCount,
     startJuz,
     endJuz,
+    createdAt,
+    updatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -147,6 +173,18 @@ class $SurahsTable extends Surahs with TableInfo<$SurahsTable, SurahRow> {
         endJuz.isAcceptableOrUnknown(data['end_juz']!, _endJuzMeta),
       );
     }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -184,6 +222,14 @@ class $SurahsTable extends Surahs with TableInfo<$SurahsTable, SurahRow> {
         DriftSqlType.int,
         data['${effectivePrefix}end_juz'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
     );
   }
 
@@ -201,6 +247,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
   final int ayatCount;
   final int startJuz;
   final int endJuz;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   const SurahRow({
     required this.id,
     required this.name,
@@ -209,6 +257,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
     required this.ayatCount,
     required this.startJuz,
     required this.endJuz,
+    required this.createdAt,
+    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -220,6 +270,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
     map['ayat_count'] = Variable<int>(ayatCount);
     map['start_juz'] = Variable<int>(startJuz);
     map['end_juz'] = Variable<int>(endJuz);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
@@ -232,6 +284,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
       ayatCount: Value(ayatCount),
       startJuz: Value(startJuz),
       endJuz: Value(endJuz),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
@@ -248,6 +302,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
       ayatCount: serializer.fromJson<int>(json['ayatCount']),
       startJuz: serializer.fromJson<int>(json['startJuz']),
       endJuz: serializer.fromJson<int>(json['endJuz']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -261,6 +317,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
       'ayatCount': serializer.toJson<int>(ayatCount),
       'startJuz': serializer.toJson<int>(startJuz),
       'endJuz': serializer.toJson<int>(endJuz),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
@@ -272,6 +330,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
     int? ayatCount,
     int? startJuz,
     int? endJuz,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) => SurahRow(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -280,6 +340,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
     ayatCount: ayatCount ?? this.ayatCount,
     startJuz: startJuz ?? this.startJuz,
     endJuz: endJuz ?? this.endJuz,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
   );
   SurahRow copyWithCompanion(SurahsCompanion data) {
     return SurahRow(
@@ -292,6 +354,8 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
       ayatCount: data.ayatCount.present ? data.ayatCount.value : this.ayatCount,
       startJuz: data.startJuz.present ? data.startJuz.value : this.startJuz,
       endJuz: data.endJuz.present ? data.endJuz.value : this.endJuz,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
@@ -304,14 +368,25 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
           ..write('arabicName: $arabicName, ')
           ..write('ayatCount: $ayatCount, ')
           ..write('startJuz: $startJuz, ')
-          ..write('endJuz: $endJuz')
+          ..write('endJuz: $endJuz, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, name, nameId, arabicName, ayatCount, startJuz, endJuz);
+  int get hashCode => Object.hash(
+    id,
+    name,
+    nameId,
+    arabicName,
+    ayatCount,
+    startJuz,
+    endJuz,
+    createdAt,
+    updatedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -322,7 +397,9 @@ class SurahRow extends DataClass implements Insertable<SurahRow> {
           other.arabicName == this.arabicName &&
           other.ayatCount == this.ayatCount &&
           other.startJuz == this.startJuz &&
-          other.endJuz == this.endJuz);
+          other.endJuz == this.endJuz &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
 class SurahsCompanion extends UpdateCompanion<SurahRow> {
@@ -333,6 +410,8 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
   final Value<int> ayatCount;
   final Value<int> startJuz;
   final Value<int> endJuz;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
   const SurahsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -341,6 +420,8 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
     this.ayatCount = const Value.absent(),
     this.startJuz = const Value.absent(),
     this.endJuz = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   });
   SurahsCompanion.insert({
     this.id = const Value.absent(),
@@ -350,6 +431,8 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
     required int ayatCount,
     this.startJuz = const Value.absent(),
     this.endJuz = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   }) : name = Value(name),
        arabicName = Value(arabicName),
        ayatCount = Value(ayatCount);
@@ -361,6 +444,8 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
     Expression<int>? ayatCount,
     Expression<int>? startJuz,
     Expression<int>? endJuz,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -370,6 +455,8 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
       if (ayatCount != null) 'ayat_count': ayatCount,
       if (startJuz != null) 'start_juz': startJuz,
       if (endJuz != null) 'end_juz': endJuz,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
 
@@ -381,6 +468,8 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
     Value<int>? ayatCount,
     Value<int>? startJuz,
     Value<int>? endJuz,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
   }) {
     return SurahsCompanion(
       id: id ?? this.id,
@@ -390,6 +479,8 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
       ayatCount: ayatCount ?? this.ayatCount,
       startJuz: startJuz ?? this.startJuz,
       endJuz: endJuz ?? this.endJuz,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -417,6 +508,12 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
     if (endJuz.present) {
       map['end_juz'] = Variable<int>(endJuz.value);
     }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
     return map;
   }
 
@@ -429,7 +526,9 @@ class SurahsCompanion extends UpdateCompanion<SurahRow> {
           ..write('arabicName: $arabicName, ')
           ..write('ayatCount: $ayatCount, ')
           ..write('startJuz: $startJuz, ')
-          ..write('endJuz: $endJuz')
+          ..write('endJuz: $endJuz, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -531,6 +630,30 @@ class $SurahPoolEntriesTable extends SurahPoolEntries
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -540,6 +663,8 @@ class $SurahPoolEntriesTable extends SurahPoolEntries
     endAyah,
     enabled,
     assignmentCount,
+    createdAt,
+    updatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -602,6 +727,18 @@ class $SurahPoolEntriesTable extends SurahPoolEntries
         ),
       );
     }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -639,6 +776,14 @@ class $SurahPoolEntriesTable extends SurahPoolEntries
         DriftSqlType.int,
         data['${effectivePrefix}assignment_count'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
     );
   }
 
@@ -657,6 +802,8 @@ class SurahPoolEntryRow extends DataClass
   final int? endAyah;
   final bool enabled;
   final int assignmentCount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   const SurahPoolEntryRow({
     required this.id,
     required this.surahId,
@@ -665,6 +812,8 @@ class SurahPoolEntryRow extends DataClass
     this.endAyah,
     required this.enabled,
     required this.assignmentCount,
+    required this.createdAt,
+    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -680,6 +829,8 @@ class SurahPoolEntryRow extends DataClass
     }
     map['enabled'] = Variable<bool>(enabled);
     map['assignment_count'] = Variable<int>(assignmentCount);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
@@ -696,6 +847,8 @@ class SurahPoolEntryRow extends DataClass
           : Value(endAyah),
       enabled: Value(enabled),
       assignmentCount: Value(assignmentCount),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
@@ -712,6 +865,8 @@ class SurahPoolEntryRow extends DataClass
       endAyah: serializer.fromJson<int?>(json['endAyah']),
       enabled: serializer.fromJson<bool>(json['enabled']),
       assignmentCount: serializer.fromJson<int>(json['assignmentCount']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -725,6 +880,8 @@ class SurahPoolEntryRow extends DataClass
       'endAyah': serializer.toJson<int?>(endAyah),
       'enabled': serializer.toJson<bool>(enabled),
       'assignmentCount': serializer.toJson<int>(assignmentCount),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
@@ -736,6 +893,8 @@ class SurahPoolEntryRow extends DataClass
     Value<int?> endAyah = const Value.absent(),
     bool? enabled,
     int? assignmentCount,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) => SurahPoolEntryRow(
     id: id ?? this.id,
     surahId: surahId ?? this.surahId,
@@ -744,6 +903,8 @@ class SurahPoolEntryRow extends DataClass
     endAyah: endAyah.present ? endAyah.value : this.endAyah,
     enabled: enabled ?? this.enabled,
     assignmentCount: assignmentCount ?? this.assignmentCount,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
   );
   SurahPoolEntryRow copyWithCompanion(SurahPoolEntriesCompanion data) {
     return SurahPoolEntryRow(
@@ -758,6 +919,8 @@ class SurahPoolEntryRow extends DataClass
       assignmentCount: data.assignmentCount.present
           ? data.assignmentCount.value
           : this.assignmentCount,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
@@ -770,7 +933,9 @@ class SurahPoolEntryRow extends DataClass
           ..write('startAyah: $startAyah, ')
           ..write('endAyah: $endAyah, ')
           ..write('enabled: $enabled, ')
-          ..write('assignmentCount: $assignmentCount')
+          ..write('assignmentCount: $assignmentCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -784,6 +949,8 @@ class SurahPoolEntryRow extends DataClass
     endAyah,
     enabled,
     assignmentCount,
+    createdAt,
+    updatedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -795,7 +962,9 @@ class SurahPoolEntryRow extends DataClass
           other.startAyah == this.startAyah &&
           other.endAyah == this.endAyah &&
           other.enabled == this.enabled &&
-          other.assignmentCount == this.assignmentCount);
+          other.assignmentCount == this.assignmentCount &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
 class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
@@ -806,6 +975,8 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
   final Value<int?> endAyah;
   final Value<bool> enabled;
   final Value<int> assignmentCount;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
   const SurahPoolEntriesCompanion({
     this.id = const Value.absent(),
     this.surahId = const Value.absent(),
@@ -814,6 +985,8 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
     this.endAyah = const Value.absent(),
     this.enabled = const Value.absent(),
     this.assignmentCount = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   });
   SurahPoolEntriesCompanion.insert({
     this.id = const Value.absent(),
@@ -823,6 +996,8 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
     this.endAyah = const Value.absent(),
     this.enabled = const Value.absent(),
     this.assignmentCount = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   }) : surahId = Value(surahId),
        isFullSurah = Value(isFullSurah);
   static Insertable<SurahPoolEntryRow> custom({
@@ -833,6 +1008,8 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
     Expression<int>? endAyah,
     Expression<bool>? enabled,
     Expression<int>? assignmentCount,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -842,6 +1019,8 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
       if (endAyah != null) 'end_ayah': endAyah,
       if (enabled != null) 'enabled': enabled,
       if (assignmentCount != null) 'assignment_count': assignmentCount,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
 
@@ -853,6 +1032,8 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
     Value<int?>? endAyah,
     Value<bool>? enabled,
     Value<int>? assignmentCount,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
   }) {
     return SurahPoolEntriesCompanion(
       id: id ?? this.id,
@@ -862,6 +1043,8 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
       endAyah: endAyah ?? this.endAyah,
       enabled: enabled ?? this.enabled,
       assignmentCount: assignmentCount ?? this.assignmentCount,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -889,6 +1072,12 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
     if (assignmentCount.present) {
       map['assignment_count'] = Variable<int>(assignmentCount.value);
     }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
     return map;
   }
 
@@ -901,7 +1090,9 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
           ..write('startAyah: $startAyah, ')
           ..write('endAyah: $endAyah, ')
           ..write('enabled: $enabled, ')
-          ..write('assignmentCount: $assignmentCount')
+          ..write('assignmentCount: $assignmentCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -942,8 +1133,38 @@ class $MonthPlansTable extends MonthPlans
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
   @override
-  List<GeneratedColumn> get $columns => [year, month, planJson];
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    year,
+    month,
+    planJson,
+    createdAt,
+    updatedAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -980,6 +1201,18 @@ class $MonthPlansTable extends MonthPlans
     } else if (isInserting) {
       context.missing(_planJsonMeta);
     }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -1001,6 +1234,14 @@ class $MonthPlansTable extends MonthPlans
         DriftSqlType.string,
         data['${effectivePrefix}plan_json'],
       )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
     );
   }
 
@@ -1014,10 +1255,14 @@ class MonthPlanRow extends DataClass implements Insertable<MonthPlanRow> {
   final int year;
   final int month;
   final String planJson;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   const MonthPlanRow({
     required this.year,
     required this.month,
     required this.planJson,
+    required this.createdAt,
+    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1025,6 +1270,8 @@ class MonthPlanRow extends DataClass implements Insertable<MonthPlanRow> {
     map['year'] = Variable<int>(year);
     map['month'] = Variable<int>(month);
     map['plan_json'] = Variable<String>(planJson);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
@@ -1033,6 +1280,8 @@ class MonthPlanRow extends DataClass implements Insertable<MonthPlanRow> {
       year: Value(year),
       month: Value(month),
       planJson: Value(planJson),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
@@ -1045,6 +1294,8 @@ class MonthPlanRow extends DataClass implements Insertable<MonthPlanRow> {
       year: serializer.fromJson<int>(json['year']),
       month: serializer.fromJson<int>(json['month']),
       planJson: serializer.fromJson<String>(json['planJson']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -1054,20 +1305,31 @@ class MonthPlanRow extends DataClass implements Insertable<MonthPlanRow> {
       'year': serializer.toJson<int>(year),
       'month': serializer.toJson<int>(month),
       'planJson': serializer.toJson<String>(planJson),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
-  MonthPlanRow copyWith({int? year, int? month, String? planJson}) =>
-      MonthPlanRow(
-        year: year ?? this.year,
-        month: month ?? this.month,
-        planJson: planJson ?? this.planJson,
-      );
+  MonthPlanRow copyWith({
+    int? year,
+    int? month,
+    String? planJson,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => MonthPlanRow(
+    year: year ?? this.year,
+    month: month ?? this.month,
+    planJson: planJson ?? this.planJson,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
   MonthPlanRow copyWithCompanion(MonthPlansCompanion data) {
     return MonthPlanRow(
       year: data.year.present ? data.year.value : this.year,
       month: data.month.present ? data.month.value : this.month,
       planJson: data.planJson.present ? data.planJson.value : this.planJson,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
@@ -1076,37 +1338,47 @@ class MonthPlanRow extends DataClass implements Insertable<MonthPlanRow> {
     return (StringBuffer('MonthPlanRow(')
           ..write('year: $year, ')
           ..write('month: $month, ')
-          ..write('planJson: $planJson')
+          ..write('planJson: $planJson, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(year, month, planJson);
+  int get hashCode => Object.hash(year, month, planJson, createdAt, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is MonthPlanRow &&
           other.year == this.year &&
           other.month == this.month &&
-          other.planJson == this.planJson);
+          other.planJson == this.planJson &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
 class MonthPlansCompanion extends UpdateCompanion<MonthPlanRow> {
   final Value<int> year;
   final Value<int> month;
   final Value<String> planJson;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
   final Value<int> rowid;
   const MonthPlansCompanion({
     this.year = const Value.absent(),
     this.month = const Value.absent(),
     this.planJson = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MonthPlansCompanion.insert({
     required int year,
     required int month,
     required String planJson,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : year = Value(year),
        month = Value(month),
@@ -1115,12 +1387,16 @@ class MonthPlansCompanion extends UpdateCompanion<MonthPlanRow> {
     Expression<int>? year,
     Expression<int>? month,
     Expression<String>? planJson,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (year != null) 'year': year,
       if (month != null) 'month': month,
       if (planJson != null) 'plan_json': planJson,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1129,12 +1405,16 @@ class MonthPlansCompanion extends UpdateCompanion<MonthPlanRow> {
     Value<int>? year,
     Value<int>? month,
     Value<String>? planJson,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
     Value<int>? rowid,
   }) {
     return MonthPlansCompanion(
       year: year ?? this.year,
       month: month ?? this.month,
       planJson: planJson ?? this.planJson,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1151,6 +1431,12 @@ class MonthPlansCompanion extends UpdateCompanion<MonthPlanRow> {
     if (planJson.present) {
       map['plan_json'] = Variable<String>(planJson.value);
     }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1163,6 +1449,8 @@ class MonthPlansCompanion extends UpdateCompanion<MonthPlanRow> {
           ..write('year: $year, ')
           ..write('month: $month, ')
           ..write('planJson: $planJson, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1275,6 +1563,30 @@ class $PrayerTimesTable extends PrayerTimes
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     date,
@@ -1287,6 +1599,8 @@ class $PrayerTimesTable extends PrayerTimes
     latitude,
     longitude,
     locationName,
+    createdAt,
+    updatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1379,6 +1693,18 @@ class $PrayerTimesTable extends PrayerTimes
         ),
       );
     }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -1428,6 +1754,14 @@ class $PrayerTimesTable extends PrayerTimes
         DriftSqlType.string,
         data['${effectivePrefix}location_name'],
       ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
     );
   }
 
@@ -1450,6 +1784,8 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
   final double latitude;
   final double longitude;
   final String? locationName;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   const PrayerTime({
     required this.date,
     required this.fajr,
@@ -1461,6 +1797,8 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
     required this.latitude,
     required this.longitude,
     this.locationName,
+    required this.createdAt,
+    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1479,6 +1817,8 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
     if (!nullToAbsent || locationName != null) {
       map['location_name'] = Variable<String>(locationName);
     }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
@@ -1498,6 +1838,8 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
       locationName: locationName == null && nullToAbsent
           ? const Value.absent()
           : Value(locationName),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
@@ -1517,6 +1859,8 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
       latitude: serializer.fromJson<double>(json['latitude']),
       longitude: serializer.fromJson<double>(json['longitude']),
       locationName: serializer.fromJson<String?>(json['locationName']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -1533,6 +1877,8 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
       'latitude': serializer.toJson<double>(latitude),
       'longitude': serializer.toJson<double>(longitude),
       'locationName': serializer.toJson<String?>(locationName),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
@@ -1547,6 +1893,8 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
     double? latitude,
     double? longitude,
     Value<String?> locationName = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) => PrayerTime(
     date: date ?? this.date,
     fajr: fajr ?? this.fajr,
@@ -1558,6 +1906,8 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
     latitude: latitude ?? this.latitude,
     longitude: longitude ?? this.longitude,
     locationName: locationName.present ? locationName.value : this.locationName,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
   );
   PrayerTime copyWithCompanion(PrayerTimesCompanion data) {
     return PrayerTime(
@@ -1573,6 +1923,8 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
       locationName: data.locationName.present
           ? data.locationName.value
           : this.locationName,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
@@ -1588,7 +1940,9 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
           ..write('sunrise: $sunrise, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
-          ..write('locationName: $locationName')
+          ..write('locationName: $locationName, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -1605,6 +1959,8 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
     latitude,
     longitude,
     locationName,
+    createdAt,
+    updatedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -1619,7 +1975,9 @@ class PrayerTime extends DataClass implements Insertable<PrayerTime> {
           other.sunrise == this.sunrise &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
-          other.locationName == this.locationName);
+          other.locationName == this.locationName &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
 class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
@@ -1633,6 +1991,8 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
   final Value<double> latitude;
   final Value<double> longitude;
   final Value<String?> locationName;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
   final Value<int> rowid;
   const PrayerTimesCompanion({
     this.date = const Value.absent(),
@@ -1645,6 +2005,8 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
     this.locationName = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PrayerTimesCompanion.insert({
@@ -1658,6 +2020,8 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
     required double latitude,
     required double longitude,
     this.locationName = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : date = Value(date),
        fajr = Value(fajr),
@@ -1678,6 +2042,8 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
     Expression<double>? latitude,
     Expression<double>? longitude,
     Expression<String>? locationName,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1691,6 +2057,8 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
       if (locationName != null) 'location_name': locationName,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1706,6 +2074,8 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
     Value<double>? latitude,
     Value<double>? longitude,
     Value<String?>? locationName,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
     Value<int>? rowid,
   }) {
     return PrayerTimesCompanion(
@@ -1719,6 +2089,8 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       locationName: locationName ?? this.locationName,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1756,6 +2128,12 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
     if (locationName.present) {
       map['location_name'] = Variable<String>(locationName.value);
     }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1775,6 +2153,8 @@ class PrayerTimesCompanion extends UpdateCompanion<PrayerTime> {
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
           ..write('locationName: $locationName, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1815,6 +2195,8 @@ typedef $$SurahsTableCreateCompanionBuilder =
       required int ayatCount,
       Value<int> startJuz,
       Value<int> endJuz,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
     });
 typedef $$SurahsTableUpdateCompanionBuilder =
     SurahsCompanion Function({
@@ -1825,6 +2207,8 @@ typedef $$SurahsTableUpdateCompanionBuilder =
       Value<int> ayatCount,
       Value<int> startJuz,
       Value<int> endJuz,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
     });
 
 final class $$SurahsTableReferences
@@ -1893,6 +2277,16 @@ class $$SurahsTableFilterComposer
 
   ColumnFilters<int> get endJuz => $composableBuilder(
     column: $table.endJuz,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1965,6 +2359,16 @@ class $$SurahsTableOrderingComposer
     column: $table.endJuz,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SurahsTableAnnotationComposer
@@ -1998,6 +2402,12 @@ class $$SurahsTableAnnotationComposer
 
   GeneratedColumn<int> get endJuz =>
       $composableBuilder(column: $table.endJuz, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
   Expression<T> surahPoolEntriesRefs<T extends Object>(
     Expression<T> Function($$SurahPoolEntriesTableAnnotationComposer a) f,
@@ -2060,6 +2470,8 @@ class $$SurahsTableTableManager
                 Value<int> ayatCount = const Value.absent(),
                 Value<int> startJuz = const Value.absent(),
                 Value<int> endJuz = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
               }) => SurahsCompanion(
                 id: id,
                 name: name,
@@ -2068,6 +2480,8 @@ class $$SurahsTableTableManager
                 ayatCount: ayatCount,
                 startJuz: startJuz,
                 endJuz: endJuz,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
               ),
           createCompanionCallback:
               ({
@@ -2078,6 +2492,8 @@ class $$SurahsTableTableManager
                 required int ayatCount,
                 Value<int> startJuz = const Value.absent(),
                 Value<int> endJuz = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
               }) => SurahsCompanion.insert(
                 id: id,
                 name: name,
@@ -2086,6 +2502,8 @@ class $$SurahsTableTableManager
                 ayatCount: ayatCount,
                 startJuz: startJuz,
                 endJuz: endJuz,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -2151,6 +2569,8 @@ typedef $$SurahPoolEntriesTableCreateCompanionBuilder =
       Value<int?> endAyah,
       Value<bool> enabled,
       Value<int> assignmentCount,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
     });
 typedef $$SurahPoolEntriesTableUpdateCompanionBuilder =
     SurahPoolEntriesCompanion Function({
@@ -2161,6 +2581,8 @@ typedef $$SurahPoolEntriesTableUpdateCompanionBuilder =
       Value<int?> endAyah,
       Value<bool> enabled,
       Value<int> assignmentCount,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
     });
 
 final class $$SurahPoolEntriesTableReferences
@@ -2234,6 +2656,16 @@ class $$SurahPoolEntriesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$SurahsTableFilterComposer get surahId {
     final $$SurahsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -2297,6 +2729,16 @@ class $$SurahPoolEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$SurahsTableOrderingComposer get surahId {
     final $$SurahsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -2351,6 +2793,12 @@ class $$SurahPoolEntriesTableAnnotationComposer
     column: $table.assignmentCount,
     builder: (column) => column,
   );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
   $$SurahsTableAnnotationComposer get surahId {
     final $$SurahsTableAnnotationComposer composer = $composerBuilder(
@@ -2413,6 +2861,8 @@ class $$SurahPoolEntriesTableTableManager
                 Value<int?> endAyah = const Value.absent(),
                 Value<bool> enabled = const Value.absent(),
                 Value<int> assignmentCount = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
               }) => SurahPoolEntriesCompanion(
                 id: id,
                 surahId: surahId,
@@ -2421,6 +2871,8 @@ class $$SurahPoolEntriesTableTableManager
                 endAyah: endAyah,
                 enabled: enabled,
                 assignmentCount: assignmentCount,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
               ),
           createCompanionCallback:
               ({
@@ -2431,6 +2883,8 @@ class $$SurahPoolEntriesTableTableManager
                 Value<int?> endAyah = const Value.absent(),
                 Value<bool> enabled = const Value.absent(),
                 Value<int> assignmentCount = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
               }) => SurahPoolEntriesCompanion.insert(
                 id: id,
                 surahId: surahId,
@@ -2439,6 +2893,8 @@ class $$SurahPoolEntriesTableTableManager
                 endAyah: endAyah,
                 enabled: enabled,
                 assignmentCount: assignmentCount,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -2514,6 +2970,8 @@ typedef $$MonthPlansTableCreateCompanionBuilder =
       required int year,
       required int month,
       required String planJson,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<int> rowid,
     });
 typedef $$MonthPlansTableUpdateCompanionBuilder =
@@ -2521,6 +2979,8 @@ typedef $$MonthPlansTableUpdateCompanionBuilder =
       Value<int> year,
       Value<int> month,
       Value<String> planJson,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<int> rowid,
     });
 
@@ -2545,6 +3005,16 @@ class $$MonthPlansTableFilterComposer
 
   ColumnFilters<String> get planJson => $composableBuilder(
     column: $table.planJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -2572,6 +3042,16 @@ class $$MonthPlansTableOrderingComposer
     column: $table.planJson,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$MonthPlansTableAnnotationComposer
@@ -2591,6 +3071,12 @@ class $$MonthPlansTableAnnotationComposer
 
   GeneratedColumn<String> get planJson =>
       $composableBuilder(column: $table.planJson, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
 class $$MonthPlansTableTableManager
@@ -2627,11 +3113,15 @@ class $$MonthPlansTableTableManager
                 Value<int> year = const Value.absent(),
                 Value<int> month = const Value.absent(),
                 Value<String> planJson = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MonthPlansCompanion(
                 year: year,
                 month: month,
                 planJson: planJson,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -2639,11 +3129,15 @@ class $$MonthPlansTableTableManager
                 required int year,
                 required int month,
                 required String planJson,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MonthPlansCompanion.insert(
                 year: year,
                 month: month,
                 planJson: planJson,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -2683,6 +3177,8 @@ typedef $$PrayerTimesTableCreateCompanionBuilder =
       required double latitude,
       required double longitude,
       Value<String?> locationName,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<int> rowid,
     });
 typedef $$PrayerTimesTableUpdateCompanionBuilder =
@@ -2697,6 +3193,8 @@ typedef $$PrayerTimesTableUpdateCompanionBuilder =
       Value<double> latitude,
       Value<double> longitude,
       Value<String?> locationName,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
       Value<int> rowid,
     });
 
@@ -2756,6 +3254,16 @@ class $$PrayerTimesTableFilterComposer
 
   ColumnFilters<String> get locationName => $composableBuilder(
     column: $table.locationName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -2818,6 +3326,16 @@ class $$PrayerTimesTableOrderingComposer
     column: $table.locationName,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$PrayerTimesTableAnnotationComposer
@@ -2860,6 +3378,12 @@ class $$PrayerTimesTableAnnotationComposer
     column: $table.locationName,
     builder: (column) => column,
   );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
 class $$PrayerTimesTableTableManager
@@ -2903,6 +3427,8 @@ class $$PrayerTimesTableTableManager
                 Value<double> latitude = const Value.absent(),
                 Value<double> longitude = const Value.absent(),
                 Value<String?> locationName = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PrayerTimesCompanion(
                 date: date,
@@ -2915,6 +3441,8 @@ class $$PrayerTimesTableTableManager
                 latitude: latitude,
                 longitude: longitude,
                 locationName: locationName,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -2929,6 +3457,8 @@ class $$PrayerTimesTableTableManager
                 required double latitude,
                 required double longitude,
                 Value<String?> locationName = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PrayerTimesCompanion.insert(
                 date: date,
@@ -2941,6 +3471,8 @@ class $$PrayerTimesTableTableManager
                 latitude: latitude,
                 longitude: longitude,
                 locationName: locationName,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

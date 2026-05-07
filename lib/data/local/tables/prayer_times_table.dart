@@ -16,6 +16,10 @@ class PrayerTimes extends Table {
   RealColumn get longitude => real()();
   TextColumn get locationName => text().nullable()();
 
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
   @override
   Set<Column> get primaryKey => {date};
 }

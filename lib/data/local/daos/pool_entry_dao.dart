@@ -22,16 +22,24 @@ class PoolEntryDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<int> insertPoolEntry(SurahPoolEntriesCompanion row) {
-    return into(surahPoolEntries).insert(row);
+    final now = DateTime.now();
+    return into(
+      surahPoolEntries,
+    ).insert(row.copyWith(createdAt: Value(now), updatedAt: Value(now)));
   }
 
-  Future<void> updatePoolEntry(SurahPoolEntryRow row) {
-    return update(surahPoolEntries).replace(row);
+  Future<void> updatePoolEntry(int id, SurahPoolEntriesCompanion row) {
+    return (update(surahPoolEntries)..where((t) => t.id.equals(id))).write(
+      row.copyWith(updatedAt: Value(DateTime.now())),
+    );
   }
 
   Future<void> setPoolEntryEnabled(int id, bool enabled) async {
     await (update(surahPoolEntries)..where((t) => t.id.equals(id))).write(
-      SurahPoolEntriesCompanion(enabled: Value(enabled)),
+      SurahPoolEntriesCompanion(
+        enabled: Value(enabled),
+        updatedAt: Value(DateTime.now()),
+      ),
     );
   }
 
@@ -45,7 +53,7 @@ class PoolEntryDao extends DatabaseAccessor<AppDatabase>
     final placeholders = List.filled(ids.length, '?').join(', ');
     await customStatement(
       'UPDATE surah_pool_entries '
-      'SET assignment_count = assignment_count + 1 '
+      'SET assignment_count = assignment_count + 1, updated_at = unixepoch() '
       'WHERE id IN ($placeholders)',
       ids,
     );

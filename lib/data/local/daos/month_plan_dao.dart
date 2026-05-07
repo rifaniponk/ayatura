@@ -32,15 +32,20 @@ class MonthPlanDao extends DatabaseAccessor<AppDatabase>
 
   /// Persists [plan] by upserting per (year, month).
   Future<void> savePlan(MonthPlan plan) async {
+    final now = DateTime.now();
     await into(monthPlans).insert(
       MonthPlansCompanion.insert(
         year: plan.year,
         month: plan.month,
         planJson: jsonEncode(plan.toJson()),
+        createdAt: Value(now),
+        updatedAt: Value(now),
       ),
       onConflict: DoUpdate(
-        (old) =>
-            MonthPlansCompanion(planJson: Value(jsonEncode(plan.toJson()))),
+        (old) => MonthPlansCompanion(
+          planJson: Value(jsonEncode(plan.toJson())),
+          updatedAt: Value(DateTime.now()),
+        ),
       ),
     );
   }

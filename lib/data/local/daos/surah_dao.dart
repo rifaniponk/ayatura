@@ -13,11 +13,12 @@ class SurahDao extends DatabaseAccessor<AppDatabase> with _$SurahDaoMixin {
   /// Runs in one transaction; does not touch the pool entries table.
   Future<void> seedMasterSurahsIfEmpty(List<Surah> list) async {
     if (list.isEmpty) return;
+    final now = DateTime.now();
     await transaction(() async {
       final n = await surahs.count().getSingle();
       if (n == 0) {
         await batch((b) {
-          b.insertAll(surahs, list.map(_toCompanion).toList());
+          b.insertAll(surahs, list.map((s) => _toCompanion(s, now)).toList());
         });
       }
       await batch((b) {
@@ -28,6 +29,7 @@ class SurahDao extends DatabaseAccessor<AppDatabase> with _$SurahDaoMixin {
               startJuz: Value(s.startJuz),
               endJuz: Value(s.endJuz),
               nameId: Value(s.nameId),
+              updatedAt: Value(DateTime.now()),
             ),
             where: (t) => t.id.equals(s.id),
           );
@@ -53,13 +55,16 @@ class SurahDao extends DatabaseAccessor<AppDatabase> with _$SurahDaoMixin {
     endJuz: r.endJuz,
   );
 
-  static SurahsCompanion _toCompanion(Surah s) => SurahsCompanion.insert(
-    id: Value(s.id),
-    name: s.name,
-    nameId: Value(s.nameId),
-    arabicName: s.arabicName,
-    ayatCount: s.ayatCount,
-    startJuz: Value(s.startJuz),
-    endJuz: Value(s.endJuz),
-  );
+  static SurahsCompanion _toCompanion(Surah s, DateTime now) =>
+      SurahsCompanion.insert(
+        id: Value(s.id),
+        name: s.name,
+        nameId: Value(s.nameId),
+        arabicName: s.arabicName,
+        ayatCount: s.ayatCount,
+        startJuz: Value(s.startJuz),
+        endJuz: Value(s.endJuz),
+        createdAt: Value(now),
+        updatedAt: Value(now),
+      );
 }
