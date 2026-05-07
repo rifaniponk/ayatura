@@ -21,6 +21,15 @@ class PrayerTimeDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> upsert(PrayerTimesCompanion row) {
-    return into(prayerTimes).insert(row, mode: InsertMode.insertOrReplace);
+    final now = DateTime.now();
+    return into(prayerTimes).insert(
+      row.copyWith(createdAt: Value(now), updatedAt: Value(now)),
+      onConflict: DoUpdate(
+        (old) => row.copyWith(
+          createdAt: const Value.absent(),
+          updatedAt: Value(DateTime.now()),
+        ),
+      ),
+    );
   }
 }

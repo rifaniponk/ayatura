@@ -8,6 +8,10 @@ class MonthPlans extends Table {
 
   TextColumn get planJson => text()();
 
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
   @override
   Set<Column<Object>>? get primaryKey => {year, month};
 }

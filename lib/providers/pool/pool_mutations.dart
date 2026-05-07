@@ -96,14 +96,14 @@ Future<void> replacePoolSegment({
 }) async {
   final db = ref.read(appDatabaseProvider);
   await db.updatePoolEntry(
-    SurahPoolEntryRow(
-      id: entry.id,
-      surahId: entry.surahId,
-      isFullSurah: entry.isFullSurah,
-      startAyah: entry.startAyah,
-      endAyah: entry.endAyah,
-      enabled: entry.enabled,
-      assignmentCount: entry.assignmentCount,
+    entry.id,
+    SurahPoolEntriesCompanion(
+      surahId: Value(entry.surahId),
+      isFullSurah: Value(entry.isFullSurah),
+      startAyah: Value(entry.startAyah),
+      endAyah: Value(entry.endAyah),
+      enabled: Value(entry.enabled),
+      assignmentCount: Value(entry.assignmentCount),
     ),
   );
   _invalidatePoolAndPlan(ref);

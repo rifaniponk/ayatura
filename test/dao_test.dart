@@ -184,11 +184,9 @@ void main() {
           endAyah: const Value(5),
         ),
       );
-      final rows = await (db.select(
-        db.surahPoolEntries,
-      )..where((t) => t.id.equals(id))).get();
       await db.poolEntryDao.updatePoolEntry(
-        rows.first.copyWith(startAyah: const Value(3), endAyah: const Value(7)),
+        id,
+        const SurahPoolEntriesCompanion(startAyah: Value(3), endAyah: Value(7)),
       );
       final updated = await db.poolEntryDao.allPoolEntries();
       expect(updated.first.startAyah, 3);

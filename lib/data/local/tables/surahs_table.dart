@@ -16,6 +16,10 @@ class Surahs extends Table {
 
   IntColumn get endJuz => integer().withDefault(const Constant(1))();
 
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
   @override
   Set<Column<Object>>? get primaryKey => {id};
 }

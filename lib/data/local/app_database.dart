@@ -27,7 +27,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'surah_planner'));
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 10;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -57,6 +57,16 @@ class AppDatabase extends _$AppDatabase {
       if (from < 8) {
         await m.addColumn(surahPoolEntries, surahPoolEntries.assignmentCount);
       }
+      if (from < 9) {
+        await m.addColumn(surahs, surahs.createdAt);
+        await m.addColumn(surahs, surahs.updatedAt);
+        await m.addColumn(surahPoolEntries, surahPoolEntries.createdAt);
+        await m.addColumn(surahPoolEntries, surahPoolEntries.updatedAt);
+        await m.addColumn(monthPlans, monthPlans.createdAt);
+        await m.addColumn(monthPlans, monthPlans.updatedAt);
+        await m.addColumn(prayerTimes, prayerTimes.createdAt);
+        await m.addColumn(prayerTimes, prayerTimes.updatedAt);
+      }
     },
   );
 
@@ -76,8 +86,8 @@ class AppDatabase extends _$AppDatabase {
   Future<int> insertPoolEntry(SurahPoolEntriesCompanion row) =>
       poolEntryDao.insertPoolEntry(row);
 
-  Future<void> updatePoolEntry(SurahPoolEntryRow row) =>
-      poolEntryDao.updatePoolEntry(row);
+  Future<void> updatePoolEntry(int id, SurahPoolEntriesCompanion row) =>
+      poolEntryDao.updatePoolEntry(id, row);
 
   Future<void> setPoolEntryEnabled(int id, bool enabled) =>
       poolEntryDao.setPoolEntryEnabled(id, enabled);
