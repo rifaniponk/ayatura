@@ -519,6 +519,18 @@ class $SurahPoolEntriesTable extends SurahPoolEntries
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _assignmentCountMeta = const VerificationMeta(
+    'assignmentCount',
+  );
+  @override
+  late final GeneratedColumn<int> assignmentCount = GeneratedColumn<int>(
+    'assignment_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -527,6 +539,7 @@ class $SurahPoolEntriesTable extends SurahPoolEntries
     startAyah,
     endAyah,
     enabled,
+    assignmentCount,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -580,6 +593,15 @@ class $SurahPoolEntriesTable extends SurahPoolEntries
         enabled.isAcceptableOrUnknown(data['enabled']!, _enabledMeta),
       );
     }
+    if (data.containsKey('assignment_count')) {
+      context.handle(
+        _assignmentCountMeta,
+        assignmentCount.isAcceptableOrUnknown(
+          data['assignment_count']!,
+          _assignmentCountMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -613,6 +635,10 @@ class $SurahPoolEntriesTable extends SurahPoolEntries
         DriftSqlType.bool,
         data['${effectivePrefix}enabled'],
       )!,
+      assignmentCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}assignment_count'],
+      )!,
     );
   }
 
@@ -630,6 +656,7 @@ class SurahPoolEntryRow extends DataClass
   final int? startAyah;
   final int? endAyah;
   final bool enabled;
+  final int assignmentCount;
   const SurahPoolEntryRow({
     required this.id,
     required this.surahId,
@@ -637,6 +664,7 @@ class SurahPoolEntryRow extends DataClass
     this.startAyah,
     this.endAyah,
     required this.enabled,
+    required this.assignmentCount,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -651,6 +679,7 @@ class SurahPoolEntryRow extends DataClass
       map['end_ayah'] = Variable<int>(endAyah);
     }
     map['enabled'] = Variable<bool>(enabled);
+    map['assignment_count'] = Variable<int>(assignmentCount);
     return map;
   }
 
@@ -666,6 +695,7 @@ class SurahPoolEntryRow extends DataClass
           ? const Value.absent()
           : Value(endAyah),
       enabled: Value(enabled),
+      assignmentCount: Value(assignmentCount),
     );
   }
 
@@ -681,6 +711,7 @@ class SurahPoolEntryRow extends DataClass
       startAyah: serializer.fromJson<int?>(json['startAyah']),
       endAyah: serializer.fromJson<int?>(json['endAyah']),
       enabled: serializer.fromJson<bool>(json['enabled']),
+      assignmentCount: serializer.fromJson<int>(json['assignmentCount']),
     );
   }
   @override
@@ -693,6 +724,7 @@ class SurahPoolEntryRow extends DataClass
       'startAyah': serializer.toJson<int?>(startAyah),
       'endAyah': serializer.toJson<int?>(endAyah),
       'enabled': serializer.toJson<bool>(enabled),
+      'assignmentCount': serializer.toJson<int>(assignmentCount),
     };
   }
 
@@ -703,6 +735,7 @@ class SurahPoolEntryRow extends DataClass
     Value<int?> startAyah = const Value.absent(),
     Value<int?> endAyah = const Value.absent(),
     bool? enabled,
+    int? assignmentCount,
   }) => SurahPoolEntryRow(
     id: id ?? this.id,
     surahId: surahId ?? this.surahId,
@@ -710,6 +743,7 @@ class SurahPoolEntryRow extends DataClass
     startAyah: startAyah.present ? startAyah.value : this.startAyah,
     endAyah: endAyah.present ? endAyah.value : this.endAyah,
     enabled: enabled ?? this.enabled,
+    assignmentCount: assignmentCount ?? this.assignmentCount,
   );
   SurahPoolEntryRow copyWithCompanion(SurahPoolEntriesCompanion data) {
     return SurahPoolEntryRow(
@@ -721,6 +755,9 @@ class SurahPoolEntryRow extends DataClass
       startAyah: data.startAyah.present ? data.startAyah.value : this.startAyah,
       endAyah: data.endAyah.present ? data.endAyah.value : this.endAyah,
       enabled: data.enabled.present ? data.enabled.value : this.enabled,
+      assignmentCount: data.assignmentCount.present
+          ? data.assignmentCount.value
+          : this.assignmentCount,
     );
   }
 
@@ -732,14 +769,22 @@ class SurahPoolEntryRow extends DataClass
           ..write('isFullSurah: $isFullSurah, ')
           ..write('startAyah: $startAyah, ')
           ..write('endAyah: $endAyah, ')
-          ..write('enabled: $enabled')
+          ..write('enabled: $enabled, ')
+          ..write('assignmentCount: $assignmentCount')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, surahId, isFullSurah, startAyah, endAyah, enabled);
+  int get hashCode => Object.hash(
+    id,
+    surahId,
+    isFullSurah,
+    startAyah,
+    endAyah,
+    enabled,
+    assignmentCount,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -749,7 +794,8 @@ class SurahPoolEntryRow extends DataClass
           other.isFullSurah == this.isFullSurah &&
           other.startAyah == this.startAyah &&
           other.endAyah == this.endAyah &&
-          other.enabled == this.enabled);
+          other.enabled == this.enabled &&
+          other.assignmentCount == this.assignmentCount);
 }
 
 class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
@@ -759,6 +805,7 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
   final Value<int?> startAyah;
   final Value<int?> endAyah;
   final Value<bool> enabled;
+  final Value<int> assignmentCount;
   const SurahPoolEntriesCompanion({
     this.id = const Value.absent(),
     this.surahId = const Value.absent(),
@@ -766,6 +813,7 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
     this.startAyah = const Value.absent(),
     this.endAyah = const Value.absent(),
     this.enabled = const Value.absent(),
+    this.assignmentCount = const Value.absent(),
   });
   SurahPoolEntriesCompanion.insert({
     this.id = const Value.absent(),
@@ -774,6 +822,7 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
     this.startAyah = const Value.absent(),
     this.endAyah = const Value.absent(),
     this.enabled = const Value.absent(),
+    this.assignmentCount = const Value.absent(),
   }) : surahId = Value(surahId),
        isFullSurah = Value(isFullSurah);
   static Insertable<SurahPoolEntryRow> custom({
@@ -783,6 +832,7 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
     Expression<int>? startAyah,
     Expression<int>? endAyah,
     Expression<bool>? enabled,
+    Expression<int>? assignmentCount,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -791,6 +841,7 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
       if (startAyah != null) 'start_ayah': startAyah,
       if (endAyah != null) 'end_ayah': endAyah,
       if (enabled != null) 'enabled': enabled,
+      if (assignmentCount != null) 'assignment_count': assignmentCount,
     });
   }
 
@@ -801,6 +852,7 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
     Value<int?>? startAyah,
     Value<int?>? endAyah,
     Value<bool>? enabled,
+    Value<int>? assignmentCount,
   }) {
     return SurahPoolEntriesCompanion(
       id: id ?? this.id,
@@ -809,6 +861,7 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
       startAyah: startAyah ?? this.startAyah,
       endAyah: endAyah ?? this.endAyah,
       enabled: enabled ?? this.enabled,
+      assignmentCount: assignmentCount ?? this.assignmentCount,
     );
   }
 
@@ -833,6 +886,9 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
     if (enabled.present) {
       map['enabled'] = Variable<bool>(enabled.value);
     }
+    if (assignmentCount.present) {
+      map['assignment_count'] = Variable<int>(assignmentCount.value);
+    }
     return map;
   }
 
@@ -844,7 +900,8 @@ class SurahPoolEntriesCompanion extends UpdateCompanion<SurahPoolEntryRow> {
           ..write('isFullSurah: $isFullSurah, ')
           ..write('startAyah: $startAyah, ')
           ..write('endAyah: $endAyah, ')
-          ..write('enabled: $enabled')
+          ..write('enabled: $enabled, ')
+          ..write('assignmentCount: $assignmentCount')
           ..write(')'))
         .toString();
   }
@@ -2093,6 +2150,7 @@ typedef $$SurahPoolEntriesTableCreateCompanionBuilder =
       Value<int?> startAyah,
       Value<int?> endAyah,
       Value<bool> enabled,
+      Value<int> assignmentCount,
     });
 typedef $$SurahPoolEntriesTableUpdateCompanionBuilder =
     SurahPoolEntriesCompanion Function({
@@ -2102,6 +2160,7 @@ typedef $$SurahPoolEntriesTableUpdateCompanionBuilder =
       Value<int?> startAyah,
       Value<int?> endAyah,
       Value<bool> enabled,
+      Value<int> assignmentCount,
     });
 
 final class $$SurahPoolEntriesTableReferences
@@ -2170,6 +2229,11 @@ class $$SurahPoolEntriesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<int> get assignmentCount => $composableBuilder(
+    column: $table.assignmentCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$SurahsTableFilterComposer get surahId {
     final $$SurahsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -2228,6 +2292,11 @@ class $$SurahPoolEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get assignmentCount => $composableBuilder(
+    column: $table.assignmentCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$SurahsTableOrderingComposer get surahId {
     final $$SurahsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -2277,6 +2346,11 @@ class $$SurahPoolEntriesTableAnnotationComposer
 
   GeneratedColumn<bool> get enabled =>
       $composableBuilder(column: $table.enabled, builder: (column) => column);
+
+  GeneratedColumn<int> get assignmentCount => $composableBuilder(
+    column: $table.assignmentCount,
+    builder: (column) => column,
+  );
 
   $$SurahsTableAnnotationComposer get surahId {
     final $$SurahsTableAnnotationComposer composer = $composerBuilder(
@@ -2338,6 +2412,7 @@ class $$SurahPoolEntriesTableTableManager
                 Value<int?> startAyah = const Value.absent(),
                 Value<int?> endAyah = const Value.absent(),
                 Value<bool> enabled = const Value.absent(),
+                Value<int> assignmentCount = const Value.absent(),
               }) => SurahPoolEntriesCompanion(
                 id: id,
                 surahId: surahId,
@@ -2345,6 +2420,7 @@ class $$SurahPoolEntriesTableTableManager
                 startAyah: startAyah,
                 endAyah: endAyah,
                 enabled: enabled,
+                assignmentCount: assignmentCount,
               ),
           createCompanionCallback:
               ({
@@ -2354,6 +2430,7 @@ class $$SurahPoolEntriesTableTableManager
                 Value<int?> startAyah = const Value.absent(),
                 Value<int?> endAyah = const Value.absent(),
                 Value<bool> enabled = const Value.absent(),
+                Value<int> assignmentCount = const Value.absent(),
               }) => SurahPoolEntriesCompanion.insert(
                 id: id,
                 surahId: surahId,
@@ -2361,6 +2438,7 @@ class $$SurahPoolEntriesTableTableManager
                 startAyah: startAyah,
                 endAyah: endAyah,
                 enabled: enabled,
+                assignmentCount: assignmentCount,
               ),
           withReferenceMapper: (p0) => p0
               .map(

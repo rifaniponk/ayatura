@@ -8,6 +8,14 @@ import 'package:surah_planner/data/services/month_plan_generator.dart';
 SurahPoolEntry _entry(int id, int surahId) =>
     SurahPoolEntry(id: id, surahId: surahId, isFullSurah: true);
 
+SurahPoolEntry _countedEntry(int id, int surahId, int assignmentCount) =>
+    SurahPoolEntry(
+      id: id,
+      surahId: surahId,
+      isFullSurah: true,
+      assignmentCount: assignmentCount,
+    );
+
 void main() {
   final testNow = DateTime(2026, 1, 15);
 
@@ -40,6 +48,109 @@ void main() {
         dealt.skip(poolIds.length).take(poolIds.length).toSet(),
         equals(poolIds),
       );
+    });
+
+    test('least-assigned entries are prioritized first', () {
+      final pool = [
+        _countedEntry(1, 1, 5),
+        _countedEntry(2, 2, 0),
+        _countedEntry(3, 3, 2),
+      ];
+      final plan = MonthPlanGenerator.generate(
+        month: 6,
+        year: 2026,
+        enabledPool: pool,
+        surahsPerPrayer: 1,
+        now: DateTime(2026, 6, 1),
+      );
+
+      final firstSlot = plan.planForDay(1)!.slotFor(Prayer.fajr).surahs.single;
+      expect(firstSlot.surahId, 2);
+    });
+
+    test('new least-assigned entry appears at most once per day', () {
+      final pool = [
+        _countedEntry(1, 1, 0),
+        _countedEntry(2, 2, 10),
+        _countedEntry(3, 3, 10),
+        _countedEntry(4, 4, 10),
+        _countedEntry(5, 5, 10),
+        _countedEntry(6, 6, 10),
+      ];
+      final plan = MonthPlanGenerator.generate(
+        month: 6,
+        year: 2026,
+        enabledPool: pool,
+        surahsPerPrayer: 1,
+        now: DateTime(2026, 6, 1),
+      );
+
+      final day1 = plan.planForDay(1)!;
+      final occurrencesInDay1 = Prayer.values
+          .map((p) => day1.slotFor(p).surahs.single.surahId)
+          .where((surahId) => surahId == 1)
+          .length;
+      expect(occurrencesInDay1, 1);
+    });
+
+    test('does not repeat the same surah on the same day', () {
+      final pool = [
+        _entry(1, 1),
+        _entry(2, 2),
+        _entry(3, 3),
+        _entry(4, 4),
+        _entry(5, 5),
+      ];
+      final plan = MonthPlanGenerator.generate(
+        month: 6,
+        year: 2026,
+        enabledPool: pool,
+        surahsPerPrayer: 1,
+        now: DateTime(2026, 6, 1),
+      );
+
+      final day1 = plan.planForDay(1)!;
+      final daySurahIds = <int>{
+        for (final prayer in Prayer.values)
+          day1.slotFor(prayer).surahs.single.surahId,
+      };
+      expect(daySurahIds.length, Prayer.values.length);
+    });
+
+    test('allows same-day repeats when pool is smaller than day slots', () {
+      final pool = [_entry(1, 1), _entry(2, 2)];
+      final plan = MonthPlanGenerator.generate(
+        month: 6,
+        year: 2026,
+        enabledPool: pool,
+        surahsPerPrayer: 1,
+        now: DateTime(2026, 6, 1),
+      );
+
+      final day1 = plan.planForDay(1)!;
+      final daySurahIds = [
+        for (final prayer in Prayer.values)
+          day1.slotFor(prayer).surahs.single.surahId,
+      ];
+      expect(daySurahIds.toSet().length, lessThan(Prayer.values.length));
+    });
+
+    test('allows one same-day repeat when pool has 4 entries', () {
+      final pool = [_entry(1, 1), _entry(2, 2), _entry(3, 3), _entry(4, 4)];
+      final plan = MonthPlanGenerator.generate(
+        month: 6,
+        year: 2026,
+        enabledPool: pool,
+        surahsPerPrayer: 1,
+        now: DateTime(2026, 6, 1),
+      );
+
+      final day1 = plan.planForDay(1)!;
+      final daySurahIds = [
+        for (final prayer in Prayer.values)
+          day1.slotFor(prayer).surahs.single.surahId,
+      ];
+      expect(daySurahIds.toSet().length, 4);
     });
 
     test('empty pool yields empty slots', () {
@@ -231,6 +342,18 @@ void main() {
       final day1Fajr = plan.planForDay(1)!.slotFor(Prayer.fajr);
       expect(day1Fajr.locked, false);
       expect(day1Fajr.surahs.single.surahId, 99);
+    });
+
+    test('future month generation starts from day 1', () {
+      final plan = MonthPlanGenerator.generate(
+        month: 7,
+        year: 2026,
+        enabledPool: [_entry(1, 1), _entry(2, 2), _entry(3, 3), _entry(4, 4)],
+        surahsPerPrayer: 1,
+        now: DateTime(2026, 6, 15),
+      );
+
+      expect(plan.planForDay(1)!.slotFor(Prayer.fajr).surahs, isNotEmpty);
     });
   });
 }
