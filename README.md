@@ -38,6 +38,13 @@ dart run build_runner build --delete-conflicting-outputs
 flutter run
 ```
 
+### Run environments
+
+```bash
+flutter run # dev environment
+flutter run -t lib/main_prod.dart # prod environment
+```
+
 ### Test
 
 ```bash
@@ -48,9 +55,9 @@ flutter analyze
 ### Build
 
 ```bash
-flutter build apk        # Android
-flutter build ios        # iOS (macOS only)
-flutter build macos      # macOS desktop
+flutter build apk -t lib/main_prod.dart        # Android (prod)
+flutter build ios -t lib/main_prod.dart        # iOS (macOS only, prod)
+flutter build macos -t lib/main_prod.dart      # macOS desktop (prod)
 ```
 
 ---

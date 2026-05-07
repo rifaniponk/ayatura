@@ -1,9 +1,13 @@
-part of 'bottom_nav_bar.dart';
+import 'package:flutter/material.dart';
 
-class _NavItemWidget extends StatelessWidget {
-  const _NavItemWidget({required this.item, required this.isActive});
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text_styles.dart';
+import 'nav_item.dart';
 
-  final _NavItem item;
+class NavItemWidget extends StatelessWidget {
+  const NavItemWidget({super.key, required this.item, required this.isActive});
+
+  final NavItem item;
   final bool isActive;
 
   @override

@@ -5,6 +5,7 @@
   "navHome": "Home",
   "navMonth": "Month",
   "navHifdh": "Hifdh",
+  "navInsight": "Insight",
   "navSettings": "Settings",
 
   "appBarSubtitleChaptersPool": "{chapters} surahs · {pool} in hifdh list",
@@ -173,6 +174,14 @@
   "settingsLanguageSubtitle": "Choose your preferred language",
   "settingsAbout": "About",
   "settingsAboutBody": "Surah Planner helps you keep up with your hifdh by spreading your surahs and ayat across daily prayers throughout the month. Add what you're memorizing, generate a plan, and review a little each day.",
+
+  "insightTitle": "Insight",
+  "insightSubtitle": "Hifdh frequency counter across all saved monthly plans.",
+  "insightEmpty": "No active hifdh entries yet.",
+  "insightAssignmentCount": "{count, plural, one{Assigned 1 time} other{Assigned {count} times}}",
+  "@insightAssignmentCount": {
+    "placeholders": { "count": {"type": "int"} }
+  },
 
   "langEnglish": "English",
   "langIndonesian": "Indonesian",

@@ -50,4 +50,20 @@ class MonthPlanDao extends DatabaseAccessor<AppDatabase>
       monthPlans,
     )..where((t) => t.year.equals(year) & t.month.equals(month))).go();
   }
+
+  Future<List<MonthPlan>> loadAllPlans() async {
+    final rows =
+        await (select(monthPlans)..orderBy([
+              (t) => OrderingTerm.desc(t.year),
+              (t) => OrderingTerm.desc(t.month),
+            ]))
+            .get();
+    return rows
+        .map(
+          (row) => MonthPlan.fromJson(
+            jsonDecode(row.planJson) as Map<String, dynamic>,
+          ),
+        )
+        .toList();
+  }
 }

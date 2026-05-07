@@ -21,6 +21,9 @@ class SEn extends S {
   String get navHifdh => 'Hifdh';
 
   @override
+  String get navInsight => 'Insight';
+
+  @override
   String get navSettings => 'Settings';
 
   @override
@@ -427,6 +430,27 @@ class SEn extends S {
   @override
   String get settingsAboutBody =>
       'Surah Planner helps you keep up with your hifdh by spreading your surahs and ayat across daily prayers throughout the month. Add what you\'re memorizing, generate a plan, and review a little each day.';
+
+  @override
+  String get insightTitle => 'Insight';
+
+  @override
+  String get insightSubtitle =>
+      'Hifdh frequency counter across all saved monthly plans.';
+
+  @override
+  String get insightEmpty => 'No active hifdh entries yet.';
+
+  @override
+  String insightAssignmentCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Assigned $count times',
+      one: 'Assigned 1 time',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get langEnglish => 'English';
