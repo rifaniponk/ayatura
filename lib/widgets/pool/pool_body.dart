@@ -99,7 +99,12 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
 
   @override
   Widget build(BuildContext context) {
-    final pool = widget.pool;
+    final pool = [...widget.pool]
+      ..sort((a, b) {
+        final bySurahId = a.surahId.compareTo(b.surahId);
+        if (bySurahId != 0) return bySurahId;
+        return a.id.compareTo(b.id);
+      });
     final surahs = widget.surahs;
 
     if (surahs.isEmpty) {
@@ -167,6 +172,14 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
                           child: Text.rich(
                             TextSpan(
                               children: [
+                                TextSpan(
+                                  text: '#${entry.surahId}',
+                                  style: AppTextStyles.cardLabel.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.ink3,
+                                  ),
+                                ),
+                                const TextSpan(text: '  '),
                                 TextSpan(
                                   text: latinName,
                                   style: AppTextStyles.cardLabel.copyWith(

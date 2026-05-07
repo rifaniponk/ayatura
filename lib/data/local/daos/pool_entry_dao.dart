@@ -6,9 +6,12 @@ class PoolEntryDao extends DatabaseAccessor<AppDatabase>
   PoolEntryDao(super.db);
 
   Future<List<SurahPoolEntry>> allPoolEntries() async {
-    final rows = await (select(
-      surahPoolEntries,
-    )..orderBy([(t) => OrderingTerm.asc(t.id)])).get();
+    final rows =
+        await (select(surahPoolEntries)..orderBy([
+              (t) => OrderingTerm.asc(t.surahId),
+              (t) => OrderingTerm.asc(t.id),
+            ]))
+            .get();
     return rows.map(_toModel).toList();
   }
 
@@ -16,7 +19,10 @@ class PoolEntryDao extends DatabaseAccessor<AppDatabase>
     final rows =
         await (select(surahPoolEntries)
               ..where((t) => t.enabled.equals(true))
-              ..orderBy([(t) => OrderingTerm.asc(t.id)]))
+              ..orderBy([
+                (t) => OrderingTerm.asc(t.surahId),
+                (t) => OrderingTerm.asc(t.id),
+              ]))
             .get();
     return rows.map(_toModel).toList();
   }
