@@ -7,10 +7,7 @@ import '../models/plan_surah.dart';
 import '../models/prayer.dart';
 import '../models/surah_pool_entry.dart';
 
-/// Builds a [MonthPlan] from enabled hifdh-list rows using a round-robin deck.
-///
-/// The full pool is shuffled once, dealt slot by slot through the month, then
-/// reshuffled when exhausted. Every surah appears before any surah repeats.
+/// Builds a [MonthPlan] from enabled hifdh-list rows with fair distribution.
 abstract final class MonthPlanGenerator {
   /// Builds a plan for [month]/[year].
   ///
@@ -45,36 +42,38 @@ abstract final class MonthPlanGenerator {
       return MonthPlan(month: month, year: year, days: days);
     }
 
-    final lockedKeys = <_PoolEntryKey>{};
+    final lockedKeys = <String>{};
     if (existingPlan != null) {
       for (final day in existingPlan.days) {
         for (final prayer in Prayer.values) {
           final slot = day.slotFor(prayer);
           if (!slot.locked) continue;
           for (final planSurah in slot.surahs) {
-            lockedKeys.add(
-              _PoolEntryKey(
-                surahId: planSurah.surahId,
-                isFullSurah: planSurah.isFullSurah,
-                startAyah: planSurah.startAyah,
-                endAyah: planSurah.endAyah,
-              ),
-            );
+            lockedKeys.add(_planSurahKey(planSurah));
           }
         }
       }
     }
-    final firstCycleEntries = enabledPool
-        .where((e) => !lockedKeys.contains(_PoolEntryKey.fromPoolEntry(e)))
+    final orderedPool = List<SurahPoolEntry>.from(enabledPool)
+      ..sort((a, b) {
+        final countCompare = a.assignmentCount.compareTo(b.assignmentCount);
+        if (countCompare != 0) return countCompare;
+        return a.id.compareTo(b.id);
+      });
+    final firstCycleEntries = orderedPool
+        .where((entry) => !lockedKeys.contains(_poolEntryKey(entry)))
         .toList();
-    final deck = _RoundRobinDeck(
-      entries: enabledPool,
-      firstCycleEntries: firstCycleEntries,
-    );
+    var queue = firstCycleEntries.isEmpty
+        ? List<SurahPoolEntry>.from(orderedPool)
+        : List<SurahPoolEntry>.from(firstCycleEntries);
+    var firstCycleOnly = firstCycleEntries.isNotEmpty;
+    var cursor = 0;
     final perSlot = min(
       surahsPerPrayer.clamp(1, PlanLimits.maxSurahsPerPrayerSlot),
-      enabledPool.length,
+      orderedPool.length,
     );
+    final slotsPerDay = Prayer.values.length * perSlot;
+    final allowSameDayRepeats = orderedPool.length < slotsPerDay;
 
     for (var day = 1; day <= daysInMonth; day++) {
       final existing = existingPlan?.planForDay(day);
@@ -92,18 +91,55 @@ abstract final class MonthPlanGenerator {
         continue;
       }
       final prayers = <Prayer, PrayerSlot>{};
+      final usedToday = <String>{};
 
       for (final prayer in Prayer.values) {
         final existingSlot = existing?.slotFor(prayer);
         if (existingSlot != null && existingSlot.locked) {
+          for (final s in existingSlot.surahs) {
+            usedToday.add(_planSurahKey(s));
+          }
           prayers[prayer] = existingSlot;
         } else {
-          prayers[prayer] = PrayerSlot(
-            surahs: deck
-                .take(perSlot)
-                .map(PlanSurah.fromSurahPoolEntry)
-                .toList(),
-          );
+          final assigned = <PlanSurah>[];
+          for (var i = 0; i < perSlot; i++) {
+            var skippedInCurrentQueue = 0;
+            while (true) {
+              if (cursor >= queue.length) {
+                if (firstCycleOnly) {
+                  firstCycleOnly = false;
+                  queue = List<SurahPoolEntry>.from(orderedPool);
+                  cursor = 0;
+                  skippedInCurrentQueue = 0;
+                } else {
+                  cursor = 0;
+                }
+              }
+
+              final entry = queue[cursor++];
+              final key = _poolEntryKey(entry);
+              if (!usedToday.contains(key)) {
+                usedToday.add(key);
+                assigned.add(PlanSurah.fromSurahPoolEntry(entry));
+                break;
+              }
+
+              skippedInCurrentQueue++;
+              if (skippedInCurrentQueue >= queue.length) {
+                if (firstCycleOnly) {
+                  firstCycleOnly = false;
+                  queue = List<SurahPoolEntry>.from(orderedPool);
+                  cursor = 0;
+                } else if (allowSameDayRepeats) {
+                  // Fallback: when all unique entries are already used today,
+                  // allow repeats after resetting the day set.
+                  usedToday.clear();
+                }
+                skippedInCurrentQueue = 0;
+              }
+            }
+          }
+          prayers[prayer] = PrayerSlot(surahs: assigned);
         }
       }
       days.add(DayPlan(day: day, prayers: prayers));
@@ -113,80 +149,8 @@ abstract final class MonthPlanGenerator {
   }
 }
 
-/// Deals through a shuffled pool and reshuffles on exhaustion.
-class _RoundRobinDeck {
-  _RoundRobinDeck({
-    required List<SurahPoolEntry> entries,
-    required List<SurahPoolEntry> firstCycleEntries,
-  }) : _entries = List.from(entries),
-       _firstCycleEntries = List.from(firstCycleEntries) {
-    _reshuffle();
-  }
+String _poolEntryKey(SurahPoolEntry entry) =>
+    '${entry.surahId}|${entry.isFullSurah}|${entry.startAyah}|${entry.endAyah}';
 
-  final List<SurahPoolEntry> _entries;
-  final List<SurahPoolEntry> _firstCycleEntries;
-  final _rng = Random();
-  int _cursor = 0;
-  late List<SurahPoolEntry> _deck;
-  late bool _firstCycleOnly;
-
-  void _reshuffle() {
-    _firstCycleOnly = _firstCycleEntries.isNotEmpty;
-    _deck = List.from(_firstCycleOnly ? _firstCycleEntries : _entries)
-      ..shuffle(_rng);
-    _cursor = 0;
-  }
-
-  List<SurahPoolEntry> take(int n) {
-    final result = <SurahPoolEntry>[];
-    while (result.length < n) {
-      if (_cursor >= _deck.length) {
-        if (_firstCycleOnly) {
-          _firstCycleOnly = false;
-          _deck = List.from(_entries)..shuffle(_rng);
-          _cursor = 0;
-        } else {
-          _deck = List.from(_entries)..shuffle(_rng);
-          _cursor = 0;
-        }
-      }
-      result.add(_deck[_cursor++]);
-    }
-    return result;
-  }
-}
-
-class _PoolEntryKey {
-  const _PoolEntryKey({
-    required this.surahId,
-    required this.isFullSurah,
-    required this.startAyah,
-    required this.endAyah,
-  });
-
-  factory _PoolEntryKey.fromPoolEntry(SurahPoolEntry entry) {
-    return _PoolEntryKey(
-      surahId: entry.surahId,
-      isFullSurah: entry.isFullSurah,
-      startAyah: entry.startAyah,
-      endAyah: entry.endAyah,
-    );
-  }
-
-  final int surahId;
-  final bool isFullSurah;
-  final int? startAyah;
-  final int? endAyah;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is _PoolEntryKey &&
-          surahId == other.surahId &&
-          isFullSurah == other.isFullSurah &&
-          startAyah == other.startAyah &&
-          endAyah == other.endAyah;
-
-  @override
-  int get hashCode => Object.hash(surahId, isFullSurah, startAyah, endAyah);
-}
+String _planSurahKey(PlanSurah surah) =>
+    '${surah.surahId}|${surah.isFullSurah}|${surah.startAyah}|${surah.endAyah}';

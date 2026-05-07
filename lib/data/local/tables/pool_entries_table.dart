@@ -15,4 +15,6 @@ class SurahPoolEntries extends Table {
   IntColumn get endAyah => integer().nullable()();
 
   BoolColumn get enabled => boolean().withDefault(const Constant(true))();
+
+  IntColumn get assignmentCount => integer().withDefault(const Constant(0))();
 }

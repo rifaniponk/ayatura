@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/models/plan.dart';
 import '../../data/models/prayer.dart';
+import '../../data/models/plan_surah.dart';
+import '../../data/models/surah_pool_entry.dart';
 import '../../data/services/month_plan_generator.dart';
 import '../core/database_provider.dart';
 import '../insight/hifdh_frequency_provider.dart';
@@ -72,6 +74,28 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
       );
 
       await db.savePlan(next);
+      final keyToEntryId = <String, int>{
+        for (final entry in enabled) _poolEntryKey(entry): entry.id,
+      };
+      final assignedEntryIds = <int>{};
+      for (final day in next.days) {
+        final existingDay = preprocessedExistingPlan?.planForDay(day.day);
+        for (final prayer in Prayer.values) {
+          final existingSlot = existingDay?.slotFor(prayer);
+          final slot = day.slotFor(prayer);
+          if (existingSlot != null && existingSlot.locked) {
+            continue;
+          }
+          for (final surah in slot.surahs) {
+            final entryId = keyToEntryId[_planSurahKey(surah)];
+            if (entryId != null) {
+              assignedEntryIds.add(entryId);
+            }
+          }
+        }
+      }
+      await db.incrementPoolEntryAssignmentCounts(assignedEntryIds);
+      ref.invalidate(poolEntriesAsyncProvider);
       ref.invalidate(hifdhFrequencyProvider);
       ref.invalidate(
         monthPlanByYearMonthProvider((year: targetYear, month: targetMonth)),
@@ -195,3 +219,9 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
 final monthPlanProvider = AsyncNotifierProvider<MonthPlanNotifier, MonthPlan?>(
   MonthPlanNotifier.new,
 );
+
+String _poolEntryKey(SurahPoolEntry entry) =>
+    '${entry.surahId}|${entry.isFullSurah}|${entry.startAyah}|${entry.endAyah}';
+
+String _planSurahKey(PlanSurah surah) =>
+    '${surah.surahId}|${surah.isFullSurah}|${surah.startAyah}|${surah.endAyah}';

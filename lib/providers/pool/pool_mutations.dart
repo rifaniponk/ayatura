@@ -103,6 +103,7 @@ Future<void> replacePoolSegment({
       startAyah: entry.startAyah,
       endAyah: entry.endAyah,
       enabled: entry.enabled,
+      assignmentCount: entry.assignmentCount,
     ),
   );
   _invalidatePoolAndPlan(ref);

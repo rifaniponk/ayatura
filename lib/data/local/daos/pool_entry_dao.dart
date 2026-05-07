@@ -39,6 +39,18 @@ class PoolEntryDao extends DatabaseAccessor<AppDatabase>
     return (delete(surahPoolEntries)..where((t) => t.id.equals(id))).go();
   }
 
+  Future<void> incrementAssignmentCounts(Iterable<int> entryIds) async {
+    final ids = entryIds.toSet().toList();
+    if (ids.isEmpty) return;
+    final placeholders = List.filled(ids.length, '?').join(', ');
+    await customStatement(
+      'UPDATE surah_pool_entries '
+      'SET assignment_count = assignment_count + 1 '
+      'WHERE id IN ($placeholders)',
+      ids,
+    );
+  }
+
   static SurahPoolEntry _toModel(SurahPoolEntryRow r) => SurahPoolEntry(
     id: r.id,
     surahId: r.surahId,
@@ -46,5 +58,6 @@ class PoolEntryDao extends DatabaseAccessor<AppDatabase>
     startAyah: r.startAyah,
     endAyah: r.endAyah,
     enabled: r.enabled,
+    assignmentCount: r.assignmentCount,
   );
 }

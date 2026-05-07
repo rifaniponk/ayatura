@@ -11,6 +11,7 @@ class SurahPoolEntry {
   final int? startAyah;
   final int? endAyah;
   final bool enabled;
+  final int assignmentCount;
 
   const SurahPoolEntry({
     required this.id,
@@ -19,6 +20,7 @@ class SurahPoolEntry {
     this.startAyah,
     this.endAyah,
     this.enabled = true,
+    this.assignmentCount = 0,
   });
 
   factory SurahPoolEntry.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class SurahPoolEntry {
       startAyah: json['startAyah'] as int?,
       endAyah: json['endAyah'] as int?,
       enabled: json['enabled'] as bool? ?? true,
+      assignmentCount: json['assignmentCount'] as int? ?? 0,
     );
   }
 
@@ -39,6 +42,7 @@ class SurahPoolEntry {
     'startAyah': startAyah,
     'endAyah': endAyah,
     'enabled': enabled,
+    'assignmentCount': assignmentCount,
   };
 
   String displayLabel(Surah surah, String languageCode) {
@@ -60,6 +64,7 @@ class SurahPoolEntry {
     int? startAyah,
     int? endAyah,
     bool? enabled,
+    int? assignmentCount,
   }) {
     return SurahPoolEntry(
       id: id ?? this.id,
@@ -68,6 +73,7 @@ class SurahPoolEntry {
       startAyah: startAyah ?? this.startAyah,
       endAyah: endAyah ?? this.endAyah,
       enabled: enabled ?? this.enabled,
+      assignmentCount: assignmentCount ?? this.assignmentCount,
     );
   }
 
@@ -80,9 +86,17 @@ class SurahPoolEntry {
           other.isFullSurah == isFullSurah &&
           other.startAyah == startAyah &&
           other.endAyah == endAyah &&
-          other.enabled == enabled);
+          other.enabled == enabled &&
+          other.assignmentCount == assignmentCount);
 
   @override
-  int get hashCode =>
-      Object.hash(id, surahId, isFullSurah, startAyah, endAyah, enabled);
+  int get hashCode => Object.hash(
+    id,
+    surahId,
+    isFullSurah,
+    startAyah,
+    endAyah,
+    enabled,
+    assignmentCount,
+  );
 }

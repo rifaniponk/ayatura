@@ -126,6 +126,7 @@ void main() {
       expect(entries.first.surahId, 1);
       expect(entries.first.isFullSurah, isTrue);
       expect(entries.first.enabled, isTrue);
+      expect(entries.first.assignmentCount, 0);
     });
 
     test('enabledPoolEntries filters out disabled entries', () async {
@@ -192,6 +193,25 @@ void main() {
       final updated = await db.poolEntryDao.allPoolEntries();
       expect(updated.first.startAyah, 3);
       expect(updated.first.endAyah, 7);
+    });
+
+    test('incrementAssignmentCounts increments only targeted rows', () async {
+      await seedSurah(1);
+      await seedSurah(2);
+      final id1 = await db.poolEntryDao.insertPoolEntry(
+        SurahPoolEntriesCompanion.insert(surahId: 1, isFullSurah: true),
+      );
+      await db.poolEntryDao.insertPoolEntry(
+        SurahPoolEntriesCompanion.insert(surahId: 2, isFullSurah: true),
+      );
+
+      await db.poolEntryDao.incrementAssignmentCounts([id1]);
+
+      final entries = await db.poolEntryDao.allPoolEntries();
+      final first = entries.firstWhere((e) => e.id == id1);
+      final second = entries.firstWhere((e) => e.id != id1);
+      expect(first.assignmentCount, 1);
+      expect(second.assignmentCount, 0);
     });
   });
 }

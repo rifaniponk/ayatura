@@ -27,7 +27,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'surah_planner'));
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -53,6 +53,9 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 7) {
         await m.addColumn(prayerTimes, prayerTimes.sunrise);
+      }
+      if (from < 8) {
+        await m.addColumn(surahPoolEntries, surahPoolEntries.assignmentCount);
       }
     },
   );
@@ -80,6 +83,9 @@ class AppDatabase extends _$AppDatabase {
       poolEntryDao.setPoolEntryEnabled(id, enabled);
 
   Future<int> deletePoolEntry(int id) => poolEntryDao.deletePoolEntry(id);
+
+  Future<void> incrementPoolEntryAssignmentCounts(Iterable<int> entryIds) =>
+      poolEntryDao.incrementAssignmentCounts(entryIds);
 
   Future<MonthPlan?> loadPlan(int year, int month) =>
       monthPlanDao.loadPlan(year, month);
