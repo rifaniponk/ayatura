@@ -1,61 +1,121 @@
 {
   "@@locale": "en",
-
   "appTitle": "Surah Planner",
   "navHome": "Home",
   "navMonth": "Month",
   "navHifdh": "Hifdh",
   "navInsight": "Insight",
   "navSettings": "Settings",
-
   "appBarSubtitleChaptersPool": "{chapters} surahs · {pool} in hifdh list",
   "@appBarSubtitleChaptersPool": {
-    "placeholders": { "chapters": {"type": "int"}, "pool": {"type": "int"} }
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      },
+      "pool": {
+        "type": "int"
+      }
+    }
   },
   "appBarSubtitleChaptersLoading": "{chapters} surahs · …",
   "@appBarSubtitleChaptersLoading": {
-    "placeholders": { "chapters": {"type": "int"} }
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      }
+    }
   },
-
   "errorGeneric": "Error: {message}",
-  "@errorGeneric": { "placeholders": { "message": {"type": "String"} } },
+  "@errorGeneric": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
   "noSurahsLoaded": "No surahs loaded",
-
   "dayLabel": "Day",
   "dayOfMonth": "{day} / {total}",
   "@dayOfMonth": {
-    "placeholders": { "day": {"type": "int"}, "total": {"type": "int"} }
+    "placeholders": {
+      "day": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
   },
   "regeneratePlan": "Regenerate Plan",
   "snackbarNeedTwoSegments": "Need at least two items turned on in your hifdh list.",
-
   "monthScreenTitle": "Month",
   "monthSubtitle": "{month} · {chapters} surahs",
   "@monthSubtitle": {
-    "placeholders": { "month": {"type": "String"}, "chapters": {"type": "int"} }
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "chapters": {
+        "type": "int"
+      }
+    }
   },
   "monthScreenSubtitlePool": "{monthYear} · {count} in hifdh list",
   "@monthScreenSubtitlePool": {
-    "placeholders": { "monthYear": {"type": "String"}, "count": {"type": "int"} }
+    "placeholders": {
+      "monthYear": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "monthNavYearDays": "{monthYear} · {days, plural, one{1 day} other{{days} days}}",
   "@monthNavYearDays": {
-    "placeholders": { "monthYear": {"type": "String"}, "days": {"type": "int"} }
+    "placeholders": {
+      "monthYear": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
   },
   "monthNavPreviousMonth": "Previous month",
   "monthNavNextMonth": "Next month",
   "monthRegenerateCompact": "Regenerate",
   "monthNoPlanTitle": "No plan for {monthYear}",
-  "@monthNoPlanTitle": { "placeholders": { "monthYear": {"type": "String"} } },
-  "monthNoPlanSubtitle": "Tap Regenerate to create one.",
+  "@monthNoPlanTitle": {
+    "placeholders": {
+      "monthYear": {
+        "type": "String"
+      }
+    }
+  },
+  "monthNoPlanSubtitle": "Tap button below to create one.",
   "monthNoPlanPastSubtitle": "Plans can only be generated for the current or a future month.",
-  "monthRegeneratePlanFor": "Regenerate Plan for {monthYear}",
-  "@monthRegeneratePlanFor": { "placeholders": { "monthYear": {"type": "String"} } },
+  "monthRegeneratePlanFor": "Generate Plan for {monthYear}",
+  "@monthRegeneratePlanFor": {
+    "placeholders": {
+      "monthYear": {
+        "type": "String"
+      }
+    }
+  },
   "monthTodayChip": "Today",
   "monthFullSurah": "Full surah",
   "monthAyatRange": "{start} – {end}",
   "@monthAyatRange": {
-    "placeholders": { "start": {"type": "int"}, "end": {"type": "int"} } },
+    "placeholders": {
+      "start": {
+        "type": "int"
+      },
+      "end": {
+        "type": "int"
+      }
+    }
+  },
   "monthPrayerEmpty": "—",
   "prayerNameFajr": "FAJR",
   "prayerNameDhuhr": "DHUHR",
@@ -63,17 +123,32 @@
   "prayerNameMaghrib": "MAGHRIB",
   "prayerNameIsha": "ISHA",
   "monthDayTitle": "Day {day}",
-  "@monthDayTitle": { "placeholders": { "day": {"type": "int"} } },
+  "@monthDayTitle": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
   "monthDayReadings": "{count, plural, =1{1 planned reading across prayers} other{{count} planned readings across prayers}}",
-  "@monthDayReadings": { "placeholders": { "count": {"type": "int"} } },
-
+  "@monthDayReadings": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "hifdhScreenTitle": "Hifdh",
   "hifdhSubtitleEmpty": "Nothing listed yet",
   "hifdhSubtitleCount": "{enabled} active of {total} total in hifdh list",
   "@hifdhSubtitleCount": {
     "placeholders": {
-      "enabled": {"type": "int"},
-      "total": {"type": "int"}
+      "enabled": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "hifdhIntroBanner": "Hifdh is Quran memorization. What you list here is used when you build your monthly plan.",
@@ -82,20 +157,61 @@
   "hifdhMenuRemove": "Remove",
   "hifdhRemoveDialogTitle": "Remove from hifdh list?",
   "hifdhRemoveDialogContent": "{label} will be removed from your hifdh list. Your current month plan will be cleared until you generate a new one.",
-  "@hifdhRemoveDialogContent": { "placeholders": { "label": {"type": "String"} } },
+  "@hifdhRemoveDialogContent": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
   "hifdhRemoveErrorSnackbar": "Could not remove: {error}",
-  "@hifdhRemoveErrorSnackbar": { "placeholders": { "error": {"type": "String"} } },
+  "@hifdhRemoveErrorSnackbar": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "hifdhSaveErrorSnackbar": "Could not save: {error}",
-  "@hifdhSaveErrorSnackbar": { "placeholders": { "error": {"type": "String"} } },
+  "@hifdhSaveErrorSnackbar": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "hifdhToggleErrorSnackbar": "Failed to save: {error}",
-  "@hifdhToggleErrorSnackbar": { "placeholders": { "error": {"type": "String"} } },
+  "@hifdhToggleErrorSnackbar": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "hifdhDuplicateError": "{label} is already in your hifdh list",
-  "@hifdhDuplicateError": { "placeholders": { "label": {"type": "String"} } },
+  "@hifdhDuplicateError": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
   "hifdhBulkSkippedOne": "1 entry was skipped — {label} is already in your hifdh list.",
-  "@hifdhBulkSkippedOne": { "placeholders": { "label": {"type": "String"} } },
+  "@hifdhBulkSkippedOne": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
   "hifdhBulkSkippedMany": "{count} entries were skipped — already in your hifdh list.",
-  "@hifdhBulkSkippedMany": { "placeholders": { "count": {"type": "int"} } },
-
+  "@hifdhBulkSkippedMany": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "editorAddTitle": "Add surah or ayat",
   "editorEditTitle": "Edit entry",
   "editorSurahLabel": "Surah",
@@ -103,7 +219,13 @@
   "editorEntireSurahOn": "The entire surah is on your hifdh list.",
   "editorEntireSurahOff": "Only the ayat range below is included.",
   "editorAyatCount": "{count} ayat in this surah",
-  "@editorAyatCount": { "placeholders": { "count": {"type": "int"} } },
+  "@editorAyatCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "editorStartAyah": "Start ayah",
   "editorEndAyah": "End ayah",
   "editorAddButton": "Add to hifdh list",
@@ -111,18 +233,28 @@
   "editorNoSurahsAvailable": "No surahs available.",
   "editorPickerSearchHint": "Search by surah name",
   "editorPickerNoResults": "No results",
-
   "editorModeNormal": "Normal",
   "editorModeBulkByJuz": "Bulk by Juz",
   "editorJuzLabel": "Juz",
   "editorJuzOption": "Juz {juz}",
-  "@editorJuzOption": { "placeholders": { "juz": {"type": "int"} } },
+  "@editorJuzOption": {
+    "placeholders": {
+      "juz": {
+        "type": "int"
+      }
+    }
+  },
   "editorBulkAddButton": "{count, plural, one{Add 1 to hifdh list} other{Add {count} to hifdh list}}",
-  "@editorBulkAddButton": { "placeholders": { "count": {"type": "int"} } },
+  "@editorBulkAddButton": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "editorAlreadyAdded": "Already added",
   "editorSelectAll": "Select all",
   "editorDeselectAll": "Deselect all",
-
   "emptyNoPlanTitle": "No plan yet",
   "emptyNoPlanSubtitle": "Generate a plan to assign readings across the month.",
   "emptyNoPlanAction": "Generate Plan",
@@ -132,7 +264,6 @@
   "emptyHifdhListTitle": "Start your hifdh list",
   "emptyHifdhListSubtitle": "Add full surahs or ayat ranges you are memorizing. Your monthly plan will draw from this list.",
   "emptyHifdhListAction": "Add surah or ayat",
-
   "prayerFajr": "Fajr",
   "prayerDhuhr": "Dhuhr",
   "prayerAsr": "Asr",
@@ -147,24 +278,41 @@
   "monthNoLocksToClear": "No locks to clear for this month.",
   "monthClearedLocksSnackbar": "{count, plural, one{Cleared 1 lock} other{Cleared {count} locks}}",
   "@monthClearedLocksSnackbar": {
-    "placeholders": { "count": {"type": "int"} }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "prayerAyatCount": "{count} ayat",
-  "@prayerAyatCount": { "placeholders": { "count": {"type": "int"} } },
+  "@prayerAyatCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "homeNowPrayingBadge": "NOW PRAYING",
   "homeUpNextBadge": "UP NEXT",
   "homePrayerStartedAt": "started {time}",
   "@homePrayerStartedAt": {
-    "placeholders": { "time": {"type": "String"} }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
   "homePrayerUntilNext": "IN {duration} UNTIL NEXT",
   "@homePrayerUntilNext": {
-    "placeholders": { "duration": {"type": "String"} }
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
   },
   "readerNoVerses": "No verses found.",
   "readerLoadErrorRetry": "Could not load verses. Tap to retry.",
   "readerSourceAttribution": "Quran text and translation source: quran.com (Quran Foundation).",
-
   "settingsTitle": "Settings",
   "settingsPreferences": "Preferences",
   "settingsSurahsPerPrayer": "Surahs per prayer",
@@ -175,18 +323,19 @@
   "settingsLanguageSubtitle": "Choose your preferred language",
   "settingsAbout": "About",
   "settingsAboutBody": "Surah Planner helps you keep up with your hifdh by spreading your surahs and ayat across daily prayers throughout the month. Add what you're memorizing, generate a plan, and review a little each day.",
-
   "insightTitle": "Insight",
   "insightSubtitle": "Hifdh frequency counter across all saved monthly plans.",
   "insightEmpty": "No active hifdh entries yet.",
   "insightAssignmentCount": "{count, plural, one{Assigned 1 time} other{Assigned {count} times}}",
   "@insightAssignmentCount": {
-    "placeholders": { "count": {"type": "int"} }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
-
   "langEnglish": "English",
   "langIndonesian": "Indonesian",
-
   "dialogCancel": "Cancel",
   "dialogRemove": "Remove",
   "backTooltip": "Back",

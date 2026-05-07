@@ -97,7 +97,8 @@ class SId extends S {
   }
 
   @override
-  String get monthNoPlanSubtitle => 'Ketuk Buat ulang untuk membuatnya.';
+  String get monthNoPlanSubtitle =>
+      'Ketuk tombol dibawah ini untuk membuatnya.';
 
   @override
   String get monthNoPlanPastSubtitle =>
@@ -105,7 +106,7 @@ class SId extends S {
 
   @override
   String monthRegeneratePlanFor(String monthYear) {
-    return 'Buat ulang rencana untuk $monthYear';
+    return 'Buat rencana untuk $monthYear';
   }
 
   @override
@@ -261,10 +262,10 @@ class SId extends S {
   String get editorPickerNoResults => 'Tidak ada hasil';
 
   @override
-  String get editorModeNormal => 'Biasa';
+  String get editorModeNormal => '1 Surah';
 
   @override
-  String get editorModeBulkByJuz => 'Massal per juz';
+  String get editorModeBulkByJuz => 'Bayak Surah (per Juz)';
 
   @override
   String get editorJuzLabel => 'Juz';

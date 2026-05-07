@@ -98,7 +98,7 @@ class SEn extends S {
   }
 
   @override
-  String get monthNoPlanSubtitle => 'Tap Regenerate to create one.';
+  String get monthNoPlanSubtitle => 'Tap button below to create one.';
 
   @override
   String get monthNoPlanPastSubtitle =>
@@ -106,7 +106,7 @@ class SEn extends S {
 
   @override
   String monthRegeneratePlanFor(String monthYear) {
-    return 'Regenerate Plan for $monthYear';
+    return 'Generate Plan for $monthYear';
   }
 
   @override

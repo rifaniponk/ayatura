@@ -232,7 +232,7 @@ abstract class S {
   /// No description provided for @monthNoPlanSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Tap Regenerate to create one.'**
+  /// **'Tap button below to create one.'**
   String get monthNoPlanSubtitle;
 
   /// No description provided for @monthNoPlanPastSubtitle.
@@ -244,7 +244,7 @@ abstract class S {
   /// No description provided for @monthRegeneratePlanFor.
   ///
   /// In en, this message translates to:
-  /// **'Regenerate Plan for {monthYear}'**
+  /// **'Generate Plan for {monthYear}'**
   String monthRegeneratePlanFor(String monthYear);
 
   /// No description provided for @monthTodayChip.
