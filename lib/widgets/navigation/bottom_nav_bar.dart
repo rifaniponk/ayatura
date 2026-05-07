@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_text_styles.dart';
-import '../../l10n/app_localizations.dart';
-
-part 'nav_item_widget.dart';
+import 'nav_item.dart';
+import 'nav_item_widget.dart';
 
 /// Bottom navigation: Home, Month, Hifdh (memorization list), Settings.
 class AppBottomNavBar extends StatelessWidget {
@@ -12,25 +10,15 @@ class AppBottomNavBar extends StatelessWidget {
     super.key,
     required this.currentIndex,
     required this.onTap,
+    required this.items,
   });
 
   final int currentIndex;
   final ValueChanged<int> onTap;
+  final List<NavItem> items;
 
   @override
   Widget build(BuildContext context) {
-    final s = S.of(context)!;
-    final items = [
-      _NavItem(icon: Icons.home_rounded, label: s.navHome),
-      _NavItem(icon: Icons.calendar_month_rounded, label: s.navMonth),
-      _NavItem(icon: Icons.menu_book_rounded, label: s.navHifdh),
-      _NavItem(
-        icon: Icons.settings_outlined,
-        activeIcon: Icons.settings,
-        label: s.navSettings,
-      ),
-    ];
-
     return Container(
       height: 72,
       decoration: BoxDecoration(
@@ -55,7 +43,7 @@ class AppBottomNavBar extends StatelessWidget {
               child: InkWell(
                 onTap: () => onTap(i),
                 customBorder: const RoundedRectangleBorder(),
-                child: _NavItemWidget(item: items[i], isActive: isActive),
+                child: NavItemWidget(item: items[i], isActive: isActive),
               ),
             ),
           );
@@ -63,12 +51,4 @@ class AppBottomNavBar extends StatelessWidget {
       ),
     );
   }
-}
-
-class _NavItem {
-  const _NavItem({required this.icon, this.activeIcon, required this.label});
-
-  final IconData icon;
-  final IconData? activeIcon;
-  final String label;
 }

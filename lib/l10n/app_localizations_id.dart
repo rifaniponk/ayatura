@@ -21,6 +21,9 @@ class SId extends S {
   String get navHifdh => 'Hafalan';
 
   @override
+  String get navInsight => 'Insight';
+
+  @override
   String get navSettings => 'Pengaturan';
 
   @override
@@ -431,6 +434,27 @@ class SId extends S {
   @override
   String get settingsAboutBody =>
       'Surah Planner bantu kamu jaga konsistensi hafalan dengan menyebarkan surah dan ayat ke shalat-shalat harian sepanjang bulan. Tambahkan hafalan kamu, buat rencana, dan muraja\'ah sedikit setiap harinya.';
+
+  @override
+  String get insightTitle => 'Insight';
+
+  @override
+  String get insightSubtitle =>
+      'Penghitung frekuensi hafalan di semua rencana bulanan yang tersimpan.';
+
+  @override
+  String get insightEmpty => 'Belum ada entri hafalan aktif.';
+
+  @override
+  String insightAssignmentCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ditugaskan $count kali',
+      one: 'Ditugaskan 1 kali',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get langEnglish => 'Inggris';

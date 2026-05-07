@@ -4,12 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/local/app_database.dart';
 import '../../data/models/surah_pool_entry.dart';
 import '../core/database_provider.dart';
+import '../insight/hifdh_frequency_provider.dart';
 import '../plan/month_plan_provider.dart';
 import '../quran/surah_data_providers.dart';
 
 void _invalidatePoolAndPlan(WidgetRef ref) {
   ref.invalidate(poolEntriesAsyncProvider);
   ref.invalidate(monthPlanProvider);
+  ref.invalidate(hifdhFrequencyProvider);
 }
 
 /// Returns the existing pool entry that exactly matches the given criteria, or null.
@@ -46,6 +48,7 @@ Future<void> setPoolEntryEnabled(
   final db = ref.read(appDatabaseProvider);
   await db.setPoolEntryEnabled(entry.id, enabled);
   ref.invalidate(poolEntriesAsyncProvider);
+  ref.invalidate(hifdhFrequencyProvider);
 }
 
 /// Inserts a single pool entry. Returns `true` on success, `false` if an

@@ -121,6 +121,12 @@ abstract class S {
   /// **'Hifdh'**
   String get navHifdh;
 
+  /// No description provided for @navInsight.
+  ///
+  /// In en, this message translates to:
+  /// **'Insight'**
+  String get navInsight;
+
   /// No description provided for @navSettings.
   ///
   /// In en, this message translates to:
@@ -768,6 +774,30 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Surah Planner helps you keep up with your hifdh by spreading your surahs and ayat across daily prayers throughout the month. Add what you\'re memorizing, generate a plan, and review a little each day.'**
   String get settingsAboutBody;
+
+  /// No description provided for @insightTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Insight'**
+  String get insightTitle;
+
+  /// No description provided for @insightSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hifdh frequency counter across all saved monthly plans.'**
+  String get insightSubtitle;
+
+  /// No description provided for @insightEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No active hifdh entries yet.'**
+  String get insightEmpty;
+
+  /// No description provided for @insightAssignmentCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{Assigned 1 time} other{Assigned {count} times}}'**
+  String insightAssignmentCount(int count);
 
   /// No description provided for @langEnglish.
   ///

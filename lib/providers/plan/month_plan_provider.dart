@@ -4,6 +4,7 @@ import '../../data/models/plan.dart';
 import '../../data/models/prayer.dart';
 import '../../data/services/month_plan_generator.dart';
 import '../core/database_provider.dart';
+import '../insight/hifdh_frequency_provider.dart';
 import 'month_plan_regenerate_busy_provider.dart';
 import 'selected_plan_day_provider.dart';
 import '../core/settings_provider.dart';
@@ -71,6 +72,7 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
       );
 
       await db.savePlan(next);
+      ref.invalidate(hifdhFrequencyProvider);
       ref.invalidate(
         monthPlanByYearMonthProvider((year: targetYear, month: targetMonth)),
       );
@@ -114,6 +116,7 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
     final plan = state.maybeWhen(data: (p) => p, orElse: () => null);
     if (plan != null) {
       await db.deletePlan(plan.year, plan.month);
+      ref.invalidate(hifdhFrequencyProvider);
       ref.invalidate(
         monthPlanByYearMonthProvider((year: plan.year, month: plan.month)),
       );
@@ -143,6 +146,7 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
       days: updatedDays,
     );
     await db.savePlan(next);
+    ref.invalidate(hifdhFrequencyProvider);
     ref.invalidate(monthPlanByYearMonthProvider((year: year, month: month)));
     final now = DateTime.now();
     if (year == now.year && month == now.month) {
@@ -178,6 +182,7 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
       days: updatedDays,
     );
     await db.savePlan(next);
+    ref.invalidate(hifdhFrequencyProvider);
     ref.invalidate(monthPlanByYearMonthProvider((year: year, month: month)));
     final now = DateTime.now();
     if (year == now.year && month == now.month) {

@@ -91,6 +91,8 @@ class AppDatabase extends _$AppDatabase {
   Future<void> deletePlan(int year, int month) =>
       monthPlanDao.deletePlan(year, month);
 
+  Future<List<MonthPlan>> loadAllPlans() => monthPlanDao.loadAllPlans();
+
   Future<Map<String, PrayerTime>> prayerTimesByDates(Iterable<String> dates) =>
       prayerTimeDao.byDates(dates);
 
