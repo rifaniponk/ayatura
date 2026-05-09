@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="surah_planner_widget_description">Surah Planner prayer widget</string>
+    <string name="widget_empty_no_plan_title">No plan generated yet</string>
+    <string name="widget_empty_no_plan_subtitle">Open the app to get started</string>
+    <string name="widget_empty_plan_expired_title">Plan expired</string>
+    <string name="widget_empty_plan_expired_subtitle">Open the app to regenerate</string>
+    <string name="widget_empty_stale_title">Widget data outdated</string>
+    <string name="widget_empty_stale_subtitle">Open the app to refresh the widget</string>
+    <string name="widget_before_fajr">BEFORE FAJR</string>
+</resources>

@@ -2,6 +2,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- add these for development so db is always wiped out after uninstall
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+     -->
     <application
         android:label="surah_planner"
         android:name="${applicationName}"
@@ -33,6 +39,30 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <receiver
+            android:name=".widget.SurahPlannerWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.ponkcoding.surahplanner.widget.ACTION_REFRESH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/surah_planner_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.SurahPlannerWidgetAlarmReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".widget.SurahPlannerBootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

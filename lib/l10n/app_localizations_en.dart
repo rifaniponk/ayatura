@@ -473,4 +473,31 @@ class SEn extends S {
 
   @override
   String get dismissTooltip => 'Dismiss';
+
+  @override
+  String get widgetDescription => 'Surah Planner prayer widget';
+
+  @override
+  String get widgetEmptyNoPlanTitle => 'No plan generated yet';
+
+  @override
+  String get widgetEmptyNoPlanSubtitle => 'Open the app to get started';
+
+  @override
+  String get widgetEmptyPlanExpiredTitle => 'Plan expired';
+
+  @override
+  String get widgetEmptyPlanExpiredSubtitle => 'Open the app to regenerate';
+
+  @override
+  String get widgetEmptyStaleTitle => 'Widget data outdated';
+
+  @override
+  String get widgetEmptyStaleSubtitle => 'Open the app to refresh the widget';
+
+  @override
+  String get widgetTomorrowMarker => 'TOMORROW';
+
+  @override
+  String get widgetBeforeFajr => 'BEFORE FAJR';
 }

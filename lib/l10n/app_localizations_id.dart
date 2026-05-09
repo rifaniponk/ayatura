@@ -474,4 +474,33 @@ class SId extends S {
 
   @override
   String get dismissTooltip => 'Tutup';
+
+  @override
+  String get widgetDescription => 'Widget shalat Surah Planner';
+
+  @override
+  String get widgetEmptyNoPlanTitle => 'Belum ada rencana';
+
+  @override
+  String get widgetEmptyNoPlanSubtitle => 'Buka aplikasi untuk memulai';
+
+  @override
+  String get widgetEmptyPlanExpiredTitle => 'Rencana kedaluwarsa';
+
+  @override
+  String get widgetEmptyPlanExpiredSubtitle =>
+      'Buka aplikasi untuk membuat ulang';
+
+  @override
+  String get widgetEmptyStaleTitle => 'Data widget perlu diperbarui';
+
+  @override
+  String get widgetEmptyStaleSubtitle =>
+      'Buka aplikasi untuk menyegarkan widget';
+
+  @override
+  String get widgetTomorrowMarker => 'BESOK';
+
+  @override
+  String get widgetBeforeFajr => 'SEBELUM SUBUH';
 }

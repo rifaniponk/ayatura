@@ -122,5 +122,14 @@
   "dialogCancel": "Batal",
   "dialogRemove": "Hapus",
   "backTooltip": "Kembali",
-  "dismissTooltip": "Tutup"
+  "dismissTooltip": "Tutup",
+  "widgetDescription": "Widget shalat Surah Planner",
+  "widgetEmptyNoPlanTitle": "Belum ada rencana",
+  "widgetEmptyNoPlanSubtitle": "Buka aplikasi untuk memulai",
+  "widgetEmptyPlanExpiredTitle": "Rencana kedaluwarsa",
+  "widgetEmptyPlanExpiredSubtitle": "Buka aplikasi untuk membuat ulang",
+  "widgetEmptyStaleTitle": "Data widget perlu diperbarui",
+  "widgetEmptyStaleSubtitle": "Buka aplikasi untuk menyegarkan widget",
+  "widgetTomorrowMarker": "BESOK",
+  "widgetBeforeFajr": "SEBELUM SUBUH"
 }

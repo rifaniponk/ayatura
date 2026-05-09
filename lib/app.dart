@@ -6,6 +6,7 @@ import 'package:surah_planner/l10n/app_localizations.dart';
 
 import 'core/theme/app_theme.dart';
 import 'providers/core/locale_provider.dart';
+import 'providers/widget/widget_sync_provider.dart';
 import 'screens/app_shell.dart';
 
 class SurahPlannerApp extends ConsumerWidget {
@@ -14,6 +15,7 @@ class SurahPlannerApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
+    ref.watch(widgetSyncBootstrapProvider);
 
     return MaterialApp(
       title: 'Surah Planner',

@@ -70,6 +70,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
     final db = ref.read(appDatabaseProvider);
     await PrayerTimesSyncService(db).syncAndLoadToday(forceRefresh: true);
     ref.invalidate(prayerTimesSyncProvider);
+    await WidgetSyncService.syncFromWidgetRef(ref);
     if (mounted) {
       setState(() {
         _clockNow = DateTime.now();

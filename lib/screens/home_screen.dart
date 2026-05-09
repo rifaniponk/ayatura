@@ -8,6 +8,7 @@ import '../core/theme/app_colors.dart';
 import '../core/theme/app_text_styles.dart';
 import '../data/local/app_database.dart';
 import '../data/services/prayer_times_sync_service.dart';
+import '../data/services/widget_sync_service.dart';
 import '../l10n/app_localizations.dart';
 import '../data/models/plan.dart';
 import '../data/models/prayer.dart';
