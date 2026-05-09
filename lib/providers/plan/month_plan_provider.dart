@@ -5,6 +5,7 @@ import '../../data/models/prayer.dart';
 import '../../data/models/plan_surah.dart';
 import '../../data/models/surah_pool_entry.dart';
 import '../../data/services/month_plan_generator.dart';
+import '../../data/services/widget_sync_service.dart';
 import '../core/database_provider.dart';
 import '../insight/hifdh_frequency_provider.dart';
 import 'month_plan_regenerate_busy_provider.dart';
@@ -112,6 +113,7 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
           ref.read(selectedPlanDayProvider.notifier).setDay(dim);
         }
       }
+      await WidgetSyncService.sync(ref);
       return true;
     } finally {
       ref.read(monthPlanRegenerateBusyProvider.notifier).state = false;
@@ -146,6 +148,7 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
       );
     }
     state = const AsyncData(null);
+    await WidgetSyncService.sync(ref);
   }
 
   Future<void> toggleSlotLock({
@@ -176,6 +179,7 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
     if (year == now.year && month == now.month) {
       state = AsyncData(next);
     }
+    await WidgetSyncService.sync(ref);
   }
 
   Future<int> clearLocksForMonth({
@@ -212,6 +216,7 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
     if (year == now.year && month == now.month) {
       state = AsyncData(next);
     }
+    await WidgetSyncService.sync(ref);
     return cleared;
   }
 }

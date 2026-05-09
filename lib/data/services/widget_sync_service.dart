@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
@@ -15,28 +16,75 @@ import '../models/surah.dart';
 import '../local/app_database.dart';
 
 const widgetPayloadKey = 'widget_payload';
+const _androidWidgetQualifiedName =
+    'com.ponkcoding.surahplanner.widget.SurahPlannerWidgetReceiver';
 
 abstract final class WidgetSyncService {
-  static Future<void> sync(Ref ref) async {
+  static Future<void> syncFromWidgetRef(WidgetRef ref) async {
     try {
       await HomeWidget.setAppGroupId('group.com.ponkcoding.surahplanner');
-      final payload = await _buildPayload(ref);
+      final payload = await _buildPayloadFromWidgetRef(ref);
       await HomeWidget.saveWidgetData<String>(
         widgetPayloadKey,
         jsonEncode(payload),
       );
       await HomeWidget.updateWidget(
         iOSName: 'SurahPlannerWidget',
-        androidName: 'SurahPlannerWidgetReceiver',
+        qualifiedAndroidName: _androidWidgetQualifiedName,
       );
-    } catch (_) {
+    } catch (error, stackTrace) {
       // Widget sync must never crash user flows.
+      debugPrint(
+        'WidgetSyncService.syncFromWidgetRef failed: $error\n$stackTrace',
+      );
     }
   }
 
-  static Future<Map<String, dynamic>> _buildPayload(Ref ref) async {
+  static Future<void> sync(Ref ref) async {
+    try {
+      await HomeWidget.setAppGroupId('group.com.ponkcoding.surahplanner');
+      final payload = await _buildPayloadFromRef(ref);
+      await HomeWidget.saveWidgetData<String>(
+        widgetPayloadKey,
+        jsonEncode(payload),
+      );
+      await HomeWidget.updateWidget(
+        iOSName: 'SurahPlannerWidget',
+        qualifiedAndroidName: _androidWidgetQualifiedName,
+      );
+    } catch (error, stackTrace) {
+      // Widget sync must never crash user flows.
+      debugPrint('WidgetSyncService.sync failed: $error\n$stackTrace');
+    }
+  }
+
+  static Future<Map<String, dynamic>> _buildPayloadFromRef(Ref ref) async {
     await ref.read(seededDatabaseProvider.future);
     final db = ref.read(appDatabaseProvider);
+    return _buildPayloadCore(
+      db: db,
+      localeCode: ref.read(localeProvider).languageCode,
+      surahs: await ref.read(surahsAsyncProvider.future),
+    );
+  }
+
+  static Future<Map<String, dynamic>> _buildPayloadFromWidgetRef(
+    WidgetRef ref,
+  ) async {
+    await ref.read(seededDatabaseProvider.future);
+    final db = ref.read(appDatabaseProvider);
+    return _buildPayloadCore(
+      db: db,
+      localeCode: ref.read(localeProvider).languageCode,
+      surahs: await ref.read(surahsAsyncProvider.future),
+    );
+  }
+
+  static Future<Map<String, dynamic>> _buildPayloadCore({
+    required AppDatabase db,
+    required String localeCode,
+    required List<Surah> surahs,
+  }) async {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final tomorrow = today.add(const Duration(days: 1));
@@ -57,9 +105,8 @@ abstract final class WidgetSyncService {
 
     final tomorrowPlan = await db.loadPlan(tomorrow.year, tomorrow.month);
     final tomorrowDayPlan = tomorrowPlan?.planForDay(tomorrow.day);
-    final surahs = await ref.read(surahsAsyncProvider.future);
     final surahById = {for (final surah in surahs) surah.id: surah};
-    final locale = ref.read(localeProvider).languageCode;
+    final locale = localeCode;
     final prayerTimes = _prayerTimesMap(todayPrayerTimes);
 
     final resolved = _resolveCurrentAndNext(
