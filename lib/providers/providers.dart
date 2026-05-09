@@ -14,3 +14,4 @@ export 'pool/pool_mutations.dart';
 export 'prayer/prayer_times_provider.dart';
 export 'quran/quran_verse_provider.dart';
 export 'quran/surah_data_providers.dart';
+export 'widget/widget_sync_provider.dart';
