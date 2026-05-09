@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.view.View
 import android.widget.RemoteViews
@@ -19,6 +20,28 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+
+private val widgetCurrentTitleColor = Color.parseColor("#D4AF37")
+private val widgetCurrentTimeColor = Color.parseColor("#61FFFFFF")
+private val widgetCurrentRowColor = Color.parseColor("#E6FFFFFF")
+private val widgetNextTitleColor = Color.parseColor("#6BFFFFFF")
+private val widgetNextTimeColor = Color.parseColor("#42FFFFFF")
+private val widgetNextRowColor = Color.parseColor("#80FFFFFF")
+
+private val widgetCurrentRowIds =
+    intArrayOf(
+        R.id.widget_current_row_1,
+        R.id.widget_current_row_2,
+        R.id.widget_current_row_3,
+        R.id.widget_current_row_4,
+    )
+private val widgetNextRowIds =
+    intArrayOf(
+        R.id.widget_next_row_1,
+        R.id.widget_next_row_2,
+        R.id.widget_next_row_3,
+        R.id.widget_next_row_4,
+    )
 
 class SurahPlannerWidgetReceiver : AppWidgetProvider() {
     override fun onUpdate(
@@ -100,25 +123,19 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
         val now = LocalDateTime.now()
         val resolved =
             resolvePrayerSlotsFromDays(days, now, widgetStrings, localeTag) ?: return false
-        val current = resolved.first
-        val next = resolved.second
+        val current = resolved.current
+        val next = resolved.next
 
         views.setViewVisibility(R.id.widget_ready_container, View.VISIBLE)
         views.setViewVisibility(R.id.widget_empty_container, View.GONE)
 
-        val beforeFajr =
-            localizedUiString(
-                widgetStrings,
-                "widgetBeforeFajr",
-                context,
-                R.string.widget_before_fajr,
-            )
         bindSlot(
             views = views,
             isCurrent = true,
-            title = current?.title ?: beforeFajr,
-            trailing = current?.time ?: "",
-            rows = current?.rows ?: emptyList(),
+            title = current.title,
+            trailing = current.time,
+            rows = current.rows,
+            useMutedPalette = resolved.muteCurrentColumn,
         )
         bindSlot(
             views = views,
@@ -133,13 +150,17 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
     /**
      * Derives current/next from date-keyed [days] at [now]. Expects today and
      * (when needed) tomorrow entries under ISO date keys.
+     *
+     * When there is no active current prayer (before Fajr, or after sunrise until
+     * the next salat), the top slot still shows **Fajr** readings with the muted
+     * palette; only the Fajr–sunrise window uses the gold “current” styling.
      */
     private fun resolvePrayerSlotsFromDays(
         days: JSONObject,
         now: LocalDateTime,
         widgetStrings: JSONObject?,
         localeTag: String,
-    ): Pair<Slot?, Slot>? {
+    ): ResolvedWidgetSlots? {
         val today = now.toLocalDate()
         val todayIso = today.toString()
         val tomorrowIso = today.plusDays(1).toString()
@@ -200,11 +221,24 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
                 parsedToday[effectiveNextKey] ?: return null
             }
 
-        val currentSlot =
-            if (currentKey == null) {
-                null
-            } else {
-                val at = parsedToday[currentKey] ?: return null
+        val muteCurrentColumn: Boolean
+        val currentSlot: Slot
+        if (currentKey == null) {
+            muteCurrentColumn = true
+            val at = fajrAt
+            currentSlot =
+                buildLiveSlot(
+                    prayerKey = "fajr",
+                    at = at,
+                    rowsSource = slotsToday,
+                    isTomorrow = false,
+                    widgetStrings = widgetStrings,
+                    localeTag = localeTag,
+                )
+        } else {
+            muteCurrentColumn = false
+            val at = parsedToday[currentKey] ?: return null
+            currentSlot =
                 buildLiveSlot(
                     prayerKey = currentKey,
                     at = at,
@@ -213,7 +247,7 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
                     widgetStrings = widgetStrings,
                     localeTag = localeTag,
                 )
-            }
+        }
 
         val rowsSourceNext = if (nextIsTomorrow) slotsTomorrow else slotsToday
         val nextSlot =
@@ -226,7 +260,11 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
                 localeTag = localeTag,
             )
 
-        return currentSlot to nextSlot
+        return ResolvedWidgetSlots(
+            current = currentSlot,
+            next = nextSlot,
+            muteCurrentColumn = muteCurrentColumn,
+        )
     }
 
     private fun buildLiveSlot(
@@ -380,34 +418,45 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
         title: String,
         trailing: String,
         rows: List<String>,
+        useMutedPalette: Boolean = false,
     ) {
         if (isCurrent) {
             views.setTextViewText(R.id.widget_current_title, title)
             views.setTextViewText(R.id.widget_current_time, trailing)
             bindRows(views, true, rows)
+            applyCurrentColumnPalette(views, muted = useMutedPalette)
         } else {
             views.setTextViewText(R.id.widget_next_title, title)
             views.setTextViewText(R.id.widget_next_time, trailing)
             bindRows(views, false, rows)
+            applyNextColumnPalette(views)
+        }
+    }
+
+    private fun applyCurrentColumnPalette(views: RemoteViews, muted: Boolean) {
+        if (muted) {
+            views.setTextColor(R.id.widget_current_title, widgetNextTitleColor)
+            views.setTextColor(R.id.widget_current_time, widgetNextTimeColor)
+        } else {
+            views.setTextColor(R.id.widget_current_title, widgetCurrentTitleColor)
+            views.setTextColor(R.id.widget_current_time, widgetCurrentTimeColor)
+        }
+        val rowColor = if (muted) widgetNextRowColor else widgetCurrentRowColor
+        for (id in widgetCurrentRowIds) {
+            views.setTextColor(id, rowColor)
+        }
+    }
+
+    private fun applyNextColumnPalette(views: RemoteViews) {
+        views.setTextColor(R.id.widget_next_title, widgetNextTitleColor)
+        views.setTextColor(R.id.widget_next_time, widgetNextTimeColor)
+        for (id in widgetNextRowIds) {
+            views.setTextColor(id, widgetNextRowColor)
         }
     }
 
     private fun bindRows(views: RemoteViews, isCurrent: Boolean, rows: List<String>) {
-        val ids = if (isCurrent) {
-            intArrayOf(
-                R.id.widget_current_row_1,
-                R.id.widget_current_row_2,
-                R.id.widget_current_row_3,
-                R.id.widget_current_row_4,
-            )
-        } else {
-            intArrayOf(
-                R.id.widget_next_row_1,
-                R.id.widget_next_row_2,
-                R.id.widget_next_row_3,
-                R.id.widget_next_row_4,
-            )
-        }
+        val ids = if (isCurrent) widgetCurrentRowIds else widgetNextRowIds
         for (i in ids.indices) {
             val text = rows.getOrNull(i) ?: ""
             views.setTextViewText(ids[i], text)
@@ -519,4 +568,10 @@ data class Slot(
     val title: String,
     val time: String,
     val rows: List<String>,
+)
+
+private data class ResolvedWidgetSlots(
+    val current: Slot,
+    val next: Slot,
+    val muteCurrentColumn: Boolean,
 )

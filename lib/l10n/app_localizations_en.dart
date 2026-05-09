@@ -497,7 +497,4 @@ class SEn extends S {
 
   @override
   String get widgetTomorrowMarker => 'TOMORROW';
-
-  @override
-  String get widgetBeforeFajr => 'BEFORE FAJR';
 }

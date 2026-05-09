@@ -882,12 +882,6 @@ abstract class S {
   /// In en, this message translates to:
   /// **'TOMORROW'**
   String get widgetTomorrowMarker;
-
-  /// No description provided for @widgetBeforeFajr.
-  ///
-  /// In en, this message translates to:
-  /// **'BEFORE FAJR'**
-  String get widgetBeforeFajr;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

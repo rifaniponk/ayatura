@@ -130,6 +130,5 @@
   "widgetEmptyPlanExpiredSubtitle": "Buka aplikasi untuk membuat ulang",
   "widgetEmptyStaleTitle": "Data widget perlu diperbarui",
   "widgetEmptyStaleSubtitle": "Buka aplikasi untuk menyegarkan widget",
-  "widgetTomorrowMarker": "BESOK",
-  "widgetBeforeFajr": "SEBELUM SUBUH"
+  "widgetTomorrowMarker": "BESOK"
 }

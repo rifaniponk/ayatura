@@ -180,7 +180,6 @@ Map<String, dynamic> _widgetUiStrings(S l10n) {
     'widgetEmptyStaleTitle': l10n.widgetEmptyStaleTitle,
     'widgetEmptyStaleSubtitle': l10n.widgetEmptyStaleSubtitle,
     'widgetTomorrowMarker': l10n.widgetTomorrowMarker,
-    'widgetBeforeFajr': l10n.widgetBeforeFajr,
     'prayerLabels': {
       for (final p in Prayer.values) p.name: _prayerDisplayLabel(l10n, p),
     },

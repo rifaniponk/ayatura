@@ -500,7 +500,4 @@ class SId extends S {
 
   @override
   String get widgetTomorrowMarker => 'BESOK';
-
-  @override
-  String get widgetBeforeFajr => 'SEBELUM SUBUH';
 }

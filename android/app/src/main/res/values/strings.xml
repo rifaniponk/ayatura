@@ -7,5 +7,4 @@
     <string name="widget_empty_plan_expired_subtitle">Open the app to regenerate</string>
     <string name="widget_empty_stale_title">Widget data outdated</string>
     <string name="widget_empty_stale_subtitle">Open the app to refresh the widget</string>
-    <string name="widget_before_fajr">BEFORE FAJR</string>
 </resources>

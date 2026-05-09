@@ -347,6 +347,5 @@
   "widgetEmptyPlanExpiredSubtitle": "Open the app to regenerate",
   "widgetEmptyStaleTitle": "Widget data outdated",
   "widgetEmptyStaleSubtitle": "Open the app to refresh the widget",
-  "widgetTomorrowMarker": "TOMORROW",
-  "widgetBeforeFajr": "BEFORE FAJR"
+  "widgetTomorrowMarker": "TOMORROW"
 }

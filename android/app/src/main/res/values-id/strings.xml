@@ -7,5 +7,4 @@
     <string name="widget_empty_plan_expired_subtitle">Buka aplikasi untuk membuat ulang</string>
     <string name="widget_empty_stale_title">Data widget perlu diperbarui</string>
     <string name="widget_empty_stale_subtitle">Buka aplikasi untuk menyegarkan widget</string>
-    <string name="widget_before_fajr">SEBELUM SUBUH</string>
 </resources>
