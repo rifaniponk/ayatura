@@ -834,6 +834,60 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Dismiss'**
   String get dismissTooltip;
+
+  /// No description provided for @widgetDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Surah Planner prayer widget'**
+  String get widgetDescription;
+
+  /// No description provided for @widgetEmptyNoPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No plan generated yet'**
+  String get widgetEmptyNoPlanTitle;
+
+  /// No description provided for @widgetEmptyNoPlanSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the app to get started'**
+  String get widgetEmptyNoPlanSubtitle;
+
+  /// No description provided for @widgetEmptyPlanExpiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan expired'**
+  String get widgetEmptyPlanExpiredTitle;
+
+  /// No description provided for @widgetEmptyPlanExpiredSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the app to regenerate'**
+  String get widgetEmptyPlanExpiredSubtitle;
+
+  /// No description provided for @widgetEmptyStaleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Widget data outdated'**
+  String get widgetEmptyStaleTitle;
+
+  /// No description provided for @widgetEmptyStaleSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the app to refresh the widget'**
+  String get widgetEmptyStaleSubtitle;
+
+  /// No description provided for @widgetTomorrowMarker.
+  ///
+  /// In en, this message translates to:
+  /// **'TOMORROW'**
+  String get widgetTomorrowMarker;
+
+  /// No description provided for @widgetBeforeFajr.
+  ///
+  /// In en, this message translates to:
+  /// **'BEFORE FAJR'**
+  String get widgetBeforeFajr;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

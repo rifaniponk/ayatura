@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../providers/core/database_provider.dart';
 import '../../providers/core/locale_provider.dart';
 import '../../providers/quran/surah_data_providers.dart';
@@ -90,13 +91,20 @@ abstract final class WidgetSyncService {
   }) async {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
+    final l10n = lookupS(Locale(localeCode));
+    final stringsPayload = _widgetUiStrings(l10n);
     final todayPlan = await db.loadPlan(today.year, today.month);
     final todayDayPlan = todayPlan?.planForDay(today.day);
 
     if (todayPlan == null || todayDayPlan == null) {
       final latest = await db.loadLatestPlan();
       final status = latest == null ? 'no_plan' : 'plan_expired';
-      return {'generatedAt': now.toIso8601String(), 'status': status};
+      return {
+        'generatedAt': now.toIso8601String(),
+        'status': status,
+        'locale': localeCode,
+        'strings': stringsPayload,
+      };
     }
 
     final windowDates = List<DateTime>.generate(
@@ -156,8 +164,41 @@ abstract final class WidgetSyncService {
     return {
       'generatedAt': now.toIso8601String(),
       'status': 'ready',
+      'locale': localeCode,
+      'strings': stringsPayload,
       'days': days,
     };
+  }
+}
+
+Map<String, dynamic> _widgetUiStrings(S l10n) {
+  return {
+    'widgetEmptyNoPlanTitle': l10n.widgetEmptyNoPlanTitle,
+    'widgetEmptyNoPlanSubtitle': l10n.widgetEmptyNoPlanSubtitle,
+    'widgetEmptyPlanExpiredTitle': l10n.widgetEmptyPlanExpiredTitle,
+    'widgetEmptyPlanExpiredSubtitle': l10n.widgetEmptyPlanExpiredSubtitle,
+    'widgetEmptyStaleTitle': l10n.widgetEmptyStaleTitle,
+    'widgetEmptyStaleSubtitle': l10n.widgetEmptyStaleSubtitle,
+    'widgetTomorrowMarker': l10n.widgetTomorrowMarker,
+    'widgetBeforeFajr': l10n.widgetBeforeFajr,
+    'prayerLabels': {
+      for (final p in Prayer.values) p.name: _prayerDisplayLabel(l10n, p),
+    },
+  };
+}
+
+String _prayerDisplayLabel(S l10n, Prayer prayer) {
+  switch (prayer) {
+    case Prayer.fajr:
+      return l10n.prayerFajr;
+    case Prayer.dhuhr:
+      return l10n.prayerDhuhr;
+    case Prayer.asr:
+      return l10n.prayerAsr;
+    case Prayer.maghrib:
+      return l10n.prayerMaghrib;
+    case Prayer.isha:
+      return l10n.prayerIsha;
   }
 }
 

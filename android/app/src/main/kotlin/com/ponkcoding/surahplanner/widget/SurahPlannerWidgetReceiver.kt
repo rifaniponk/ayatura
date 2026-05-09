@@ -58,25 +58,27 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
         val views = RemoteViews(context.packageName, layoutId)
         val payload = readPayload(context)
         val status = payload?.optString("status") ?: "no_plan"
+        val widgetStrings = payload?.optJSONObject("strings")
 
         if (status != "ready" || payload == null) {
-            bindEmptyState(context, views, status)
+            bindEmptyState(context, views, status, widgetStrings)
             setTapOpenApp(context, views)
             manager.updateAppWidget(appWidgetId, views)
             return
         }
 
+        val localeTag = payload.optString("locale", "en")
         val todayIso = LocalDate.now().toString()
         val days = payload.optJSONObject("days")
         if (days == null || !days.has(todayIso)) {
-            bindEmptyState(context, views, STATUS_WIDGET_STALE)
+            bindEmptyState(context, views, STATUS_WIDGET_STALE, widgetStrings)
             setTapOpenApp(context, views)
             manager.updateAppWidget(appWidgetId, views)
             return
         }
 
-        if (!bindReadyState(views, days)) {
-            bindEmptyState(context, views, STATUS_WIDGET_STALE)
+        if (!bindReadyState(context, views, days, widgetStrings, localeTag)) {
+            bindEmptyState(context, views, STATUS_WIDGET_STALE, widgetStrings)
             setTapOpenApp(context, views)
             manager.updateAppWidget(appWidgetId, views)
             return
@@ -88,19 +90,33 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
     }
 
     /** @return false if prayer/slot data for today is unusable */
-    private fun bindReadyState(views: RemoteViews, days: JSONObject): Boolean {
+    private fun bindReadyState(
+        context: Context,
+        views: RemoteViews,
+        days: JSONObject,
+        widgetStrings: JSONObject?,
+        localeTag: String,
+    ): Boolean {
         val now = LocalDateTime.now()
-        val resolved = resolvePrayerSlotsFromDays(days, now) ?: return false
+        val resolved =
+            resolvePrayerSlotsFromDays(days, now, widgetStrings, localeTag) ?: return false
         val current = resolved.first
         val next = resolved.second
 
         views.setViewVisibility(R.id.widget_ready_container, View.VISIBLE)
         views.setViewVisibility(R.id.widget_empty_container, View.GONE)
 
+        val beforeFajr =
+            localizedUiString(
+                widgetStrings,
+                "widgetBeforeFajr",
+                context,
+                R.string.widget_before_fajr,
+            )
         bindSlot(
             views = views,
             isCurrent = true,
-            title = current?.title ?: "BEFORE FAJR",
+            title = current?.title ?: beforeFajr,
             trailing = current?.time ?: "",
             rows = current?.rows ?: emptyList(),
         )
@@ -121,6 +137,8 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
     private fun resolvePrayerSlotsFromDays(
         days: JSONObject,
         now: LocalDateTime,
+        widgetStrings: JSONObject?,
+        localeTag: String,
     ): Pair<Slot?, Slot>? {
         val today = now.toLocalDate()
         val todayIso = today.toString()
@@ -192,6 +210,8 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
                     at = at,
                     rowsSource = slotsToday,
                     isTomorrow = false,
+                    widgetStrings = widgetStrings,
+                    localeTag = localeTag,
                 )
             }
 
@@ -202,6 +222,8 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
                 at = nextAt,
                 rowsSource = rowsSourceNext,
                 isTomorrow = nextIsTomorrow,
+                widgetStrings = widgetStrings,
+                localeTag = localeTag,
             )
 
         return currentSlot to nextSlot
@@ -212,10 +234,21 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
         at: LocalDateTime,
         rowsSource: JSONObject,
         isTomorrow: Boolean,
+        widgetStrings: JSONObject?,
+        localeTag: String,
     ): Slot {
-        val label = PRAYER_LABELS[prayerKey] ?: prayerKey
-        val titleBase = label.uppercase(Locale.US)
-        val title = if (isTomorrow) "$titleBase · TOMORROW" else titleBase
+        val label = prayerDisplayLabel(widgetStrings, prayerKey)
+        val locale = titleCaseLocale(localeTag)
+        val titleBase = label.uppercase(locale)
+        val tomorrowMarker =
+            widgetStrings?.optString("widgetTomorrowMarker")?.trim().orEmpty()
+                .ifEmpty { "TOMORROW" }
+        val title =
+            if (isTomorrow) {
+                "$titleBase · $tomorrowMarker"
+            } else {
+                titleBase
+            }
         val timeStr = HH_MM.format(at.toLocalTime())
         val rows = rowsForPrayer(rowsSource, prayerKey)
         return Slot(title = title, time = timeStr, rows = rows)
@@ -235,40 +268,109 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
         return rows
     }
 
-    private fun bindEmptyState(context: Context, views: RemoteViews, status: String) {
+    private fun bindEmptyState(
+        context: Context,
+        views: RemoteViews,
+        status: String,
+        widgetStrings: JSONObject?,
+    ) {
         views.setViewVisibility(R.id.widget_ready_container, View.GONE)
         views.setViewVisibility(R.id.widget_empty_container, View.VISIBLE)
         when (status) {
             "plan_expired" -> {
                 views.setTextViewText(
                     R.id.widget_empty_title,
-                    context.getString(R.string.widget_empty_plan_expired_title),
+                    localizedUiString(
+                        widgetStrings,
+                        "widgetEmptyPlanExpiredTitle",
+                        context,
+                        R.string.widget_empty_plan_expired_title,
+                    ),
                 )
                 views.setTextViewText(
                     R.id.widget_empty_subtitle,
-                    context.getString(R.string.widget_empty_plan_expired_subtitle),
+                    localizedUiString(
+                        widgetStrings,
+                        "widgetEmptyPlanExpiredSubtitle",
+                        context,
+                        R.string.widget_empty_plan_expired_subtitle,
+                    ),
                 )
             }
             STATUS_WIDGET_STALE -> {
                 views.setTextViewText(
                     R.id.widget_empty_title,
-                    context.getString(R.string.widget_empty_stale_title),
+                    localizedUiString(
+                        widgetStrings,
+                        "widgetEmptyStaleTitle",
+                        context,
+                        R.string.widget_empty_stale_title,
+                    ),
                 )
                 views.setTextViewText(
                     R.id.widget_empty_subtitle,
-                    context.getString(R.string.widget_empty_stale_subtitle),
+                    localizedUiString(
+                        widgetStrings,
+                        "widgetEmptyStaleSubtitle",
+                        context,
+                        R.string.widget_empty_stale_subtitle,
+                    ),
                 )
             }
             else -> {
                 views.setTextViewText(
                     R.id.widget_empty_title,
-                    context.getString(R.string.widget_empty_no_plan_title),
+                    localizedUiString(
+                        widgetStrings,
+                        "widgetEmptyNoPlanTitle",
+                        context,
+                        R.string.widget_empty_no_plan_title,
+                    ),
                 )
                 views.setTextViewText(
                     R.id.widget_empty_subtitle,
-                    context.getString(R.string.widget_empty_no_plan_subtitle),
+                    localizedUiString(
+                        widgetStrings,
+                        "widgetEmptyNoPlanSubtitle",
+                        context,
+                        R.string.widget_empty_no_plan_subtitle,
+                    ),
                 )
             }
+        }
+    }
+
+    private fun localizedUiString(
+        strings: JSONObject?,
+        key: String,
+        context: Context,
+        fallbackResId: Int,
+    ): String {
+        val fromPayload = strings?.optString(key)?.trim().orEmpty()
+        return fromPayload.ifEmpty { context.getString(fallbackResId) }
+    }
+
+    private fun prayerDisplayLabel(strings: JSONObject?, prayerKey: String): String {
+        val labels = strings?.optJSONObject("prayerLabels") ?: return prayerKey.fallbackPrayerLabel()
+        val raw = labels.optString(prayerKey).trim()
+        return raw.ifEmpty { prayerKey.fallbackPrayerLabel() }
+    }
+
+    private fun String.fallbackPrayerLabel(): String =
+        replaceFirstChar { ch ->
+            if (ch.isLowerCase()) {
+                ch.titlecase(Locale.ENGLISH)
+            } else {
+                ch.toString()
+            }
+        }
+
+    private fun titleCaseLocale(localeTag: String): Locale {
+        val code =
+            localeTag.ifBlank { "en" }.substringBefore('-').lowercase(Locale.ENGLISH)
+        return when (code) {
+            "id" -> Locale.forLanguageTag("id-ID")
+            else -> Locale.forLanguageTag("en")
         }
     }
 
@@ -403,14 +505,6 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
 
         private val HH_MM: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
         private val PRAYER_ORDER = listOf("fajr", "dhuhr", "asr", "maghrib", "isha")
-        private val PRAYER_LABELS =
-            mapOf(
-                "fajr" to "Fajr",
-                "dhuhr" to "Dhuhr",
-                "asr" to "Asr",
-                "maghrib" to "Maghrib",
-                "isha" to "Isha",
-            )
 
         fun requestRefresh(context: Context) {
             val intent = Intent(context, SurahPlannerWidgetReceiver::class.java).apply {

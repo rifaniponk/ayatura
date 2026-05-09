@@ -339,5 +339,14 @@
   "dialogCancel": "Cancel",
   "dialogRemove": "Remove",
   "backTooltip": "Back",
-  "dismissTooltip": "Dismiss"
+  "dismissTooltip": "Dismiss",
+  "widgetDescription": "Surah Planner prayer widget",
+  "widgetEmptyNoPlanTitle": "No plan generated yet",
+  "widgetEmptyNoPlanSubtitle": "Open the app to get started",
+  "widgetEmptyPlanExpiredTitle": "Plan expired",
+  "widgetEmptyPlanExpiredSubtitle": "Open the app to regenerate",
+  "widgetEmptyStaleTitle": "Widget data outdated",
+  "widgetEmptyStaleSubtitle": "Open the app to refresh the widget",
+  "widgetTomorrowMarker": "TOMORROW",
+  "widgetBeforeFajr": "BEFORE FAJR"
 }
