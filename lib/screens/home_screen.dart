@@ -20,6 +20,9 @@ import '../widgets/quran_reader/quran_reader_sheet.dart';
 import '../widgets/prayer/prayer_card.dart';
 
 part '../widgets/home/home_body.dart';
+part '../widgets/home/home_body_state.dart';
+part '../widgets/home/prayer_card_state.dart';
+part '../widgets/home/prayer_card_status.dart';
 part '../widgets/home/week_strip.dart';
 
 class HomeScreen extends ConsumerWidget {
