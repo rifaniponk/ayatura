@@ -108,7 +108,7 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
             views = views,
             isCurrent = false,
             title = next.title,
-            trailing = next.countdownText,
+            trailing = next.time,
             rows = next.rows,
         )
         return true
@@ -192,8 +192,6 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
                     at = at,
                     rowsSource = slotsToday,
                     isTomorrow = false,
-                    now = now,
-                    isCurrent = true,
                 )
             }
 
@@ -204,8 +202,6 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
                 at = nextAt,
                 rowsSource = rowsSourceNext,
                 isTomorrow = nextIsTomorrow,
-                now = now,
-                isCurrent = false,
             )
 
         return currentSlot to nextSlot
@@ -216,22 +212,13 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
         at: LocalDateTime,
         rowsSource: JSONObject,
         isTomorrow: Boolean,
-        now: LocalDateTime,
-        isCurrent: Boolean,
     ): Slot {
         val label = PRAYER_LABELS[prayerKey] ?: prayerKey
         val titleBase = label.uppercase(Locale.US)
         val title = if (isTomorrow) "$titleBase · TOMORROW" else titleBase
         val timeStr = HH_MM.format(at.toLocalTime())
         val rows = rowsForPrayer(rowsSource, prayerKey)
-        val countdownText =
-            if (isCurrent) {
-                timeStr
-            } else {
-                val mins = java.time.Duration.between(now, at).toMinutes().toInt()
-                if (mins > 0) formatCountdown(mins) else timeStr
-            }
-        return Slot(title = title, time = timeStr, countdownText = countdownText, rows = rows)
+        return Slot(title = title, time = timeStr, rows = rows)
     }
 
     private fun rowsForPrayer(rowsSource: JSONObject, prayerKey: String): List<String> {
@@ -431,18 +418,11 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
             }
             context.sendBroadcast(intent)
         }
-
-        private fun formatCountdown(totalMinutes: Int): String {
-            val hours = totalMinutes / 60
-            val minutes = totalMinutes % 60
-            return if (hours > 0) "in ${hours}h${minutes}m" else "in ${minutes}m"
-        }
     }
 }
 
 data class Slot(
     val title: String,
     val time: String,
-    val countdownText: String,
     val rows: List<String>,
 )
