@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="◐  Surah Planner"
             android:textColor="#7AFFFFFF"
-            android:textSize="9sp" />
+            android:textSize="11sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                 android:text="DHUHR"
                 android:textAllCaps="true"
                 android:textColor="#D4AF37"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:text="12:00"
                 android:textColor="#61FFFFFF"
-                android:textSize="8sp" />
+                android:textSize="10sp" />
         </LinearLayout>
 
         <TextView
@@ -56,28 +56,28 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:textColor="#E6FFFFFF"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/widget_current_row_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#E6FFFFFF"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/widget_current_row_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#E6FFFFFF"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/widget_current_row_4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#E6FFFFFF"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <ImageView
             android:layout_width="match_parent"
@@ -100,7 +100,7 @@
                 android:text="ASR"
                 android:textAllCaps="true"
                 android:textColor="#6BFFFFFF"
-                android:textSize="9sp"
+                android:textSize="11sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:text="in 2h30"
                 android:textColor="#42FFFFFF"
-                android:textSize="8sp" />
+                android:textSize="10sp" />
         </LinearLayout>
 
         <TextView
@@ -118,28 +118,28 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:textColor="#80FFFFFF"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/widget_next_row_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#80FFFFFF"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/widget_next_row_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#80FFFFFF"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/widget_next_row_4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#80FFFFFF"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -155,14 +155,14 @@
             android:layout_height="wrap_content"
             android:text="◐"
             android:textColor="#29FFFFFF"
-            android:textSize="48sp" />
+            android:textSize="52sp" />
 
         <TextView
             android:id="@+id/widget_empty_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#D9FFFFFF"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -170,6 +170,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#8CFFFFFF"
-            android:textSize="11sp" />
+            android:textSize="13sp" />
     </LinearLayout>
 </FrameLayout>
