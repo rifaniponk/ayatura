@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ayatura — Daily Surah Planner</title>
+    <meta
+      name="description"
+      content="A planner for Muslims memorizing the Quran. Spread your daily Surah recitation across every prayer. Coming soon on Android & iOS."
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Ayatura — Daily Surah Planner" />
+    <meta
+      property="og:description"
+      content="A planner for Muslims memorizing the Quran. Coming soon on Android & iOS."
+    />
+    <meta property="og:type" content="website" />
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --green: #0f3d2e;
+        --green2: #1f7a6b;
+        --green-dark: #071d13;
+        --gold: #d4af37;
+        --gold-dim: rgba(212, 175, 55, 0.15);
+        --white: #ffffff;
+        --text: rgba(255, 255, 255, 0.92);
+        --text-muted: rgba(255, 255, 255, 0.5);
+        --surface: rgba(255, 255, 255, 0.06);
+        --border: rgba(255, 255, 255, 0.1);
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        background-color: var(--green-dark);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1.25rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* ── Background ── */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse 80% 60% at 50% -10%,
+            rgba(31, 122, 107, 0.35) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            ellipse 60% 40% at 80% 100%,
+            rgba(15, 61, 46, 0.4) 0%,
+            transparent 70%
+          );
+        pointer-events: none;
+      }
+
+      .arabic-bg {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(280px, 40vw, 520px);
+        line-height: 1;
+        color: rgba(212, 175, 55, 0.04);
+        pointer-events: none;
+        user-select: none;
+        font-family: "Amiri", "Traditional Arabic", serif;
+      }
+
+      /* ── Layout ── */
+      main {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 560px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2.5rem;
+        text-align: center;
+      }
+
+      /* ── Brand ── */
+      .brand {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .brand-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.3rem 0.85rem;
+        border-radius: 100px;
+        background: var(--gold-dim);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+
+      .brand-pill::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--gold);
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.4;
+          transform: scale(0.7);
+        }
+      }
+
+      .brand-name {
+        font-size: clamp(2.6rem, 8vw, 3.75rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        background: linear-gradient(
+          135deg,
+          #ffffff 0%,
+          rgba(255, 255, 255, 0.75) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1.1;
+      }
+
+      .brand-sub {
+        font-size: 0.9rem;
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      /* ── Hero ── */
+      .hero h1 {
+        font-size: clamp(1.15rem, 3.5vw, 1.4rem);
+        font-weight: 400;
+        line-height: 1.65;
+        color: var(--text-muted);
+        max-width: 420px;
+      }
+
+      .hero h1 strong {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      /* ── Form ── */
+      .notify-section {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .notify-label {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .form-row {
+        display: flex;
+        width: 100%;
+        gap: 0.5rem;
+      }
+
+      .form-row input[type="email"] {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s;
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+      }
+
+      .form-row input[type="email"]::placeholder {
+        color: var(--text-muted);
+      }
+      .form-row input[type="email"]:focus {
+        border-color: rgba(212, 175, 55, 0.5);
+      }
+
+      .form-row button {
+        padding: 0.75rem 1.25rem;
+        border-radius: 10px;
+        border: none;
+        background: linear-gradient(
+          135deg,
+          var(--green2) 0%,
+          var(--green) 100%
+        );
+        color: var(--white);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+          opacity 0.2s,
+          transform 0.1s;
+      }
+
+      .form-row button:hover {
+        opacity: 0.88;
+      }
+      .form-row button:active {
+        transform: scale(0.97);
+      }
+
+      .success-msg {
+        display: none;
+        font-size: 0.85rem;
+        color: var(--gold);
+      }
+
+      /* ── Divider ── */
+      .divider {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      .divider span {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        letter-spacing: 0.05em;
+      }
+
+      /* ── Store badges ── */
+      .store-badges {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .store-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.6rem 1rem;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        opacity: 0.5;
+        cursor: default;
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+      }
+
+      .store-badge svg {
+        width: 20px;
+        height: 20px;
+        fill: var(--text);
+      }
+
+      .store-badge-text {
+        text-align: left;
+      }
+
+      .store-badge-label {
+        display: block;
+        font-size: 0.6rem;
+        color: var(--text-muted);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .store-badge-name {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      /* ── Footer ── */
+      footer {
+        position: relative;
+        z-index: 1;
+        margin-top: 3rem;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-align: center;
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 400px) {
+        .form-row {
+          flex-direction: column;
+        }
+        .form-row button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="arabic-bg" aria-hidden="true">آية</div>
+
+    <main>
+      <div class="brand">
+        <span class="brand-pill">Coming Soon</span>
+        <h1 class="brand-name">Ayatura</h1>
+        <p class="brand-sub">Daily Surah Planner</p>
+      </div>
+
+      <div class="hero">
+        <h1>
+          A planner for Muslims <strong>memorizing the Quran.</strong>
+          Add your Surahs, get a daily plan spread across every prayer. Fajr,
+          Dhuhr, Asr, Maghrib, Isha.
+        </h1>
+      </div>
+
+      <div class="notify-section">
+        <p class="notify-label">Be the first to know when we launch.</p>
+        <form
+          class="form-row"
+          name="notify"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          onsubmit="handleSubmit(event)"
+        >
+          <input type="hidden" name="form-name" value="notify" />
+          <input type="hidden" name="bot-field" />
+          <input
+            type="email"
+            name="email"
+            placeholder="your@email.com"
+            required
+            autocomplete="email"
+          />
+          <button type="submit">Notify me</button>
+        </form>
+        <p class="success-msg" id="success">
+          You're on the list. We'll let you know when Ayatura launches. ✦
+        </p>
+      </div>
+
+      <div class="divider"><span>Available soon on</span></div>
+
+      <div class="store-badges">
+        <div class="store-badge" aria-label="App Store — Coming Soon">
+          <!-- Apple logo -->
+          <svg
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"
+            />
+          </svg>
+          <div class="store-badge-text">
+            <span class="store-badge-label">Coming soon on</span>
+            <span class="store-badge-name">App Store</span>
+          </div>
+        </div>
+
+        <div class="store-badge" aria-label="Google Play — Coming Soon">
+          <!-- Google Play logo -->
+          <svg
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M3 20.5v-17c0-.83.94-1.3 1.6-.8l14 8.5c.6.37.6 1.23 0 1.6l-14 8.5c-.66.5-1.6.03-1.6-.8zM5 6.77v10.46l7.14-5.23L5 6.77z"
+            />
+            <path
+              d="M5 6.77l7.14 5.23 2.04-1.5-7.54-4.58A1 1 0 005 6.77zM5 17.23l7.14-5.23 2.04 1.5-7.54 4.58A1 1 0 015 17.23zM14.18 12l3.47-2.55c.45-.33.45-.97 0-1.3L14.18 6.6l-2.04 1.5L14.53 12l-2.39 1.9 2.04 1.5z"
+            />
+          </svg>
+          <div class="store-badge-text">
+            <span class="store-badge-label">Coming soon on</span>
+            <span class="store-badge-name">Google Play</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>© 2026 Ayatura. Made with care for the Muslim community.</p>
+    </footer>
+
+    <script>
+      function handleSubmit(e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = new FormData(form);
+        fetch("/", { method: "POST", body: data })
+          .then(() => {
+            form.style.display = "none";
+            document.querySelector(".notify-label").style.display = "none";
+            document.getElementById("success").style.display = "block";
+          })
+          .catch(() => form.submit());
+      }
+    </script>
+  </body>
+</html>
