@@ -372,9 +372,14 @@
     function handleSubmit(e) {
       e.preventDefault();
       const form = e.target;
-      const data = new FormData(form);
-      fetch('/', { method: 'POST', body: data })
-        .then(() => {
+      const body = new URLSearchParams(new FormData(form)).toString();
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body,
+      })
+        .then(res => {
+          if (!res.ok) throw new Error(res.status);
           form.style.display = 'none';
           document.querySelector('.notify-label').style.display = 'none';
           document.getElementById('success').style.display = 'block';
