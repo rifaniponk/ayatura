@@ -27,7 +27,7 @@ class PrayerTimesSyncService {
   final AppDatabase _db;
   final http.Client _client;
 
-  static const _ipApiUrl = 'http://ip-api.com/json/';
+  static const _ipInfoUrl = 'https://ipinfo.io/json';
   static const _aladhanHost = 'api.aladhan.com';
   static const _aladhanMethod = '20';
 
@@ -122,12 +122,15 @@ class PrayerTimesSyncService {
     }
 
     try {
-      final response = await _client.get(Uri.parse(_ipApiUrl));
+      final response = await _client.get(Uri.parse(_ipInfoUrl));
       if (response.statusCode != 200) return null;
       final body = jsonDecode(response.body) as Map<String, dynamic>;
-      if ((body['status'] as String?) != 'success') return null;
-      final latitude = (body['lat'] as num?)?.toDouble();
-      final longitude = (body['lon'] as num?)?.toDouble();
+      final loc = (body['loc'] as String?)?.trim();
+      if (loc == null || loc.isEmpty) return null;
+      final parts = loc.split(',');
+      if (parts.length != 2) return null;
+      final latitude = double.tryParse(parts[0].trim());
+      final longitude = double.tryParse(parts[1].trim());
       if (latitude == null || longitude == null) return null;
       final city = (body['city'] as String?)?.trim();
       return _ResolvedLocation(
