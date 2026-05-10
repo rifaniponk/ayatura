@@ -367,6 +367,32 @@
         </h1>
       </div>
 
+      <div class="notify-section">
+        <p class="notify-label">Be the first to know when we launch.</p>
+        <form
+          class="form-row"
+          name="notify"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          onsubmit="handleSubmit(event)"
+        >
+          <input type="hidden" name="form-name" value="notify" />
+          <input type="hidden" name="bot-field" />
+          <input
+            type="email"
+            name="email"
+            placeholder="your@email.com"
+            required
+            autocomplete="email"
+          />
+          <button type="submit">Notify me</button>
+        </form>
+        <p class="success-msg" id="success">
+          You're on the list. We'll let you know when Ayatura launches. ✦
+        </p>
+      </div>
+
       <div class="divider"><span>Available soon on</span></div>
 
       <div class="store-badges">
