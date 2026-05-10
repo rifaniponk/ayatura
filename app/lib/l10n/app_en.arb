@@ -1,6 +1,7 @@
 {
   "@@locale": "en",
   "appTitle": "Ayatura",
+  "brandLogoLabel": "Ayatura logo",
   "navHome": "Home",
   "navMonth": "Month",
   "navHifdh": "Hifdh",

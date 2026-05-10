@@ -6,6 +6,8 @@ import '../l10n/app_localizations.dart';
 import '../providers/core/locale_provider.dart';
 import '../providers/core/package_info_provider.dart';
 import '../providers/core/settings_provider.dart';
+import '../widgets/branding/ayatura_logo.dart';
+import '../widgets/branding/ayatura_logo_variant.dart';
 import '../widgets/common/app_dropdown_button.dart';
 
 /// Preferences and data actions — placeholders until wired to persistence.
@@ -128,7 +130,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               const SizedBox(height: 28),
               Text(s.settingsAbout, style: AppTextStyles.sectionHeadingSerif),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
+              Center(
+                child: AyaturaLogo(
+                  variant: AyaturaLogoVariant.fullColor,
+                  height: 88,
+                  semanticLabel: s.brandLogoLabel,
+                ),
+              ),
+              const SizedBox(height: 16),
               Text(
                 s.settingsAboutBody,
                 style: AppTextStyles.body.copyWith(

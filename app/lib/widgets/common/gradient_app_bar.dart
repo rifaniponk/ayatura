@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../branding/ayatura_logo.dart';
+import '../branding/ayatura_logo_variant.dart';
 
 part 'app_back_button.dart';
 
-/// Gradient header with optional crescent logo + subtitle.
+/// Gradient header with optional Ayatura logo + subtitle.
 class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
   const GradientAppBar({
     super.key,
@@ -56,14 +57,11 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
                   const SizedBox(width: 12),
                 ],
                 if (showLogo && onBack == null) ...[
-                  SvgPicture.asset(
-                    'assets/svg/crescent_mark.svg',
-                    width: 34,
+                  AyaturaLogo(
+                    variant: AyaturaLogoVariant.outlineOnDarkBackground,
                     height: 34,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.gold,
-                      BlendMode.srcIn,
-                    ),
+                    width: 34,
+                    semanticLabel: S.of(context)!.brandLogoLabel,
                   ),
                   const SizedBox(width: 10),
                 ],

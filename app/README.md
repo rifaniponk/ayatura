@@ -54,6 +54,27 @@ flutter build ios -t lib/main_prod.dart     # iOS (macOS only, prod)
 flutter build macos -t lib/main_prod.dart   # macOS desktop (prod)
 ```
 
+### App icon and splash
+
+When you change `assets/images/app_icon.png`, regenerate the splash asset (run from this `app/` directory):
+
+```bash
+# Android launch screen logo (referenced from launch_background.xml)
+sips -z 512 512 assets/images/app_icon.png --out android/app/src/main/res/drawable/ic_splash_logo.png
+
+# iOS Launch Screen (LaunchImage.imageset)
+LAUNCH=ios/Runner/Assets.xcassets/LaunchImage.imageset
+sips -z 168 168 assets/images/app_icon.png --out "$LAUNCH/LaunchImage.png"
+sips -z 336 336 assets/images/app_icon.png --out "$LAUNCH/LaunchImage@2x.png"
+sips -z 504 504 assets/images/app_icon.png --out "$LAUNCH/LaunchImage@3x.png"
+```
+
+Regenerate **launcher icons** (home screen / adaptive icons) with:
+
+```bash
+dart run flutter_launcher_icons
+```
+
 ---
 
 ## Project structure

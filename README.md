@@ -6,7 +6,7 @@ A planner for Muslims who are memorizing (hifdh) the Quran.
 
 | Directory | Description |
 |---|---|
-| [`app/`](app/) | Flutter mobile app (Android & iOS) |
+| [`app/`](app/) | Flutter mobile app (Android & iOS). Updating `app_icon.png` — see [App icon and splash](app/README.md#app-icon-and-splash) in `app/README.md`. |
 | [`landing/`](landing/) | Landing page (web) |
 
 ## Contributing

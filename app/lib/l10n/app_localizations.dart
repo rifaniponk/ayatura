@@ -103,6 +103,12 @@ abstract class S {
   /// **'Ayatura'**
   String get appTitle;
 
+  /// No description provided for @brandLogoLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ayatura logo'**
+  String get brandLogoLabel;
+
   /// No description provided for @navHome.
   ///
   /// In en, this message translates to:
