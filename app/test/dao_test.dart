@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:surah_planner/data/local/app_database.dart';
-import 'package:surah_planner/data/models/surah.dart';
+import 'package:ayatura/data/local/app_database.dart';
+import 'package:ayatura/data/models/surah.dart';
 
 Surah _surah(int id) => Surah(
   id: id,

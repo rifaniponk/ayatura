@@ -1,4 +1,4 @@
-package com.ponkcoding.surahplanner.widget
+package com.ayatura.app.widget
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -11,7 +11,7 @@ import android.graphics.Color
 import android.os.Build
 import android.view.View
 import android.widget.RemoteViews
-import com.ponkcoding.surahplanner.R
+import com.ayatura.app.R
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.LocalDate
@@ -547,7 +547,7 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
     }
 
     companion object {
-        const val ACTION_REFRESH = "com.ponkcoding.surahplanner.widget.ACTION_REFRESH"
+        const val ACTION_REFRESH = "com.ayatura.app.widget.ACTION_REFRESH"
 
         /** Internal empty-state bucket for outdated / missing window coverage */
         private const val STATUS_WIDGET_STALE = "widget_stale"

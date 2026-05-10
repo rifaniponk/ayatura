@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 
-/// Applies [ThemeData.inputDecorationTheme] and Surah Planner label, hint, and
+/// Applies [ThemeData.inputDecorationTheme] and Ayatura label, hint, and
 /// helper typography. Use with [AppTextFormField] or pass to fields that take
 /// an [InputDecoration] (e.g. [DropdownButtonFormField]).
 InputDecoration mergeAppInputDecoration(
@@ -52,7 +52,7 @@ InputDecoration mergeAppInputDecoration(
   );
 }
 
-/// Surah Planner text field: theme borders (14px outline), DM Sans body,
+/// Ayatura text field: theme borders (14px outline), DM Sans body,
 /// [AppColors.green2] caret, and card-style label colours for rest / focus / error.
 class AppTextFormField extends StatelessWidget {
   const AppTextFormField({

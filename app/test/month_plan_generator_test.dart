@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:surah_planner/data/models/plan.dart';
-import 'package:surah_planner/data/models/plan_surah.dart';
-import 'package:surah_planner/data/models/prayer.dart';
-import 'package:surah_planner/data/models/surah_pool_entry.dart';
-import 'package:surah_planner/data/services/month_plan_generator.dart';
+import 'package:ayatura/data/models/plan.dart';
+import 'package:ayatura/data/models/plan_surah.dart';
+import 'package:ayatura/data/models/prayer.dart';
+import 'package:ayatura/data/models/surah_pool_entry.dart';
+import 'package:ayatura/data/services/month_plan_generator.dart';
 
 SurahPoolEntry _entry(int id, int surahId) =>
     SurahPoolEntry(id: id, surahId: surahId, isFullSurah: true);

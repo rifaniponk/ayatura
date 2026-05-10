@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
-/// Centralised text style catalogue for Surah Planner.
+/// Centralised text style catalogue for Ayatura.
 ///
 /// Font families declared in pubspec.yaml under `flutter: fonts:`.
 /// Files live in `assets/fonts/` — see pubspec.yaml commented `fonts:` block.

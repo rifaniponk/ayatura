@@ -1,4 +1,4 @@
-package com.ponkcoding.surahplanner.widget
+package com.ayatura.app.widget
 
 import android.content.BroadcastReceiver
 import android.content.Context
