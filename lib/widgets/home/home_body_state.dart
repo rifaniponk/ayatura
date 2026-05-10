@@ -243,134 +243,150 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
       }
     });
 
-    return RefreshIndicator(
-      onRefresh: _forceRefreshPrayerTimes,
-      child: ListView(
-        controller: _listController,
-        padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
-        children: [
-          if (effective != null) ...[
-            _WeekStrip(
-              controller: _weekStripController,
-              year: effective.year,
-              month: effective.month,
-              selectedDay: resolvedDay,
-              daysInMonth: daysInMonth,
-              today: now,
-              availableDays: availableDays,
-              onChanged: (d) =>
-                  ref.read(selectedPlanDayProvider.notifier).setDay(d),
-            ),
-            const SizedBox(height: 14),
-            if (isSelectedToday)
-              Text(
-                S.of(context)!.monthTodayChip,
-                style: AppTextStyles.sectionEyebrow.copyWith(
-                  color: AppColors.ink3,
-                  letterSpacing: 1.5,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const listPadding = EdgeInsets.fromLTRB(16, 14, 16, 18);
+        final emptyStateHeight = constraints.maxHeight > listPadding.vertical
+            ? constraints.maxHeight - listPadding.vertical
+            : constraints.maxHeight;
+
+        return RefreshIndicator(
+          onRefresh: _forceRefreshPrayerTimes,
+          child: ListView(
+            controller: _listController,
+            padding: listPadding,
+            children: [
+              if (effective != null) ...[
+                _WeekStrip(
+                  controller: _weekStripController,
+                  year: effective.year,
+                  month: effective.month,
+                  selectedDay: resolvedDay,
+                  daysInMonth: daysInMonth,
+                  today: now,
+                  availableDays: availableDays,
+                  onChanged: (d) =>
+                      ref.read(selectedPlanDayProvider.notifier).setDay(d),
                 ),
-              ),
-            if (isSelectedToday) const SizedBox(height: 4),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    titleDate,
-                    style: AppTextStyles.sectionHeadingSerif.copyWith(
-                      color: AppColors.green,
-                      fontSize: 24,
-                      height: 1.05,
+                const SizedBox(height: 14),
+                if (isSelectedToday)
+                  Text(
+                    S.of(context)!.monthTodayChip,
+                    style: AppTextStyles.sectionEyebrow.copyWith(
+                      color: AppColors.ink3,
+                      letterSpacing: 1.5,
                     ),
                   ),
+                if (isSelectedToday) const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        titleDate,
+                        style: AppTextStyles.sectionHeadingSerif.copyWith(
+                          color: AppColors.green,
+                          fontSize: 24,
+                          height: 1.05,
+                        ),
+                      ),
+                    ),
+                    if (locationName != null)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.greenOverlay06,
+                          borderRadius: BorderRadius.circular(99),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                color: AppColors.green2,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              locationName,
+                              style: AppTextStyles.smallLabel.copyWith(
+                                color: AppColors.ink3,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
                 ),
-                if (locationName != null)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
+                const SizedBox(height: 14),
+                ...Prayer.values.map((prayer) {
+                  final slot =
+                      effective.planForDay(resolvedDay)?.slotFor(prayer) ??
+                      PrayerSlot();
+                  final status = isViewingPastDay
+                      ? const _PrayerCardStatus(
+                          highlight: PrayerCardHighlight.past,
+                        )
+                      : cardState.statusFor(prayer, S.of(context)!);
+                  return Padding(
+                    key: _prayerKeys[prayer],
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: PrayerCard(
+                      prayer: prayer,
+                      slot: slot,
+                      masterBySurahId: _masterById,
+                      prayerTime: cardState.displayTimeFor(prayer),
+                      highlight: status.highlight,
+                      badgeLabel: status.badge,
+                      trailingMeta: status.trailing,
+                      subtitle: status.subtitle,
+                      progress: status.progress,
+                      progressLeftLabel: status.progressLeft,
+                      progressRightLabel: status.progressRight,
+                      onToggleLock: () => _toggleLock(
+                        year: effective.year,
+                        month: effective.month,
+                        day: resolvedDay,
+                        prayer: prayer,
+                      ),
+                      onTap: slot.surahs.isEmpty
+                          ? null
+                          : () => showQuranReaderSheet(
+                              context,
+                              prayer: prayer,
+                              slot: slot,
+                              masterById: _masterById,
+                            ),
                     ),
-                    decoration: BoxDecoration(
-                      color: AppColors.greenOverlay06,
-                      borderRadius: BorderRadius.circular(99),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: const BoxDecoration(
-                            color: AppColors.green2,
-                            shape: BoxShape.circle,
+                  );
+                }),
+              ] else
+                SizedBox(
+                  height: emptyStateHeight,
+                  child: Center(
+                    child: enabledCount < 2
+                        ? EmptyState(
+                            variant: EmptyStateVariant.hifdhListTooSmall,
+                            onAction: () =>
+                                ref.read(navIndexProvider.notifier).setIndex(2),
+                          )
+                        : EmptyState(
+                            variant: EmptyStateVariant.noPlan,
+                            onAction: () =>
+                                ref.read(navIndexProvider.notifier).setIndex(1),
                           ),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          locationName,
-                          style: AppTextStyles.smallLabel.copyWith(
-                            color: AppColors.ink3,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            ...Prayer.values.map((prayer) {
-              final slot =
-                  effective.planForDay(resolvedDay)?.slotFor(prayer) ??
-                  PrayerSlot();
-              final status = isViewingPastDay
-                  ? const _PrayerCardStatus(highlight: PrayerCardHighlight.past)
-                  : cardState.statusFor(prayer, S.of(context)!);
-              return Padding(
-                key: _prayerKeys[prayer],
-                padding: const EdgeInsets.only(bottom: 12),
-                child: PrayerCard(
-                  prayer: prayer,
-                  slot: slot,
-                  masterBySurahId: _masterById,
-                  prayerTime: cardState.displayTimeFor(prayer),
-                  highlight: status.highlight,
-                  badgeLabel: status.badge,
-                  trailingMeta: status.trailing,
-                  subtitle: status.subtitle,
-                  progress: status.progress,
-                  progressLeftLabel: status.progressLeft,
-                  progressRightLabel: status.progressRight,
-                  onToggleLock: () => _toggleLock(
-                    year: effective.year,
-                    month: effective.month,
-                    day: resolvedDay,
-                    prayer: prayer,
-                  ),
-                  onTap: slot.surahs.isEmpty
-                      ? null
-                      : () => showQuranReaderSheet(
-                          context,
-                          prayer: prayer,
-                          slot: slot,
-                          masterById: _masterById,
-                        ),
                 ),
-              );
-            }),
-          ] else ...[
-            if (enabledCount < 2)
-              EmptyState(
-                variant: EmptyStateVariant.hifdhListTooSmall,
-                onAction: () => ref.read(navIndexProvider.notifier).setIndex(2),
-              )
-            else
-              EmptyState(
-                variant: EmptyStateVariant.noPlan,
-                onAction: () => ref.read(navIndexProvider.notifier).setIndex(1),
-              ),
-          ],
-        ],
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
