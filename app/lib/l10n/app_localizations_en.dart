@@ -12,6 +12,9 @@ class SEn extends S {
   String get appTitle => 'Ayatura';
 
   @override
+  String get brandLogoLabel => 'Ayatura logo';
+
+  @override
   String get navHome => 'Home';
 
   @override

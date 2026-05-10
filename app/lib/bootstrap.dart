@@ -9,8 +9,14 @@ import 'providers/core/shared_preferences_provider.dart';
 
 Future<void> runAyaturaApp({required AppEnvironment environment}) async {
   WidgetsFlutterBinding.ensureInitialized();
+  final splashStopwatch = Stopwatch()..start();
   AppConfig.initialize(environment: environment);
   final prefs = await SharedPreferences.getInstance();
+  const minNativeSplash = Duration(seconds: 1);
+  final remaining = minNativeSplash - splashStopwatch.elapsed;
+  if (remaining > Duration.zero) {
+    await Future<void>.delayed(remaining);
+  }
   runApp(
     ProviderScope(
       overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],

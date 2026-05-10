@@ -12,6 +12,9 @@ class SId extends S {
   String get appTitle => 'Ayatura';
 
   @override
+  String get brandLogoLabel => 'Logo Ayatura';
+
+  @override
   String get navHome => 'Beranda';
 
   @override
