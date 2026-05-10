@@ -4,9 +4,9 @@ These rules apply to all AI coding agents working in this repository.
 
 ## Dart File Structure
 
-- Never place multiple classes in one Dart file.
-- Keep exactly one class per file.
-- If a touched file still has multiple classes, split them into separate files.
+- Keep one primary class per Dart file by default.
+- A widget and its matching state class may live in the same Dart file, for example `MyWidget` and `_MyWidgetState`.
+- If a touched file has unrelated classes, split them into separate files.
 
 ## Commit Gate
 
