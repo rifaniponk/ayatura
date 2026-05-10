@@ -84,11 +84,12 @@ class _PoolScreenState extends ConsumerState<PoolScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    DismissibleIntroTip(
-                      storageKey: kDismissibleIntroTipHifdhKey,
-                      message: s.hifdhIntroBanner,
-                      dismissTooltip: s.dismissTooltip,
-                    ),
+                    if (pool.isNotEmpty)
+                      DismissibleIntroTip(
+                        storageKey: kDismissibleIntroTipHifdhKey,
+                        message: s.hifdhIntroBanner,
+                        dismissTooltip: s.dismissTooltip,
+                      ),
                     if (_bulkSkippedIds.isNotEmpty)
                       _BulkSkipBanner(
                         skippedIds: _bulkSkippedIds,
