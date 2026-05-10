@@ -1,7 +1,7 @@
 import Foundation
 
 enum WidgetResolver {
-    static let appGroupId = "group.com.ponkcoding.surahplanner"
+    static let appGroupId = "group.com.ayatura.app"
     static let payloadKey = "widget_payload"
     static let prayerOrder = ["fajr", "dhuhr", "asr", "maghrib", "isha"]
 
@@ -58,17 +58,17 @@ enum WidgetResolver {
         case .planExpired:
             return (
                 text(strings?.widgetEmptyPlanExpiredTitle, fallback: "Plan expired"),
-                text(strings?.widgetEmptyPlanExpiredSubtitle, fallback: "Open Surah Planner to create this month.")
+                text(strings?.widgetEmptyPlanExpiredSubtitle, fallback: "Open Ayatura to create this month.")
             )
         case .stale:
             return (
                 text(strings?.widgetEmptyStaleTitle, fallback: "Widget needs refresh"),
-                text(strings?.widgetEmptyStaleSubtitle, fallback: "Open Surah Planner to sync the latest plan.")
+                text(strings?.widgetEmptyStaleSubtitle, fallback: "Open Ayatura to sync the latest plan.")
             )
         case .noPlan:
             return (
                 text(strings?.widgetEmptyNoPlanTitle, fallback: "No plan yet"),
-                text(strings?.widgetEmptyNoPlanSubtitle, fallback: "Open Surah Planner to build your schedule.")
+                text(strings?.widgetEmptyNoPlanSubtitle, fallback: "Open Ayatura to build your schedule.")
             )
         }
     }

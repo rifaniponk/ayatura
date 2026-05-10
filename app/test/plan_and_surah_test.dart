@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:surah_planner/core/plan_config.dart';
-import 'package:surah_planner/data/models/plan.dart';
-import 'package:surah_planner/data/models/plan_surah.dart';
-import 'package:surah_planner/data/models/prayer.dart';
-import 'package:surah_planner/data/models/surah.dart';
-import 'package:surah_planner/data/models/surah_pool_entry.dart';
+import 'package:ayatura/core/plan_config.dart';
+import 'package:ayatura/data/models/plan.dart';
+import 'package:ayatura/data/models/plan_surah.dart';
+import 'package:ayatura/data/models/prayer.dart';
+import 'package:ayatura/data/models/surah.dart';
+import 'package:ayatura/data/models/surah_pool_entry.dart';
 
 Surah _surah(int id) => Surah(
   id: id,

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:surah_planner/core/plan_config.dart';
+import 'package:ayatura/core/plan_config.dart';
 
 import '../models/plan.dart';
 import '../models/plan_surah.dart';

@@ -133,7 +133,7 @@ struct WidgetHeader: View {
     var body: some View {
         HStack(spacing: 6) {
             Text("◐")
-            Text("Surah Planner")
+            Text("Ayatura")
         }
         .font(.system(size: 11))
         .foregroundColor(WidgetPalette.header)
@@ -291,8 +291,8 @@ struct SurahPlannerWidget: Widget {
         StaticConfiguration(kind: kind, provider: SurahPlannerWidgetProvider()) { entry in
             SurahPlannerWidgetView(entry: entry)
         }
-        .configurationDisplayName("Surah Planner")
-        .description("Shows your current and next Surah Planner reading slots.")
+        .configurationDisplayName("Ayatura")
+        .description("Shows your current and next prayer reading slots from your Ayatura plan.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }

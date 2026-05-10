@@ -1,4 +1,4 @@
-package com.ponkcoding.surahplanner
+package com.ayatura.app
 
 import io.flutter.embedding.android.FlutterActivity
 

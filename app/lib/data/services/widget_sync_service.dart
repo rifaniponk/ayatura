@@ -21,12 +21,12 @@ const widgetPayloadKey = 'widget_payload';
 
 const _widgetDayWindow = 7;
 const _androidWidgetQualifiedName =
-    'com.ponkcoding.surahplanner.widget.SurahPlannerWidgetReceiver';
+    'com.ayatura.app.widget.SurahPlannerWidgetReceiver';
 
 abstract final class WidgetSyncService {
   static Future<void> syncFromWidgetRef(WidgetRef ref) async {
     try {
-      await HomeWidget.setAppGroupId('group.com.ponkcoding.surahplanner');
+      await HomeWidget.setAppGroupId('group.com.ayatura.app');
       final payload = await _buildPayloadFromWidgetRef(ref);
       await HomeWidget.saveWidgetData<String>(
         widgetPayloadKey,
@@ -46,7 +46,7 @@ abstract final class WidgetSyncService {
 
   static Future<void> sync(Ref ref) async {
     try {
-      await HomeWidget.setAppGroupId('group.com.ponkcoding.surahplanner');
+      await HomeWidget.setAppGroupId('group.com.ayatura.app');
       final payload = await _buildPayloadFromRef(ref);
       await HomeWidget.saveWidgetData<String>(
         widgetPayloadKey,

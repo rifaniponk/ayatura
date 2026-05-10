@@ -9,7 +9,7 @@ class SEn extends S {
   SEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Surah Planner';
+  String get appTitle => 'Ayatura';
 
   @override
   String get navHome => 'Home';
@@ -433,7 +433,7 @@ class SEn extends S {
 
   @override
   String get settingsAboutBody =>
-      'Surah Planner helps you keep up with your hifdh by spreading your surahs and ayat across daily prayers throughout the month. Add what you\'re memorizing, generate a plan, and review a little each day.';
+      'Ayatura helps you build a consistent Surah recitation habit—whether you are memorizing the Quran, revising what you\'ve learned, or making the Quran part of every prayer. Add your pool, generate a monthly plan across your five daily prayers, and read a little each day.';
 
   @override
   String get insightTitle => 'Insight';
@@ -475,7 +475,7 @@ class SEn extends S {
   String get dismissTooltip => 'Dismiss';
 
   @override
-  String get widgetDescription => 'Surah Planner prayer widget';
+  String get widgetDescription => 'Ayatura prayer plan widget';
 
   @override
   String get widgetEmptyNoPlanTitle => 'No plan generated yet';

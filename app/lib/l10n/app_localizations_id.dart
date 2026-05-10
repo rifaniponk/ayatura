@@ -9,7 +9,7 @@ class SId extends S {
   SId([String locale = 'id']) : super(locale);
 
   @override
-  String get appTitle => 'Surah Planner';
+  String get appTitle => 'Ayatura';
 
   @override
   String get navHome => 'Beranda';
@@ -434,7 +434,7 @@ class SId extends S {
 
   @override
   String get settingsAboutBody =>
-      'Surah Planner bantu kamu jaga konsistensi hafalan dengan menyebarkan surah dan ayat ke shalat-shalat harian sepanjang bulan. Tambahkan hafalan kamu, buat rencana, dan muraja\'ah sedikit setiap harinya.';
+      'Ayatura membantu kamu membangun kebiasaan bacaan Surah yang konsisten—baik sedang menghafal Al-Qur\'an, muraja\'ah, maupun menjadikan Al-Qur\'an bagian dari setiap shalat. Tambahkan kolam hafalanmu, buat rencana bulanan di lima waktu shalat, dan baca sedikit setiap hari.';
 
   @override
   String get insightTitle => 'Insight';
@@ -476,7 +476,7 @@ class SId extends S {
   String get dismissTooltip => 'Tutup';
 
   @override
-  String get widgetDescription => 'Widget shalat Surah Planner';
+  String get widgetDescription => 'Widget rencana shalat Ayatura';
 
   @override
   String get widgetEmptyNoPlanTitle => 'Belum ada rencana';

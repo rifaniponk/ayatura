@@ -1,9 +1,9 @@
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:surah_planner/data/local/app_database.dart';
-import 'package:surah_planner/data/models/surah.dart';
-import 'package:surah_planner/widgets/pool/pool_segment_editor_sheet.dart';
+import 'package:ayatura/data/local/app_database.dart';
+import 'package:ayatura/data/models/surah.dart';
+import 'package:ayatura/widgets/pool/pool_segment_editor_sheet.dart';
 
 Surah _surah(int id, {required int startJuz, required int endJuz}) => Surah(
   id: id,

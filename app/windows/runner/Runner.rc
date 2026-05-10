@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.ponkcoding.surahplanner" "\0"
-            VALUE "FileDescription", "surah_planner" "\0"
+            VALUE "CompanyName", "com.ayatura.app" "\0"
+            VALUE "FileDescription", "Ayatura" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "surah_planner" "\0"
+            VALUE "InternalName", "ayatura" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 ponkcoding. All rights reserved." "\0"
-            VALUE "OriginalFilename", "surah_planner.exe" "\0"
-            VALUE "ProductName", "surah_planner" "\0"
+            VALUE "OriginalFilename", "ayatura.exe" "\0"
+            VALUE "ProductName", "Ayatura" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

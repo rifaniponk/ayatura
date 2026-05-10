@@ -4,7 +4,7 @@ import '../../core/theme/app_text_styles.dart';
 
 part 'app_popup_menu_item.dart';
 
-/// Surah Planner popup menu: matches [ThemeData.cardTheme] surface and shape,
+/// Ayatura popup menu: matches [ThemeData.cardTheme] surface and shape,
 /// no M3 surface tint, [AppTextStyles.body] for labels.
 class AppPopupMenuButton<T> extends StatelessWidget {
   const AppPopupMenuButton({

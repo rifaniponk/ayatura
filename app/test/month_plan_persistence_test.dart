@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:surah_planner/data/local/app_database.dart';
-import 'package:surah_planner/data/models/plan.dart';
-import 'package:surah_planner/data/models/plan_surah.dart';
-import 'package:surah_planner/data/models/prayer.dart';
+import 'package:ayatura/data/local/app_database.dart';
+import 'package:ayatura/data/models/plan.dart';
+import 'package:ayatura/data/models/plan_surah.dart';
+import 'package:ayatura/data/models/prayer.dart';
 
 MonthPlan _samplePlan({required int year, required int month}) {
   return MonthPlan(

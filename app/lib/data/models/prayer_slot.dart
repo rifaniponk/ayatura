@@ -1,4 +1,4 @@
-import 'package:surah_planner/core/plan_config.dart';
+import 'package:ayatura/core/plan_config.dart';
 
 import 'plan_surah.dart';
 

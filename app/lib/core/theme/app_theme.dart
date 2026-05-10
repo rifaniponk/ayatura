@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 
-/// Root Flutter [ThemeData] for Surah Planner.
+/// Root Flutter [ThemeData] for Ayatura.
 abstract final class AppTheme {
   static final ThemeData light = _buildLight();
 

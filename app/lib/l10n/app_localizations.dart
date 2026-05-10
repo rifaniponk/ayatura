@@ -100,7 +100,7 @@ abstract class S {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Surah Planner'**
+  /// **'Ayatura'**
   String get appTitle;
 
   /// No description provided for @navHome.
@@ -772,7 +772,7 @@ abstract class S {
   /// No description provided for @settingsAboutBody.
   ///
   /// In en, this message translates to:
-  /// **'Surah Planner helps you keep up with your hifdh by spreading your surahs and ayat across daily prayers throughout the month. Add what you\'re memorizing, generate a plan, and review a little each day.'**
+  /// **'Ayatura helps you build a consistent Surah recitation habit—whether you are memorizing the Quran, revising what you\'ve learned, or making the Quran part of every prayer. Add your pool, generate a monthly plan across your five daily prayers, and read a little each day.'**
   String get settingsAboutBody;
 
   /// No description provided for @insightTitle.
@@ -838,7 +838,7 @@ abstract class S {
   /// No description provided for @widgetDescription.
   ///
   /// In en, this message translates to:
-  /// **'Surah Planner prayer widget'**
+  /// **'Ayatura prayer plan widget'**
   String get widgetDescription;
 
   /// No description provided for @widgetEmptyNoPlanTitle.

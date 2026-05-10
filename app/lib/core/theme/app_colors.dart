@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// All brand colours for Surah Planner.
+/// All brand colours for Ayatura.
 /// Derived 1-to-1 from the design system: `--green`, `--green2`, `--gold`, etc.
 abstract final class AppColors {
   // ── Brand ──────────────────────────────────────────────────────────────────

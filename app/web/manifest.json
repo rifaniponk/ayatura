@@ -1,6 +1,6 @@
 {
-    "name": "surah_planner",
-    "short_name": "surah_planner",
+    "name": "Ayatura — Daily Surah Planner",
+    "short_name": "Ayatura",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
