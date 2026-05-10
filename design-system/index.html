@@ -1,0 +1,975 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ayatura — Design system</title>
+    <meta
+      name="description"
+      content="Design tokens for Ayatura (Surah Planner): colors, typography, and theme primitives. Mirrors app/lib/core/theme."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      :root {
+        --green: #0f3d2e;
+        --green2: #1f7a6b;
+        --gold: #d4af37;
+        --background: #f6f7f5;
+        --white: #ffffff;
+        --border: #e8e8e8;
+        --ink: #1a1a1a;
+        --ink2: #555555;
+        --ink3: #888888;
+        --bottom-nav-inactive: #bbbbbb;
+        --switch-track-inactive: #b4bcb6;
+        --switch-track-inactive-border: #9aa49c;
+        --header-dark: #071d13;
+        --error: #c0392b;
+        --error-bg: rgba(220, 53, 69, 0.1);
+        --green-overlay-06: rgba(15, 61, 46, 0.06);
+        --gold-overlay-12: rgba(212, 175, 55, 0.12);
+        --gold-overlay-30: rgba(212, 175, 55, 0.3);
+        --white-14: rgba(255, 255, 255, 0.14);
+        --white-10: rgba(255, 255, 255, 0.1);
+        --overlay-dark: rgba(4, 18, 12, 0.88);
+        --font-serif: "Playfair Display", Georgia, serif;
+        --font-sans: "DM Sans", system-ui, sans-serif;
+        --font-arabic: "Amiri", "Traditional Arabic", serif;
+        --radius-card: 16px;
+        --radius-input: 14px;
+        --max: 960px;
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--font-sans);
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--ink);
+        background: var(--background);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .page-header {
+        background: linear-gradient(135deg, var(--green) 0%, var(--green2) 100%);
+        color: var(--white);
+        padding: 2.5rem 1.5rem 3rem;
+      }
+
+      .page-header-inner {
+        max-width: var(--max);
+        margin: 0 auto;
+      }
+
+      .page-header h1 {
+        font-family: var(--font-serif);
+        font-size: clamp(1.75rem, 4vw, 2.25rem);
+        font-weight: 700;
+        margin: 0 0 0.35rem;
+        letter-spacing: -0.02em;
+      }
+
+      .page-header p {
+        margin: 0;
+        opacity: 0.88;
+        font-size: 0.95rem;
+        max-width: 36rem;
+      }
+
+      .page-header code {
+        font-size: 0.8em;
+        background: rgba(255, 255, 255, 0.12);
+        padding: 0.15em 0.45em;
+        border-radius: 6px;
+      }
+
+      main {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 2rem 1.5rem 4rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2.75rem;
+      }
+
+      section {
+        scroll-margin-top: 1rem;
+      }
+
+      .section-title {
+        font-family: var(--font-serif);
+        font-size: 1.35rem;
+        font-weight: 700;
+        margin: 0 0 1rem;
+        color: var(--green);
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .section-intro {
+        margin: -0.5rem 0 1.25rem;
+        color: var(--ink2);
+        font-size: 0.9rem;
+      }
+
+      .grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      @media (min-width: 560px) {
+        .grid--swatches {
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+      }
+
+      .token-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-card);
+        overflow: hidden;
+      }
+
+      .token-swatch {
+        height: 72px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .token-body {
+        padding: 0.85rem 1rem;
+      }
+
+      .token-name {
+        font-weight: 700;
+        font-size: 0.875rem;
+        margin: 0 0 0.25rem;
+      }
+
+      .token-meta {
+        font-size: 0.75rem;
+        color: var(--ink2);
+        font-family: ui-monospace, monospace;
+        word-break: break-all;
+      }
+
+      .token-meta + .token-meta {
+        margin-top: 0.2rem;
+      }
+
+      .swatch-on-dark {
+        background: var(--header-dark);
+        padding: 1rem;
+        border-radius: var(--radius-card);
+        border: 1px solid var(--border);
+      }
+
+      .gradient-strip {
+        height: 56px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        margin-bottom: 0.5rem;
+      }
+
+      .gradient-row {
+        margin-bottom: 1.25rem;
+      }
+
+      .gradient-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .type-sample {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-card);
+        padding: 1rem 1.1rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .type-sample:last-child {
+        margin-bottom: 0;
+      }
+
+      .type-label {
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--green2);
+        margin-bottom: 0.5rem;
+      }
+
+      .type-meta {
+        font-size: 0.72rem;
+        color: var(--ink3);
+        font-family: ui-monospace, monospace;
+        margin-top: 0.5rem;
+      }
+
+      .radii-demo {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: flex-end;
+      }
+
+      .radii-box {
+        width: 88px;
+        height: 64px;
+        background: var(--white);
+        border: 1.5px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--ink2);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-card);
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 0.65rem 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      th {
+        background: var(--background);
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink2);
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      td code {
+        font-size: 0.8em;
+      }
+
+      footer {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 0 1.5rem 2.5rem;
+        font-size: 0.8rem;
+        color: var(--ink3);
+      }
+
+      nav.toc {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+        margin-top: 1.25rem;
+      }
+
+      nav.toc a {
+        color: var(--white);
+        opacity: 0.92;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      nav.toc a:hover {
+        opacity: 1;
+        text-decoration: underline;
+      }
+
+      .dual-swatch {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        height: 72px;
+      }
+
+      .dual-swatch span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: var(--ink2);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <div class="page-header-inner">
+        <h1>Ayatura design system</h1>
+        <p>
+          Tokens mirror the Flutter app under
+          <code>app/lib/core/theme/</code>
+          (<code>AppColors</code>, <code>AppTextStyles</code>, <code>AppTheme</code>).
+        </p>
+        <nav class="toc" aria-label="On this page">
+          <a href="#brand">Brand</a>
+          <a href="#surfaces">Surfaces &amp; ink</a>
+          <a href="#semantic">Semantic &amp; UI</a>
+          <a href="#overlays">Overlays</a>
+          <a href="#gradients">Gradients</a>
+          <a href="#typography">Typography</a>
+          <a href="#radii">Radii &amp; borders</a>
+          <a href="#color-scheme">Material color scheme</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="brand" aria-labelledby="brand-heading">
+        <h2 id="brand-heading" class="section-title">Brand</h2>
+        <p class="section-intro">Primary palette: deep forest green, teal accent, metallic gold.</p>
+        <div class="grid grid--swatches">
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: #0f3d2e"
+              aria-label="Green swatch"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">green</h3>
+              <p class="token-meta">#0F3D2E</p>
+              <p class="token-meta">AppColors.green · ColorScheme.primary</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: #1f7a6b"
+              aria-label="Green2 swatch"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">green2</h3>
+              <p class="token-meta">#1F7A6B</p>
+              <p class="token-meta">AppColors.green2 · ColorScheme.secondary</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: #d4af37"
+              aria-label="Gold swatch"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">gold</h3>
+              <p class="token-meta">#D4AF37</p>
+              <p class="token-meta">AppColors.gold · ColorScheme.tertiary</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: #071d13"
+              aria-label="Header dark swatch"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">headerDark</h3>
+              <p class="token-meta">#071D13</p>
+              <p class="token-meta">AppColors.headerDark · sheet gradient stop</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="surfaces" aria-labelledby="surfaces-heading">
+        <h2 id="surfaces-heading" class="section-title">Surfaces &amp; ink</h2>
+        <div class="grid grid--swatches">
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: #f6f7f5; border-bottom-color: #e0e0e0"
+              aria-label="Background"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">background</h3>
+              <p class="token-meta">#F6F7F5</p>
+              <p class="token-meta">scaffold · ColorScheme.surface</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: #ffffff"
+              aria-label="White"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">white</h3>
+              <p class="token-meta">#FFFFFF</p>
+              <p class="token-meta">cards · inputs · onPrimary</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: #e8e8e8"
+              aria-label="Border"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">border</h3>
+              <p class="token-meta">#E8E8E8</p>
+              <p class="token-meta">card outline · dividers · default input</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div class="dual-swatch">
+              <span style="background: #1a1a1a; color: #fff">ink</span>
+              <span style="background: #f6f7f5">body</span>
+            </div>
+            <div class="token-body">
+              <h3 class="token-name">ink</h3>
+              <p class="token-meta">#1A1A1A · ColorScheme.onSurface</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: #555555"
+              aria-label="Ink2"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">ink2</h3>
+              <p class="token-meta">#555555</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: #888888"
+              aria-label="Ink3"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">ink3</h3>
+              <p class="token-meta">#888888</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="semantic" aria-labelledby="semantic-heading">
+        <h2 id="semantic-heading" class="section-title">Semantic &amp; UI</h2>
+        <div class="grid grid--swatches">
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: #bbbbbb"
+              aria-label="Bottom nav inactive"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">bottomNavInactive</h3>
+              <p class="token-meta">#BBBBBB</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: #b4bcb6"
+              aria-label="Switch track inactive"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">switchTrackInactive</h3>
+              <p class="token-meta">#B4BCB6</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: #9aa49c"
+              aria-label="Switch border"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">switchTrackInactiveBorder</h3>
+              <p class="token-meta">#9AA49C</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: #c0392b"
+              aria-label="Error"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">error</h3>
+              <p class="token-meta">#C0392B</p>
+              <p class="token-meta">ColorScheme.error</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: rgba(220, 53, 69, 0.1)"
+              aria-label="Error background"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">errorBg</h3>
+              <p class="token-meta">0x1ADC3545 (approx. 10% red tint)</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="overlays" aria-labelledby="overlays-heading">
+        <h2 id="overlays-heading" class="section-title">Overlays &amp; tints</h2>
+        <p class="section-intro">Used for scrims, chips, and subtle fills. Shown on white except overlayDark.</p>
+        <div class="grid grid--swatches">
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: rgba(15, 61, 46, 0.06)"
+              aria-label="Green overlay"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">greenOverlay06</h3>
+              <p class="token-meta">green @ 6%</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: rgba(212, 175, 55, 0.12)"
+              aria-label="Gold overlay 12"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">goldOverlay12</h3>
+              <p class="token-meta">gold @ 12%</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: rgba(212, 175, 55, 0.3)"
+              aria-label="Gold overlay 30"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">goldOverlay30</h3>
+              <p class="token-meta">gold @ 30%</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: rgba(255, 255, 255, 0.14)"
+              aria-label="White 14"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">white14</h3>
+              <p class="token-meta">white @ 14%</p>
+            </div>
+          </article>
+          <article class="token-card">
+            <div
+              class="token-swatch"
+              style="background: rgba(255, 255, 255, 0.1)"
+              aria-label="White 10"
+            ></div>
+            <div class="token-body">
+              <h3 class="token-name">white10</h3>
+              <p class="token-meta">white @ 10%</p>
+            </div>
+          </article>
+        </div>
+        <article class="token-card" style="margin-top: 1rem">
+          <div
+            class="token-swatch swatch-on-dark"
+            style="height: auto; min-height: 100px; border: none; border-radius: 0"
+            aria-label="Modal overlay demo"
+          >
+            <p style="margin: 0; color: #fff; font-size: 0.85rem">
+              Content behind modal (simulated)
+            </p>
+            <div
+              style="
+                margin-top: 0.75rem;
+                padding: 1rem;
+                border-radius: 12px;
+                background: var(--overlay-dark);
+                color: #fff;
+                font-size: 0.8rem;
+              "
+            >
+              overlayDark — modal backdrop (~88% opacity dark green-black)
+            </div>
+          </div>
+          <div class="token-body">
+            <h3 class="token-name">overlayDark</h3>
+            <p class="token-meta">0xE004120C</p>
+          </div>
+        </article>
+      </section>
+
+      <section id="gradients" aria-labelledby="gradients-heading">
+        <h2 id="gradients-heading" class="section-title">Gradients</h2>
+        <p class="section-intro">Direction matches Flutter: header and button top-left → bottom-right; timeline top → bottom.</p>
+        <div class="token-card" style="padding: 1rem">
+          <div class="gradient-row">
+            <div
+              class="gradient-strip"
+              style="background: linear-gradient(135deg, #0f3d2e 0%, #1f7a6b 100%)"
+            ></div>
+            <p class="token-name" style="margin: 0">headerGradient · buttonGradient</p>
+            <p class="token-meta">green → green2 (135deg)</p>
+          </div>
+          <div class="gradient-row">
+            <div
+              class="gradient-strip"
+              style="background: linear-gradient(135deg, #0f3d2e 0%, #071d13 100%)"
+            ></div>
+            <p class="token-name" style="margin: 0">sheetGradient</p>
+            <p class="token-meta">green → headerDark (135deg)</p>
+          </div>
+          <div class="gradient-row">
+            <div
+              class="gradient-strip"
+              style="
+                background: linear-gradient(
+                  180deg,
+                  #d4af37 0%,
+                  rgba(212, 175, 55, 0) 100%
+                )
+              "
+            ></div>
+            <p class="token-name" style="margin: 0">timelineLineGradient</p>
+            <p class="token-meta">gold → transparent (180deg)</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="typography" aria-labelledby="typography-heading">
+        <h2 id="typography-heading" class="section-title">Typography</h2>
+        <p class="section-intro">
+          Families: <strong>Playfair Display</strong> (serif), <strong>DM Sans</strong> (sans),
+          <strong>Amiri</strong> (Arabic). Sizes and weights match <code>AppTextStyles</code>.
+        </p>
+
+        <h3 class="token-name" style="margin: 1.25rem 0 0.75rem; font-size: 0.8rem; color: var(--ink2)">
+          Serif — Playfair Display
+        </h3>
+        <div class="type-sample">
+          <div class="type-label">appTitle · 21 / w700 · gold</div>
+          <div style="font-family: var(--font-serif); font-size: 21px; font-weight: 700; color: var(--gold)">
+            Ayatura
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">mainHeading · 32 / w700 · ink · line-height 1.2</div>
+          <div
+            style="
+              font-family: var(--font-serif);
+              font-size: 32px;
+              font-weight: 700;
+              line-height: 1.2;
+              color: var(--ink);
+            "
+          >
+            Main heading
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">sectionHeadingSerif · 20 / w700</div>
+          <div style="font-family: var(--font-serif); font-size: 20px; font-weight: 700; color: var(--ink)">
+            Section heading
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">surahNameCard · 14 / w600</div>
+          <div style="font-family: var(--font-serif); font-size: 14px; font-weight: 600; color: var(--ink)">
+            Surah Al-Fatihah
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">prayerCurrentTitle · 30 / w700 · gold · line-height 1</div>
+          <div
+            style="
+              font-family: var(--font-serif);
+              font-size: 30px;
+              font-weight: 700;
+              line-height: 1;
+              color: var(--gold);
+            "
+          >
+            Isha
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">prayerHighlightedTitle · 18 / w700 · gold</div>
+          <div style="font-family: var(--font-serif); font-size: 18px; font-weight: 700; color: var(--gold)">
+            Maghrib
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">surahNamePrayerCard · 14 / w500</div>
+          <div style="font-family: var(--font-serif); font-size: 14px; font-weight: 500; color: var(--ink)">
+            Surah inside card
+          </div>
+        </div>
+        <div class="type-sample swatch-on-dark" style="border-color: rgba(255, 255, 255, 0.15)">
+          <div class="type-label" style="color: var(--gold)">sheetSurahName · 24 / w700 · white</div>
+          <div style="font-family: var(--font-serif); font-size: 24px; font-weight: 700; color: #fff">
+            Sheet title
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">emptyStateTitle · 18 / w700 · green</div>
+          <div style="font-family: var(--font-serif); font-size: 18px; font-weight: 700; color: var(--green)">
+            Nothing here yet
+          </div>
+        </div>
+
+        <h3 class="token-name" style="margin: 1.5rem 0 0.75rem; font-size: 0.8rem; color: var(--ink2)">
+          Sans — DM Sans
+        </h3>
+        <div class="type-sample">
+          <div class="type-label">sectionEyebrow · 10 / w700 · letter-spacing 2.5px · green2</div>
+          <div
+            style="
+              font-family: var(--font-sans);
+              font-size: 10px;
+              font-weight: 700;
+              letter-spacing: 2.5px;
+              color: var(--green2);
+            "
+          >
+            SECTION EYEBROW
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">subtitle · 14 / w400 · ink2</div>
+          <div style="font-family: var(--font-sans); font-size: 14px; font-weight: 400; color: var(--ink2)">
+            Supporting subtitle text for screens.
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">cardLabel · 13 / w700</div>
+          <div style="font-family: var(--font-sans); font-size: 13px; font-weight: 700; color: var(--ink)">
+            Card label
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">prayerLabel · 11 / w800 · letter-spacing 0.8px · green</div>
+          <div
+            style="
+              font-family: var(--font-sans);
+              font-size: 11px;
+              font-weight: 800;
+              letter-spacing: 0.8px;
+              color: var(--green);
+            "
+          >
+            FAJR
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">prayerTime / meta · 11 / w500 · ink3</div>
+          <div style="font-family: var(--font-sans); font-size: 11px; font-weight: 500; color: var(--ink3)">
+            5:42 AM · 4 verses
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">navLabel · 10 / w600</div>
+          <div style="font-family: var(--font-sans); font-size: 10px; font-weight: 600; color: var(--ink)">
+            Today
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">body · 14 / w400</div>
+          <div style="font-family: var(--font-sans); font-size: 14px; font-weight: 400; color: var(--ink)">
+            Body copy for descriptions and helper text.
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">bodyMedium · 14 / w500</div>
+          <div style="font-family: var(--font-sans); font-size: 14px; font-weight: 500; color: var(--ink)">
+            Emphasized body line.
+          </div>
+        </div>
+        <div class="type-sample swatch-on-dark" style="border-color: rgba(255, 255, 255, 0.15)">
+          <div class="type-label" style="color: var(--gold)">buttonLabel · 15 / w700 · white</div>
+          <div style="font-family: var(--font-sans); font-size: 15px; font-weight: 700; color: #fff">
+            Continue
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">smallLabel · 12 / w500 · ink2</div>
+          <div style="font-family: var(--font-sans); font-size: 12px; font-weight: 500; color: var(--ink2)">
+            Small label
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">prayerCardBadge · 9 / w800 · letter-spacing 1.8px · gold</div>
+          <div
+            style="
+              font-family: var(--font-sans);
+              font-size: 9px;
+              font-weight: 800;
+              letter-spacing: 1.8px;
+              color: var(--gold);
+            "
+          >
+            DUE
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">prayerCardProgressMeta · 11 / w700 · letter-spacing 0.9px · ink3</div>
+          <div
+            style="
+              font-family: var(--font-sans);
+              font-size: 11px;
+              font-weight: 700;
+              letter-spacing: 0.9px;
+              color: var(--ink3);
+            "
+          >
+            2 / 5
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">prayerCardPanelTitle · 10 / w800 · letter-spacing 2.2px · gold</div>
+          <div
+            style="
+              font-family: var(--font-sans);
+              font-size: 10px;
+              font-weight: 800;
+              letter-spacing: 2.2px;
+              color: var(--gold);
+            "
+          >
+            VERSES
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">prayerCardVerseCount · 11 / w700 · ink3</div>
+          <div style="font-family: var(--font-sans); font-size: 11px; font-weight: 700; color: var(--ink3)">
+            7 ayat
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">dayPillLabel · 13 / w700</div>
+          <div style="font-family: var(--font-sans); font-size: 13px; font-weight: 700; color: var(--ink)">
+            Mon 12
+          </div>
+        </div>
+
+        <h3 class="token-name" style="margin: 1.5rem 0 0.75rem; font-size: 0.8rem; color: var(--ink2)">
+          Arabic — Amiri
+        </h3>
+        <div class="type-sample swatch-on-dark" style="border-color: rgba(255, 255, 255, 0.15)">
+          <div class="type-label" style="color: var(--gold)">arabicBody · 24 / w400 · white · line-height 1.8</div>
+          <div
+            style="
+              font-family: var(--font-arabic);
+              font-size: 24px;
+              font-weight: 400;
+              line-height: 1.8;
+              color: #fff;
+              direction: rtl;
+            "
+          >
+            بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+          </div>
+        </div>
+        <div class="type-sample">
+          <div class="type-label">arabicSecondary · 16 / w400 · ink2</div>
+          <div
+            style="
+              font-family: var(--font-arabic);
+              font-size: 16px;
+              font-weight: 400;
+              color: var(--ink2);
+              direction: rtl;
+            "
+          >
+            الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
+          </div>
+        </div>
+      </section>
+
+      <section id="radii" aria-labelledby="radii-heading">
+        <h2 id="radii-heading" class="section-title">Radii &amp; borders</h2>
+        <p class="section-intro">From <code>AppTheme</code> card and button/input shapes.</p>
+        <div class="token-card" style="padding: 1.25rem">
+          <div class="radii-demo">
+            <div class="radii-box" style="border-radius: 16px">16px</div>
+            <div class="radii-box" style="border-radius: 14px">14px</div>
+          </div>
+          <p class="type-meta" style="margin-top: 1rem; margin-bottom: 0">
+            Card &amp; elevated button: 16px · Text field outline: 14px · Card border &amp; divider: 1px
+            <code>#E8E8E8</code>
+            · Default input border: 1.5px · Focus border: <code>#1F7A6B</code> (green2)
+          </p>
+        </div>
+      </section>
+
+      <section id="color-scheme" aria-labelledby="color-scheme-heading">
+        <h2 id="color-scheme-heading" class="section-title">Material 3 color scheme</h2>
+        <p class="section-intro">Light theme <code>ColorScheme</code> mapping.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Token</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>primary</td>
+              <td><code>green</code></td>
+            </tr>
+            <tr>
+              <td>onPrimary</td>
+              <td><code>white</code></td>
+            </tr>
+            <tr>
+              <td>secondary</td>
+              <td><code>green2</code></td>
+            </tr>
+            <tr>
+              <td>onSecondary</td>
+              <td><code>white</code></td>
+            </tr>
+            <tr>
+              <td>tertiary</td>
+              <td><code>gold</code></td>
+            </tr>
+            <tr>
+              <td>onTertiary</td>
+              <td><code>ink</code></td>
+            </tr>
+            <tr>
+              <td>error / onError</td>
+              <td><code>error</code> / <code>white</code></td>
+            </tr>
+            <tr>
+              <td>surface / onSurface</td>
+              <td><code>background</code> / <code>ink</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <footer>
+      Ayatura · Surah Planner — static reference only; source of truth remains Dart under
+      <code>app/lib/core/theme/</code>.
+    </footer>
+  </body>
+</html>
