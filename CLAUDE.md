@@ -11,3 +11,4 @@ Follow `AGENTS.md` as the baseline policy.
 - Do not hardcode user-facing text; add translation keys and use `lib/l10n`.
 - Use colors and typography from `lib/core/theme/*` (including font sizes); avoid new ad-hoc values.
 - If a new color or typography token is truly needed, add it under `lib/core/theme` first.
+- Do not use `--` or em dashes (`—`) in user-facing text, comments, commit messages, or other wording you add; prefer commas, colons, parentheses, or separate sentences.

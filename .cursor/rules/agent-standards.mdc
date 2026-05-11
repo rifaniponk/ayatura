@@ -9,6 +9,7 @@ alwaysApply: true
 - Before any commit, run `dart format .`.
 - Include formatter-produced changes in the commit.
 - Do not hardcode user-facing strings; add/use localization entries from `lib/l10n`.
+- Do not use `--` or em dashes (`—`) in user-facing text, comments, commit messages, or other wording you add; prefer commas, colons, parentheses, or separate sentences.
 - Use design tokens from `lib/core/theme/*` for color and typography (including font sizes).
 - Avoid introducing new ad-hoc colors or font sizes unless required.
 - If required, add new tokens under `lib/core/theme` first, then use those tokens.
