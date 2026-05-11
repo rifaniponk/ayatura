@@ -781,6 +781,48 @@ abstract class S {
   /// **'Ayatura helps you build a consistent Surah recitation habit—whether you are memorizing the Quran, revising what you\'ve learned, or making the Quran part of every prayer. Add your pool, generate a monthly plan across your five daily prayers, and read a little each day.'**
   String get settingsAboutBody;
 
+  /// No description provided for @settingsAboutTileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About Ayatura'**
+  String get settingsAboutTileTitle;
+
+  /// No description provided for @settingsAboutTileSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Version and privacy'**
+  String get settingsAboutTileSubtitle;
+
+  /// No description provided for @aboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get aboutTitle;
+
+  /// No description provided for @aboutVersionBuild.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} ({buildNumber})'**
+  String aboutVersionBuild(String version, String buildNumber);
+
+  /// No description provided for @aboutPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get aboutPrivacyPolicy;
+
+  /// No description provided for @aboutPrivacyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Ayatura keeps your plan and settings data on this device. It does not require an account, and your Quran planning data is not sent to a server by the app.'**
+  String get aboutPrivacyBody;
+
+  /// No description provided for @aboutCopyright.
+  ///
+  /// In en, this message translates to:
+  /// **'Copyright 2026 Ayatura. All rights reserved.'**
+  String get aboutCopyright;
+
   /// No description provided for @insightTitle.
   ///
   /// In en, this message translates to:
@@ -822,6 +864,12 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get dialogCancel;
+
+  /// No description provided for @dialogClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get dialogClose;
 
   /// No description provided for @dialogRemove.
   ///

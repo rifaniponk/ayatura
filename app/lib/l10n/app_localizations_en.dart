@@ -439,6 +439,30 @@ class SEn extends S {
       'Ayatura helps you build a consistent Surah recitation habit—whether you are memorizing the Quran, revising what you\'ve learned, or making the Quran part of every prayer. Add your pool, generate a monthly plan across your five daily prayers, and read a little each day.';
 
   @override
+  String get settingsAboutTileTitle => 'About Ayatura';
+
+  @override
+  String get settingsAboutTileSubtitle => 'Version and privacy';
+
+  @override
+  String get aboutTitle => 'About';
+
+  @override
+  String aboutVersionBuild(String version, String buildNumber) {
+    return 'Version $version ($buildNumber)';
+  }
+
+  @override
+  String get aboutPrivacyPolicy => 'Privacy Policy';
+
+  @override
+  String get aboutPrivacyBody =>
+      'Ayatura keeps your plan and settings data on this device. It does not require an account, and your Quran planning data is not sent to a server by the app.';
+
+  @override
+  String get aboutCopyright => 'Copyright 2026 Ayatura. All rights reserved.';
+
+  @override
   String get insightTitle => 'Insight';
 
   @override
@@ -467,6 +491,9 @@ class SEn extends S {
 
   @override
   String get dialogCancel => 'Cancel';
+
+  @override
+  String get dialogClose => 'Close';
 
   @override
   String get dialogRemove => 'Remove';

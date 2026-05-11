@@ -324,6 +324,23 @@
   "settingsLanguageSubtitle": "Choose your preferred language",
   "settingsAbout": "About",
   "settingsAboutBody": "Ayatura helps you build a consistent Surah recitation habit—whether you are memorizing the Quran, revising what you've learned, or making the Quran part of every prayer. Add your pool, generate a monthly plan across your five daily prayers, and read a little each day.",
+  "settingsAboutTileTitle": "About Ayatura",
+  "settingsAboutTileSubtitle": "Version and privacy",
+  "aboutTitle": "About",
+  "aboutVersionBuild": "Version {version} ({buildNumber})",
+  "@aboutVersionBuild": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "buildNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutPrivacyPolicy": "Privacy Policy",
+  "aboutPrivacyBody": "Ayatura keeps your plan and settings data on this device. It does not require an account, and your Quran planning data is not sent to a server by the app.",
+  "aboutCopyright": "Copyright 2026 Ayatura. All rights reserved.",
   "insightTitle": "Insight",
   "insightSubtitle": "Hifdh frequency counter across all saved monthly plans.",
   "insightEmpty": "No active hifdh entries yet.",
@@ -338,6 +355,7 @@
   "langEnglish": "English",
   "langIndonesian": "Indonesian",
   "dialogCancel": "Cancel",
+  "dialogClose": "Close",
   "dialogRemove": "Remove",
   "backTooltip": "Back",
   "dismissTooltip": "Dismiss",
