@@ -437,7 +437,31 @@ class SId extends S {
 
   @override
   String get settingsAboutBody =>
-      'Ayatura membantu kamu membangun kebiasaan bacaan Surah yang konsisten—baik sedang menghafal Al-Qur\'an, muraja\'ah, maupun menjadikan Al-Qur\'an bagian dari setiap shalat. Tambahkan kolam hafalanmu, buat rencana bulanan di lima waktu shalat, dan baca sedikit setiap hari.';
+      'Ayatura membantu kamu membangun kebiasaan membaca Surah secara konsisten, baik untuk menghafal, muraja’ah, maupun membiasakan Al-Qur’an hadir di setiap shalat. Kamu bisa menambahkan hafalan Surah sendiri, membuat rencana bacaan bulanan untuk shalat lima waktu, lalu menjalankannya setiap hari.';
+
+  @override
+  String get settingsAboutTileTitle => 'Tentang Ayatura';
+
+  @override
+  String get settingsAboutTileSubtitle => 'Versi dan privasi';
+
+  @override
+  String get aboutTitle => 'Tentang';
+
+  @override
+  String aboutVersionBuild(String version, String buildNumber) {
+    return 'Versi $version ($buildNumber)';
+  }
+
+  @override
+  String get aboutPrivacyPolicy => 'Kebijakan Privasi';
+
+  @override
+  String get aboutPrivacyBody =>
+      'Ayatura menyimpan data rencana dan pengaturan di perangkat ini. Aplikasi ini tidak membutuhkan akun, dan data perencanaan Quranmu tidak dikirim ke server oleh aplikasi.';
+
+  @override
+  String get aboutCopyright => 'Copyright 2026 Ayatura. Semua hak dilindungi.';
 
   @override
   String get insightTitle => 'Insight';
@@ -468,6 +492,9 @@ class SId extends S {
 
   @override
   String get dialogCancel => 'Batal';
+
+  @override
+  String get dialogClose => 'Tutup';
 
   @override
   String get dialogRemove => 'Hapus';

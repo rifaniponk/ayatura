@@ -20,6 +20,10 @@ These rules apply to all AI coding agents working in this repository.
 - Add and use translation keys via `lib/l10n`.
 - Any newly introduced UI text must be localized through the app localization system.
 
+## Writing Style
+
+- Do not use `--` or em dashes (`—`) in user-facing text, comments, commit messages, or other wording you add; use commas, colons, parentheses, or separate sentences instead.
+
 ## Design System (Color & Typography)
 
 - Use existing design tokens from `lib/core/theme/*` for colors and typography.
