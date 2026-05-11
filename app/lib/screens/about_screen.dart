@@ -27,7 +27,7 @@ class AboutScreen extends ConsumerWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(24),
               child: Image.asset(
-                'assets/images/app_icon.png',
+                'assets/images/logo/logo.png',
                 width: 96,
                 height: 96,
                 semanticLabel: s.brandLogoLabel,
