@@ -266,6 +266,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
           onRefresh: _forceRefreshPrayerTimes,
           child: ListView(
             controller: _listController,
+            clipBehavior: Clip.none,
             padding: listPadding,
             children: [
               if (effective != null) ...[
@@ -383,17 +384,38 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                   height: emptyStateHeight,
                   child: Center(
                     child: enabledCount < 2
-                        ? EmptyState(
-                            variant: EmptyStateVariant.hifdhListTooSmall,
-                            onAction: () =>
+                        ? HomeEmptyHeroLayout(
+                            semanticLabel: s.emptyPoolTooSmallTitle,
+                            title: s.emptyPoolTooSmallTitle,
+                            subtitle: s.emptyPoolTooSmallSubtitle,
+                            primaryLabel: s.emptyPoolTooSmallAction,
+                            onPrimary: () =>
                                 ref.read(navIndexProvider.notifier).setIndex(2),
+                            secondaryLabel: s.homeNoPlanLearnHow,
+                            onSecondary: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  builder: (_) => const AboutScreen(),
+                                ),
+                              );
+                            },
                           )
-                        : NoPlanEmptyLayout(
+                        : HomeEmptyHeroLayout(
+                            semanticLabel: s.homeNoPlanTitle,
                             title: s.homeNoPlanTitle,
-                            subtitle: s.monthNoPlanSubtitle,
-                            createPlanLabel: s.homeNoPlanCreateThisMonth,
-                            onCreatePlan: _createPlanForCurrentMonth,
-                            createPlanEnabled: !planRegenerateBusy,
+                            subtitle: s.homeNoPlanHeroSubtitle,
+                            primaryLabel: s.homeNoPlanCreateThisMonth,
+                            onPrimary: _createPlanForCurrentMonth,
+                            primaryEnabled: !planRegenerateBusy,
+                            showPrimaryChevron: true,
+                            secondaryLabel: s.homeNoPlanLearnHow,
+                            onSecondary: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  builder: (_) => const AboutScreen(),
+                                ),
+                              );
+                            },
                           ),
                   ),
                 ),

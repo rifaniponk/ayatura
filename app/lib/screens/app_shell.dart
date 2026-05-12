@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/feature_flags.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/core/nav_provider.dart';
+import '../providers/home/home_empty_for_nav_provider.dart';
 import '../providers/prayer/prayer_times_provider.dart';
 import '../widgets/navigation/bottom_nav_bar.dart';
 import '../widgets/navigation/nav_item.dart';
@@ -44,6 +45,8 @@ class AppShell extends ConsumerWidget {
       ),
     ];
     final navIndex = ref.watch(navIndexProvider).clamp(0, tabs.length - 1);
+    final homeEmptyHero = ref.watch(homeEmptyHeroForNavProvider);
+    final navBarMatchesBody = homeEmptyHero && navIndex == 0;
 
     return Scaffold(
       body: SafeArea(
@@ -54,6 +57,7 @@ class AppShell extends ConsumerWidget {
         currentIndex: navIndex,
         items: navItems,
         onTap: (i) => ref.read(navIndexProvider.notifier).setIndex(i),
+        backgroundMatchesBody: navBarMatchesBody,
       ),
     );
   }

@@ -61,6 +61,7 @@ flutter:
 
   assets:
     - assets/images/app_icon.png
+    - assets/images/ayatura_ilustrator.png
     - assets/images/logo/
     - assets/svg/crescent_mark.svg
     - assets/svg/app_icon.svg

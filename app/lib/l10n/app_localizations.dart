@@ -256,14 +256,26 @@ abstract class S {
   /// No description provided for @homeNoPlanTitle.
   ///
   /// In en, this message translates to:
-  /// **'No plan yet for today'**
+  /// **'No plan yet'**
   String get homeNoPlanTitle;
+
+  /// No description provided for @homeNoPlanHeroSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have a daily surah plan yet. Let\'s create one to build a consistent Quran reading habit.'**
+  String get homeNoPlanHeroSubtitle;
 
   /// No description provided for @homeNoPlanCreateThisMonth.
   ///
   /// In en, this message translates to:
-  /// **'Create plan for this month'**
+  /// **'Create your first plan'**
   String get homeNoPlanCreateThisMonth;
+
+  /// No description provided for @homeNoPlanLearnHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn how it works'**
+  String get homeNoPlanLearnHow;
 
   /// No description provided for @monthTodayChip.
   ///
@@ -769,12 +781,6 @@ abstract class S {
   /// **'About'**
   String get settingsAbout;
 
-  /// No description provided for @settingsAboutBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Ayatura helps you build a consistent Surah recitation habit—whether you are memorizing the Quran, revising what you\'ve learned, or making the Quran part of every prayer. Add your pool, generate a monthly plan across your five daily prayers, and read a little each day.'**
-  String get settingsAboutBody;
-
   /// No description provided for @settingsAboutTileTitle.
   ///
   /// In en, this message translates to:
@@ -798,6 +804,18 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Version {version} ({buildNumber})'**
   String aboutVersionBuild(String version, String buildNumber);
+
+  /// About screen paragraph. Optional inline tags: <b></b> bold, <i></i> or <em></em> italic, <u></u> underline, <s></s> or <strike></strike> or <del></del> strikethrough. Tags may nest; keep pairs balanced.
+  ///
+  /// In en, this message translates to:
+  /// **'<b>Ayatura</b> helps you spread your <b>memorized surahs</b> across the <b>five daily prayers</b> in a steady, balanced way. Enter your hifdh list, and <b>Ayatura</b> builds a <b>daily reading plan</b> so every surah gets recited often instead of cycling through the same few.'**
+  String get aboutBodyParagraph1;
+
+  /// About screen paragraph. Optional inline tags: <b></b> bold, <i></i> or <em></em> italic, <u></u> underline, <s></s> or <strike></strike> or <del></del> strikethrough. Tags may nest; keep pairs balanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Many people with <b>a lot of hifdhs</b> are unsure which surah to read in <b>prayer</b>. Some surahs are then read rarely and slowly fade. <b>Ayatura</b> helps keep your <b>hifdh alive</b> through a reading pattern that is <b>consistent every day</b>.'**
+  String get aboutBodyParagraph2;
 
   /// No description provided for @aboutPrivacyPolicy.
   ///
