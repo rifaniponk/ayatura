@@ -10,12 +10,14 @@ class GradientButton extends StatelessWidget {
     required this.label,
     this.onPressed,
     this.icon,
+    this.trailing,
     this.enabled = true,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
+  final Widget? trailing;
   final bool enabled;
 
   @override
@@ -60,6 +62,7 @@ class GradientButton extends StatelessWidget {
                   softWrap: true,
                 ),
               ),
+              if (trailing != null) ...[const SizedBox(width: 4), trailing!],
             ],
           ),
         ),

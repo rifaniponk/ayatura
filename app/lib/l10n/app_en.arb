@@ -104,8 +104,10 @@
       }
     }
   },
-  "homeNoPlanTitle": "No plan yet for today",
-  "homeNoPlanCreateThisMonth": "Create plan for this month",
+  "homeNoPlanTitle": "No plan yet",
+  "homeNoPlanHeroSubtitle": "You don't have a daily surah plan yet. Let's create one to build a consistent Quran reading habit.",
+  "homeNoPlanCreateThisMonth": "Create your first plan",
+  "homeNoPlanLearnHow": "Learn how it works",
   "monthTodayChip": "Today",
   "monthFullSurah": "Full surah",
   "monthAyatRange": "{start} – {end}",

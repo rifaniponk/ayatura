@@ -15,8 +15,8 @@ import '../data/models/prayer.dart';
 import '../data/models/surah.dart';
 import '../data/models/surah_pool_entry.dart';
 import '../providers/providers.dart';
-import '../widgets/common/empty_state.dart';
-import '../widgets/month/no_plan_empty_layout.dart';
+import '../widgets/home/home_empty_hero_layout.dart';
+import 'about_screen.dart';
 import '../widgets/quran_reader/quran_reader_sheet.dart';
 import '../widgets/prayer/prayer_card.dart';
 

@@ -113,10 +113,17 @@ class SId extends S {
   }
 
   @override
-  String get homeNoPlanTitle => 'Belum ada rencana untuk hari ini';
+  String get homeNoPlanTitle => 'Belum ada rencana';
 
   @override
-  String get homeNoPlanCreateThisMonth => 'Buat rencana untuk bulan ini';
+  String get homeNoPlanHeroSubtitle =>
+      'Anda belum punya rencana surah harian. Buat satu agar kebiasaan membaca Al-Quran tetap konsisten.';
+
+  @override
+  String get homeNoPlanCreateThisMonth => 'Buat rencana pertamamu';
+
+  @override
+  String get homeNoPlanLearnHow => 'Pelajari cara kerjanya';
 
   @override
   String get monthTodayChip => 'Hari ini';
@@ -304,11 +311,11 @@ class SId extends S {
   String get editorDeselectAll => 'Batalkan pilihan';
 
   @override
-  String get emptyPoolTooSmallTitle => 'Hafalan kurang';
+  String get emptyPoolTooSmallTitle => 'Belum ada hafalan aktif';
 
   @override
   String get emptyPoolTooSmallSubtitle =>
-      'Tambahkan setidaknya dua surah atau rentang ayat di daftar hafalan (dengan sakelar aktif), lalu buat rencana.';
+      'Tambahkan beberapa surah untuk memulai membuat rencana shalat. Setelah itu kamu bisa membuat rencana untuk satu bulan ke depan dengan mudah.';
 
   @override
   String get emptyPoolTooSmallAction => 'Buka Hafalan';

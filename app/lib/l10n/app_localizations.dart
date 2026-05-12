@@ -256,14 +256,26 @@ abstract class S {
   /// No description provided for @homeNoPlanTitle.
   ///
   /// In en, this message translates to:
-  /// **'No plan yet for today'**
+  /// **'No plan yet'**
   String get homeNoPlanTitle;
+
+  /// No description provided for @homeNoPlanHeroSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have a daily surah plan yet. Let\'s create one to build a consistent Quran reading habit.'**
+  String get homeNoPlanHeroSubtitle;
 
   /// No description provided for @homeNoPlanCreateThisMonth.
   ///
   /// In en, this message translates to:
-  /// **'Create plan for this month'**
+  /// **'Create your first plan'**
   String get homeNoPlanCreateThisMonth;
+
+  /// No description provided for @homeNoPlanLearnHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn how it works'**
+  String get homeNoPlanLearnHow;
 
   /// No description provided for @monthTodayChip.
   ///

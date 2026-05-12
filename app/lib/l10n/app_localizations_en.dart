@@ -113,10 +113,17 @@ class SEn extends S {
   }
 
   @override
-  String get homeNoPlanTitle => 'No plan yet for today';
+  String get homeNoPlanTitle => 'No plan yet';
 
   @override
-  String get homeNoPlanCreateThisMonth => 'Create plan for this month';
+  String get homeNoPlanHeroSubtitle =>
+      'You don\'t have a daily surah plan yet. Let\'s create one to build a consistent Quran reading habit.';
+
+  @override
+  String get homeNoPlanCreateThisMonth => 'Create your first plan';
+
+  @override
+  String get homeNoPlanLearnHow => 'Learn how it works';
 
   @override
   String get monthTodayChip => 'Today';

@@ -11,28 +11,43 @@ class AppBottomNavBar extends StatelessWidget {
     required this.currentIndex,
     required this.onTap,
     required this.items,
+    this.backgroundMatchesBody = false,
   });
 
   final int currentIndex;
   final ValueChanged<int> onTap;
   final List<NavItem> items;
 
+  /// When true, bar uses [AppColors.background] like the scaffold body (Home empty).
+  final bool backgroundMatchesBody;
+
   @override
   Widget build(BuildContext context) {
+    final barColor = backgroundMatchesBody
+        ? AppColors.background
+        : AppColors.white;
+
     return Container(
       height: 72,
       decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border(
-          top: BorderSide(color: AppColors.green.withAlpha(0x12), width: 1),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.green.withAlpha(20),
-            blurRadius: 24,
-            offset: const Offset(0, -4),
-          ),
-        ],
+        color: barColor,
+        border: backgroundMatchesBody
+            ? null
+            : Border(
+                top: BorderSide(
+                  color: AppColors.green.withAlpha(0x12),
+                  width: 1,
+                ),
+              ),
+        boxShadow: backgroundMatchesBody
+            ? null
+            : [
+                BoxShadow(
+                  color: AppColors.green.withAlpha(20),
+                  blurRadius: 24,
+                  offset: const Offset(0, -4),
+                ),
+              ],
       ),
       child: Row(
         children: List.generate(items.length, (i) {
