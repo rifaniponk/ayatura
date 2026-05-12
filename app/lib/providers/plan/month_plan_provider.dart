@@ -197,7 +197,9 @@ class MonthPlanNotifier extends AsyncNotifier<MonthPlan?> {
         final slot = d.slotFor(prayer);
         if (slot.locked) {
           nextPrayers[prayer] = slot.copyWith(locked: false);
-          cleared++;
+          if (slot.surahs.isNotEmpty) {
+            cleared++;
+          }
           changed = true;
         }
       }
