@@ -314,7 +314,7 @@
   },
   "readerNoVerses": "No verses found.",
   "readerLoadErrorRetry": "Could not load verses. Tap to retry.",
-  "readerSourceAttribution": "Quran text and translation source: quran.com (Quran Foundation).",
+  "readerSourceAttribution": "Quran text and translation source: quran.com",
   "settingsTitle": "Settings",
   "settingsPreferences": "Preferences",
   "settingsSurahsPerPrayer": "Surahs per prayer",

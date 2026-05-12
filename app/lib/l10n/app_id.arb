@@ -104,7 +104,7 @@
   "homePrayerUntilNext": "{duration} LAGI MENUJU BERIKUTNYA",
   "readerNoVerses": "Ayat tidak ditemukan.",
   "readerLoadErrorRetry": "Tidak bisa memuat ayat. Ketuk untuk mencoba lagi.",
-  "readerSourceAttribution": "Sumber teks Al-Quran dan terjemahan: quran.com (Quran Foundation).",
+  "readerSourceAttribution": "Sumber teks Al-Quran dan terjemahan: quran.com",
   "settingsTitle": "Pengaturan",
   "settingsPreferences": "Preferensi",
   "settingsSurahsPerPrayer": "Surah per shalat",

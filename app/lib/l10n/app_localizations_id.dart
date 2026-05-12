@@ -407,7 +407,7 @@ class SId extends S {
 
   @override
   String get readerSourceAttribution =>
-      'Sumber teks Al-Quran dan terjemahan: quran.com (Quran Foundation).';
+      'Sumber teks Al-Quran dan terjemahan: quran.com';
 
   @override
   String get settingsTitle => 'Pengaturan';

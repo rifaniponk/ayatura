@@ -406,7 +406,7 @@ class SEn extends S {
 
   @override
   String get readerSourceAttribution =>
-      'Quran text and translation source: quran.com (Quran Foundation).';
+      'Quran text and translation source: quran.com';
 
   @override
   String get settingsTitle => 'Settings';
