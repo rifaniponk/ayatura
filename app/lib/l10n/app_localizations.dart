@@ -253,6 +253,18 @@ abstract class S {
   /// **'Generate Plan for {monthYear}'**
   String monthRegeneratePlanFor(String monthYear);
 
+  /// No description provided for @homeNoPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No plan yet for today'**
+  String get homeNoPlanTitle;
+
+  /// No description provided for @homeNoPlanCreateThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Create plan for this month'**
+  String get homeNoPlanCreateThisMonth;
+
   /// No description provided for @monthTodayChip.
   ///
   /// In en, this message translates to:
@@ -540,24 +552,6 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Deselect all'**
   String get editorDeselectAll;
-
-  /// No description provided for @emptyNoPlanTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'No plan yet'**
-  String get emptyNoPlanTitle;
-
-  /// No description provided for @emptyNoPlanSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Generate a plan to assign readings across the month.'**
-  String get emptyNoPlanSubtitle;
-
-  /// No description provided for @emptyNoPlanAction.
-  ///
-  /// In en, this message translates to:
-  /// **'Generate Plan'**
-  String get emptyNoPlanAction;
 
   /// No description provided for @emptyPoolTooSmallTitle.
   ///

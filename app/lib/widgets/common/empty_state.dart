@@ -5,8 +5,8 @@ import '../../core/theme/app_text_styles.dart';
 import '../../l10n/app_localizations.dart';
 import 'gradient_button.dart';
 
-/// Three variants of the empty state component.
-enum EmptyStateVariant { noPlan, hifdhListTooSmall, hifdhListEmpty }
+/// Variants of the hifdh list empty state component.
+enum EmptyStateVariant { hifdhListTooSmall, hifdhListEmpty }
 
 class EmptyState extends StatelessWidget {
   const EmptyState({super.key, required this.variant, this.onAction});
@@ -67,13 +67,6 @@ class EmptyState extends StatelessWidget {
   _EmptyStateSpec _spec(BuildContext context, EmptyStateVariant v) {
     final s = S.of(context)!;
     switch (v) {
-      case EmptyStateVariant.noPlan:
-        return _EmptyStateSpec(
-          icon: Icons.auto_awesome_rounded,
-          title: s.emptyNoPlanTitle,
-          subtitle: s.emptyNoPlanSubtitle,
-          actionLabel: s.emptyNoPlanAction,
-        );
       case EmptyStateVariant.hifdhListTooSmall:
         return _EmptyStateSpec(
           icon: Icons.warning_amber_rounded,

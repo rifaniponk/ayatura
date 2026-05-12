@@ -113,6 +113,12 @@ class SId extends S {
   }
 
   @override
+  String get homeNoPlanTitle => 'Belum ada rencana untuk hari ini';
+
+  @override
+  String get homeNoPlanCreateThisMonth => 'Buat rencana untuk bulan ini';
+
+  @override
   String get monthTodayChip => 'Hari ini';
 
   @override
@@ -296,16 +302,6 @@ class SId extends S {
 
   @override
   String get editorDeselectAll => 'Batalkan pilihan';
-
-  @override
-  String get emptyNoPlanTitle => 'Belum ada rencana';
-
-  @override
-  String get emptyNoPlanSubtitle =>
-      'Buat rencana untuk menugaskan bacaan sepanjang bulan.';
-
-  @override
-  String get emptyNoPlanAction => 'Buat Rencana';
 
   @override
   String get emptyPoolTooSmallTitle => 'Hafalan kurang';
