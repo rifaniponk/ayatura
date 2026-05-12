@@ -9,8 +9,9 @@ import '../data/models/prayer.dart';
 import '../data/models/surah.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/providers.dart';
-import '../widgets/month/no_plan_empty_layout.dart';
+import '../widgets/common/compact_gradient_button.dart';
 import '../widgets/month/day_plan_card.dart';
+import '../widgets/month/month_empty_hero_layout.dart';
 import '../widgets/quran_reader/quran_reader_sheet.dart';
 
 /// Month review: browse any allowed month, see full per-prayer assignments,
@@ -166,16 +167,17 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
     } else if (planAsync.isLoading && plan == null) {
       body = const Center(child: CircularProgressIndicator());
     } else if (effective == null) {
-      body = NoPlanEmptyLayout(
+      body = MonthEmptyHeroLayout(
+        semanticLabel: s.monthNoPlanTitle(monthYearStr),
         title: s.monthNoPlanTitle(monthYearStr),
         subtitle: canRegenerateForViewedMonth
             ? s.monthNoPlanSubtitle
             : s.monthNoPlanPastSubtitle,
-        createPlanLabel: canRegenerateForViewedMonth
+        primaryLabel: canRegenerateForViewedMonth
             ? s.monthRegeneratePlanFor(monthYearStr)
             : null,
-        onCreatePlan: canRegenerateForViewedMonth ? _onRegenerate : null,
-        createPlanEnabled: !busy,
+        onPrimary: canRegenerateForViewedMonth ? _onRegenerate : null,
+        primaryEnabled: !busy,
       );
     } else {
       final masterList = surahsAsync.maybeWhen(
@@ -247,7 +249,7 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Material(
-          color: AppColors.white,
+          color: AppColors.background,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(8, 10, 12, 10),
             child: Column(
@@ -298,37 +300,10 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
                       runSpacing: 6,
                       children: [
                         if (canRegenerateForViewedMonth)
-                          OutlinedButton.icon(
+                          CompactGradientButton(
+                            label: s.monthRegenerateCompact,
+                            icon: Icons.refresh_rounded,
                             onPressed: busy ? null : _onRegenerate,
-                            icon: busy
-                                ? const SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: AppColors.green,
-                                    ),
-                                  )
-                                : const Icon(
-                                    Icons.refresh_rounded,
-                                    size: 18,
-                                    color: AppColors.green,
-                                  ),
-                            label: Text(
-                              s.monthRegenerateCompact,
-                              style: AppTextStyles.smallLabel.copyWith(
-                                color: AppColors.green,
-                              ),
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: AppColors.green,
-                              side: const BorderSide(color: AppColors.green2),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
-                              ),
-                              visualDensity: VisualDensity.compact,
-                            ),
                           ),
                         OutlinedButton.icon(
                           onPressed: busy ? null : _onClearAllLocks,

@@ -18,7 +18,8 @@ class AppBottomNavBar extends StatelessWidget {
   final ValueChanged<int> onTap;
   final List<NavItem> items;
 
-  /// When true, bar uses [AppColors.background] like the scaffold body (Home empty).
+  /// When true, bar uses [AppColors.background] like the scaffold body (Home or
+  /// Month empty hero).
   final bool backgroundMatchesBody;
 
   @override

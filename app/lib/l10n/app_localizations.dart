@@ -724,7 +724,7 @@ abstract class S {
   /// No description provided for @readerSourceAttribution.
   ///
   /// In en, this message translates to:
-  /// **'Quran text and translation source: quran.com (Quran Foundation).'**
+  /// **'Quran text and translation source: quran.com'**
   String get readerSourceAttribution;
 
   /// No description provided for @settingsTitle.
