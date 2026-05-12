@@ -111,14 +111,13 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
       return Center(child: Text(S.of(context)!.noSurahsLoaded));
     }
     if (pool.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: EmptyState(
-            variant: EmptyStateVariant.hifdhListEmpty,
-            onAction: widget.onAddSegment,
-          ),
-        ),
+      final loc = S.of(context)!;
+      return HifdhEmptyHeroLayout(
+        semanticLabel: loc.emptyHifdhListTitle,
+        title: loc.emptyHifdhListTitle,
+        subtitle: loc.emptyHifdhListSubtitle,
+        primaryLabel: loc.emptyHifdhListAction,
+        onPrimary: widget.onAddSegment,
       );
     }
 
