@@ -74,7 +74,9 @@ class _BulkByJuzPanel extends ConsumerWidget {
           ],
         ),
         ConstrainedBox(
-          constraints: const BoxConstraints(maxHeight: 320),
+          constraints: BoxConstraints(
+            maxHeight: (MediaQuery.sizeOf(context).height * 0.50) - 100,
+          ),
           child: ListView.builder(
             shrinkWrap: true,
             itemCount: inJuz.length,
