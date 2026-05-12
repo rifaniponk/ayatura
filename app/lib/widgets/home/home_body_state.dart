@@ -97,6 +97,16 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
         .toggleSlotLock(year: year, month: month, day: day, prayer: prayer);
   }
 
+  Future<void> _createPlanForCurrentMonth() async {
+    final ok = await ref.read(monthPlanProvider.notifier).regenerate();
+    if (!mounted) return;
+    if (!ok) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(S.of(context)!.snackbarNeedTwoSegments)),
+      );
+    }
+  }
+
   Future<void> _forceRefreshPrayerTimes() async {
     await ref.read(seededDatabaseProvider.future);
     final db = ref.read(appDatabaseProvider);
@@ -132,8 +142,10 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
       return const Center(child: CircularProgressIndicator());
     }
     final effective = plan?.effectiveOrNull(now);
+    final s = S.of(context)!;
     final selectedDay = ref.watch(selectedPlanDayProvider);
     final enabledCount = widget.pool.where((e) => e.enabled).length;
+    final planRegenerateBusy = ref.watch(monthPlanRegenerateBusyProvider);
 
     final daysInMonth = effective != null
         ? DateTime(effective.year, effective.month + 1, 0).day
@@ -376,10 +388,12 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                             onAction: () =>
                                 ref.read(navIndexProvider.notifier).setIndex(2),
                           )
-                        : EmptyState(
-                            variant: EmptyStateVariant.noPlan,
-                            onAction: () =>
-                                ref.read(navIndexProvider.notifier).setIndex(1),
+                        : NoPlanEmptyLayout(
+                            title: s.homeNoPlanTitle,
+                            subtitle: s.monthNoPlanSubtitle,
+                            createPlanLabel: s.homeNoPlanCreateThisMonth,
+                            onCreatePlan: _createPlanForCurrentMonth,
+                            createPlanEnabled: !planRegenerateBusy,
                           ),
                   ),
                 ),

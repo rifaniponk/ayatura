@@ -9,7 +9,7 @@ import '../data/models/prayer.dart';
 import '../data/models/surah.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/providers.dart';
-import '../widgets/common/gradient_button.dart';
+import '../widgets/month/no_plan_empty_layout.dart';
 import '../widgets/month/day_plan_card.dart';
 import '../widgets/quran_reader/quran_reader_sheet.dart';
 
@@ -166,47 +166,16 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
     } else if (planAsync.isLoading && plan == null) {
       body = const Center(child: CircularProgressIndicator());
     } else if (effective == null) {
-      body = Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.autorenew_rounded,
-                size: 48,
-                color: AppColors.green.withValues(alpha: 0.45),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                s.monthNoPlanTitle(monthYearStr),
-                style: AppTextStyles.emptyStateTitle,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                canRegenerateForViewedMonth
-                    ? s.monthNoPlanSubtitle
-                    : s.monthNoPlanPastSubtitle,
-                style: AppTextStyles.body.copyWith(
-                  color: AppColors.ink3,
-                  fontSize: 13,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              if (canRegenerateForViewedMonth) ...[
-                const SizedBox(height: 24),
-                GradientButton(
-                  label: s.monthRegeneratePlanFor(monthYearStr),
-                  onPressed: _onRegenerate,
-                  enabled: !busy,
-                  icon: Icons.auto_awesome_rounded,
-                ),
-              ],
-            ],
-          ),
-        ),
+      body = NoPlanEmptyLayout(
+        title: s.monthNoPlanTitle(monthYearStr),
+        subtitle: canRegenerateForViewedMonth
+            ? s.monthNoPlanSubtitle
+            : s.monthNoPlanPastSubtitle,
+        createPlanLabel: canRegenerateForViewedMonth
+            ? s.monthRegeneratePlanFor(monthYearStr)
+            : null,
+        onCreatePlan: canRegenerateForViewedMonth ? _onRegenerate : null,
+        createPlanEnabled: !busy,
       );
     } else {
       final masterList = surahsAsync.maybeWhen(

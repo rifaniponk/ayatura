@@ -113,6 +113,12 @@ class SEn extends S {
   }
 
   @override
+  String get homeNoPlanTitle => 'No plan yet for today';
+
+  @override
+  String get homeNoPlanCreateThisMonth => 'Create plan for this month';
+
+  @override
   String get monthTodayChip => 'Today';
 
   @override
@@ -296,16 +302,6 @@ class SEn extends S {
 
   @override
   String get editorDeselectAll => 'Deselect all';
-
-  @override
-  String get emptyNoPlanTitle => 'No plan yet';
-
-  @override
-  String get emptyNoPlanSubtitle =>
-      'Generate a plan to assign readings across the month.';
-
-  @override
-  String get emptyNoPlanAction => 'Generate Plan';
 
   @override
   String get emptyPoolTooSmallTitle => 'Need more for a plan';

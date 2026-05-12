@@ -104,6 +104,8 @@
       }
     }
   },
+  "homeNoPlanTitle": "No plan yet for today",
+  "homeNoPlanCreateThisMonth": "Create plan for this month",
   "monthTodayChip": "Today",
   "monthFullSurah": "Full surah",
   "monthAyatRange": "{start} – {end}",
@@ -256,9 +258,6 @@
   "editorAlreadyAdded": "Already added",
   "editorSelectAll": "Select all",
   "editorDeselectAll": "Deselect all",
-  "emptyNoPlanTitle": "No plan yet",
-  "emptyNoPlanSubtitle": "Generate a plan to assign readings across the month.",
-  "emptyNoPlanAction": "Generate Plan",
   "emptyPoolTooSmallTitle": "Need more for a plan",
   "emptyPoolTooSmallSubtitle": "Include at least two surahs or ayat ranges in your hifdh list (with the switch on), then generate a plan.",
   "emptyPoolTooSmallAction": "Open Hifdh",
