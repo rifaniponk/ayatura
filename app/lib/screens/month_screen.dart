@@ -9,7 +9,7 @@ import '../data/models/prayer.dart';
 import '../data/models/surah.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/providers.dart';
-import '../widgets/month/no_plan_empty_layout.dart';
+import '../widgets/month/month_empty_hero_layout.dart';
 import '../widgets/month/day_plan_card.dart';
 import '../widgets/quran_reader/quran_reader_sheet.dart';
 
@@ -166,16 +166,17 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
     } else if (planAsync.isLoading && plan == null) {
       body = const Center(child: CircularProgressIndicator());
     } else if (effective == null) {
-      body = NoPlanEmptyLayout(
+      body = MonthEmptyHeroLayout(
+        semanticLabel: s.monthNoPlanTitle(monthYearStr),
         title: s.monthNoPlanTitle(monthYearStr),
         subtitle: canRegenerateForViewedMonth
             ? s.monthNoPlanSubtitle
             : s.monthNoPlanPastSubtitle,
-        createPlanLabel: canRegenerateForViewedMonth
+        primaryLabel: canRegenerateForViewedMonth
             ? s.monthRegeneratePlanFor(monthYearStr)
             : null,
-        onCreatePlan: canRegenerateForViewedMonth ? _onRegenerate : null,
-        createPlanEnabled: !busy,
+        onPrimary: canRegenerateForViewedMonth ? _onRegenerate : null,
+        primaryEnabled: !busy,
       );
     } else {
       final masterList = surahsAsync.maybeWhen(

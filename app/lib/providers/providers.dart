@@ -7,6 +7,7 @@ export 'core/package_info_provider.dart';
 export 'core/settings_provider.dart';
 export 'core/shared_preferences_provider.dart';
 export 'insight/hifdh_frequency_provider.dart';
+export 'plan/month_empty_hero_for_nav_provider.dart';
 export 'plan/month_plan_provider.dart';
 export 'plan/month_plan_regenerate_busy_provider.dart';
 export 'plan/month_screen_provider.dart';

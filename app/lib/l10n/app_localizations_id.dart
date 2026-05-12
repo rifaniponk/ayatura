@@ -60,7 +60,7 @@ class SId extends S {
 
   @override
   String get snackbarNeedTwoSegments =>
-      'Butuh minimal dua item yang aktif di daftar hafalan.';
+      'Butuh minimal dua surah yang aktif di daftar hafalan.';
 
   @override
   String get monthScreenTitle => 'Bulan';
@@ -101,7 +101,7 @@ class SId extends S {
 
   @override
   String get monthNoPlanSubtitle =>
-      'Ketuk tombol dibawah ini untuk membuatnya.';
+      'Mulai susun bacaan Al-Qur’anmu untuk bulan ini. Ayatura akan membantu membagi hafalanmu secara seimbang ke dalam shalat 5 waktu, sehingga seluruh hafalan tetap terjaga dan terus dibaca secara rutin.';
 
   @override
   String get monthNoPlanPastSubtitle =>
