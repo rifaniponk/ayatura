@@ -21,65 +21,78 @@ class AboutScreen extends ConsumerWidget {
         title: s.aboutTitle,
         onBack: () => Navigator.of(context).pop(),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(18),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Center(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: Image.asset(
-                'assets/images/logo/logo.png',
-                width: 96,
-                height: 96,
-                semanticLabel: s.brandLogoLabel,
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: Image.asset(
+                        'assets/images/logo/logo.png',
+                        width: 96,
+                        height: 96,
+                        semanticLabel: s.brandLogoLabel,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    s.appTitle,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.mainHeading,
+                  ),
+                  const SizedBox(height: 8),
+                  packageInfoAsync.when(
+                    data: (info) => Text(
+                      s.aboutVersionBuild(info.version, info.buildNumber),
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.meta.copyWith(color: AppColors.ink2),
+                    ),
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, _) => const SizedBox.shrink(),
+                  ),
+                  const SizedBox(height: 24),
+                  TaggedRichText(text: s.aboutBodyParagraph1),
+                  const SizedBox(height: 16),
+                  TaggedRichText(text: s.aboutBodyParagraph2),
+                  const SizedBox(height: 24),
+                  Card(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.privacy_tip_outlined),
+                          title: Text(
+                            s.aboutPrivacyPolicy,
+                            style: AppTextStyles.cardLabel,
+                          ),
+                          trailing: const Icon(Icons.chevron_right_rounded),
+                          onTap: () => _showTextDialog(
+                            context: context,
+                            title: s.aboutPrivacyPolicy,
+                            body: s.aboutPrivacyBody,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          const SizedBox(height: 18),
-          Text(
-            s.appTitle,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.mainHeading,
-          ),
-          const SizedBox(height: 8),
-          packageInfoAsync.when(
-            data: (info) => Text(
-              s.aboutVersionBuild(info.version, info.buildNumber),
+          SafeArea(
+            top: false,
+            minimum: const EdgeInsets.fromLTRB(18, 8, 18, 16),
+            child: Text(
+              s.aboutCopyright,
               textAlign: TextAlign.center,
-              style: AppTextStyles.meta.copyWith(color: AppColors.ink2),
+              style: AppTextStyles.meta.copyWith(color: AppColors.ink3),
             ),
-            loading: () => const SizedBox.shrink(),
-            error: (_, _) => const SizedBox.shrink(),
-          ),
-          const SizedBox(height: 24),
-          TaggedRichText(text: s.aboutBodyParagraph1),
-          const SizedBox(height: 16),
-          TaggedRichText(text: s.aboutBodyParagraph2),
-          const SizedBox(height: 24),
-          Card(
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.privacy_tip_outlined),
-                  title: Text(
-                    s.aboutPrivacyPolicy,
-                    style: AppTextStyles.cardLabel,
-                  ),
-                  trailing: const Icon(Icons.chevron_right_rounded),
-                  onTap: () => _showTextDialog(
-                    context: context,
-                    title: s.aboutPrivacyPolicy,
-                    body: s.aboutPrivacyBody,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            s.aboutCopyright,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.meta.copyWith(color: AppColors.ink3),
           ),
         ],
       ),
