@@ -158,7 +158,7 @@ class HomeEmptyHeroLayout extends StatelessWidget {
                 ),
               ),
               if (secondaryLabel != null && onSecondary != null) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: 24),
                 Center(
                   child: TextButton.icon(
                     style: TextButton.styleFrom(

@@ -5,6 +5,7 @@ import '../core/theme/app_colors.dart';
 import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/core/package_info_provider.dart';
+import '../widgets/common/tagged_rich_text.dart';
 import '../widgets/common/gradient_app_bar.dart';
 
 class AboutScreen extends ConsumerWidget {
@@ -51,7 +52,9 @@ class AboutScreen extends ConsumerWidget {
             error: (_, _) => const SizedBox.shrink(),
           ),
           const SizedBox(height: 24),
-          Text(s.settingsAboutBody, style: AppTextStyles.body),
+          TaggedRichText(text: s.aboutBodyParagraph1),
+          const SizedBox(height: 16),
+          TaggedRichText(text: s.aboutBodyParagraph2),
           const SizedBox(height: 24),
           Card(
             child: Column(

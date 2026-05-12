@@ -391,6 +391,14 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                             primaryLabel: s.emptyPoolTooSmallAction,
                             onPrimary: () =>
                                 ref.read(navIndexProvider.notifier).setIndex(2),
+                            secondaryLabel: s.homeNoPlanLearnHow,
+                            onSecondary: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  builder: (_) => const AboutScreen(),
+                                ),
+                              );
+                            },
                           )
                         : HomeEmptyHeroLayout(
                             semanticLabel: s.homeNoPlanTitle,

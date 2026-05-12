@@ -117,7 +117,7 @@ class SId extends S {
 
   @override
   String get homeNoPlanHeroSubtitle =>
-      'Anda belum punya rencana surah harian. Buat satu agar kebiasaan membaca Al-Quran tetap konsisten.';
+      'Anda belum punya rencana surah harian. Ketuk tombol dibawah ini untuk membuatnya secara otomatis untuk bulan ini.';
 
   @override
   String get homeNoPlanCreateThisMonth => 'Buat rencana pertamamu';
@@ -439,10 +439,6 @@ class SId extends S {
   String get settingsAbout => 'Tentang';
 
   @override
-  String get settingsAboutBody =>
-      'Ayatura membantu kamu membangun kebiasaan membaca Surah secara konsisten, baik untuk menghafal, muraja’ah, maupun membiasakan Al-Qur’an hadir di setiap shalat. Kamu bisa menambahkan hafalan Surah sendiri, membuat rencana bacaan bulanan untuk shalat lima waktu, lalu menjalankannya setiap hari.';
-
-  @override
   String get settingsAboutTileTitle => 'Tentang Ayatura';
 
   @override
@@ -455,6 +451,14 @@ class SId extends S {
   String aboutVersionBuild(String version, String buildNumber) {
     return 'Versi $version ($buildNumber)';
   }
+
+  @override
+  String get aboutBodyParagraph1 =>
+      '<b>Ayatura</b> membantu kamu mendistribusikan <b>hafalan Surah</b> ke dalam <b>shalat lima waktu</b> secara teratur dan seimbang. Masukkan daftar hafalanmu, lalu <b>Ayatura</b> akan menyusun <b>rencana bacaan harian</b> agar seluruh hafalan tetap sering dibaca dan tidak hanya berputar di Surah yang itu-itu saja.';
+
+  @override
+  String get aboutBodyParagraph2 =>
+      'Banyak orang yang memiliki <b>hafalan cukup banyak</b> sering bingung menentukan Surah apa yang ingin dibaca saat <b>shalat</b>. Akibatnya, beberapa Surah menjadi jarang dibaca dan perlahan mulai terlupa. <b>Ayatura</b> hadir untuk membantu menjaga hafalan tetap hidup melalui <b>pola bacaan yang lebih merata setiap hari</b>.';
 
   @override
   String get aboutPrivacyPolicy => 'Kebijakan Privasi';

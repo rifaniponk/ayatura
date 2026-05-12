@@ -438,10 +438,6 @@ class SEn extends S {
   String get settingsAbout => 'About';
 
   @override
-  String get settingsAboutBody =>
-      'Ayatura helps you build a consistent Surah recitation habit—whether you are memorizing the Quran, revising what you\'ve learned, or making the Quran part of every prayer. Add your pool, generate a monthly plan across your five daily prayers, and read a little each day.';
-
-  @override
   String get settingsAboutTileTitle => 'About Ayatura';
 
   @override
@@ -454,6 +450,14 @@ class SEn extends S {
   String aboutVersionBuild(String version, String buildNumber) {
     return 'Version $version ($buildNumber)';
   }
+
+  @override
+  String get aboutBodyParagraph1 =>
+      '<b>Ayatura</b> helps you spread your <b>memorized surahs</b> across the <b>five daily prayers</b> in a steady, balanced way. Enter your hifdh list, and <b>Ayatura</b> builds a <b>daily reading plan</b> so every surah gets recited often instead of cycling through the same few.';
+
+  @override
+  String get aboutBodyParagraph2 =>
+      'Many people with <b>a lot of hifdhs</b> are unsure which surah to read in <b>prayer</b>. Some surahs are then read rarely and slowly fade. <b>Ayatura</b> helps keep your <b>hifdh alive</b> through a reading pattern that is <b>consistent every day</b>.';
 
   @override
   String get aboutPrivacyPolicy => 'Privacy Policy';
