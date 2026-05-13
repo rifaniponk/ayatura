@@ -31,7 +31,7 @@ class SEn extends S {
 
   @override
   String appBarSubtitleChaptersPool(int chapters, int pool) {
-    return '$chapters surahs · $pool in hifdh list';
+    return '$chapters surahs · $pool in Hifdh list';
   }
 
   @override
@@ -45,7 +45,7 @@ class SEn extends S {
   }
 
   @override
-  String get noSurahsLoaded => 'No surahs loaded';
+  String get noSurahsLoaded => 'Surahs are not available';
 
   @override
   String get dayLabel => 'Day';
@@ -60,7 +60,7 @@ class SEn extends S {
 
   @override
   String get snackbarNeedTwoSegments =>
-      'Need at least two items turned on in your hifdh list.';
+      'You need at least two active surahs in your Hifdh list.';
 
   @override
   String get monthScreenTitle => 'Month';
@@ -72,7 +72,7 @@ class SEn extends S {
 
   @override
   String monthScreenSubtitlePool(String monthYear, int count) {
-    return '$monthYear · $count in hifdh list';
+    return '$monthYear · $count in Hifdh list';
   }
 
   @override
@@ -97,19 +97,20 @@ class SEn extends S {
 
   @override
   String monthNoPlanTitle(String monthYear) {
-    return 'No plan for $monthYear';
+    return 'No plan yet for $monthYear';
   }
 
   @override
-  String get monthNoPlanSubtitle => 'Tap button below to create one.';
+  String get monthNoPlanSubtitle =>
+      'Start planning your Quran reading for this month. Ayatura helps you spread your Hifdh evenly across the five daily prayers, so everything you have memorized stays fresh and is read regularly.';
 
   @override
   String get monthNoPlanPastSubtitle =>
-      'Plans can only be generated for the current or a future month.';
+      'Plans can only be created for this month or a future month.';
 
   @override
   String monthRegeneratePlanFor(String monthYear) {
-    return 'Generate Plan for $monthYear';
+    return 'Create plan for $monthYear';
   }
 
   @override
@@ -117,7 +118,7 @@ class SEn extends S {
 
   @override
   String get homeNoPlanHeroSubtitle =>
-      'You don\'t have a daily surah plan yet. Let\'s create one to build a consistent Quran reading habit.';
+      'You do not have a daily surah plan yet. Tap the button below to create one automatically for this month.';
 
   @override
   String get homeNoPlanCreateThisMonth => 'Create your first plan';
@@ -174,16 +175,16 @@ class SEn extends S {
   String get hifdhScreenTitle => 'Hifdh';
 
   @override
-  String get hifdhSubtitleEmpty => 'Nothing listed yet';
+  String get hifdhSubtitleEmpty => 'Nothing added yet';
 
   @override
   String hifdhSubtitleCount(int enabled, int total) {
-    return '$enabled active of $total total in hifdh list';
+    return '$enabled active of $total total in Hifdh list';
   }
 
   @override
   String get hifdhIntroBanner =>
-      'Hifdh is Quran memorization. What you list here is used when you build your monthly plan.';
+      'Surahs you add here will be used to create your monthly plan.';
 
   @override
   String get hifdhFabAdd => 'Add';
@@ -195,11 +196,11 @@ class SEn extends S {
   String get hifdhMenuRemove => 'Remove';
 
   @override
-  String get hifdhRemoveDialogTitle => 'Remove from hifdh list?';
+  String get hifdhRemoveDialogTitle => 'Remove from Hifdh list?';
 
   @override
   String hifdhRemoveDialogContent(String label) {
-    return '$label will be removed from your hifdh list. Your current month plan will be cleared until you generate a new one.';
+    return '$label will be removed from your Hifdh list, but this will not affect your existing monthly plan.';
   }
 
   @override
@@ -214,29 +215,29 @@ class SEn extends S {
 
   @override
   String hifdhToggleErrorSnackbar(String error) {
-    return 'Failed to save: $error';
+    return 'Could not save: $error';
   }
 
   @override
   String hifdhDuplicateError(String label) {
-    return '$label is already in your hifdh list';
+    return '$label is already in your Hifdh list';
   }
 
   @override
   String hifdhBulkSkippedOne(String label) {
-    return '1 entry was skipped — $label is already in your hifdh list.';
+    return '1 item was skipped because $label is already in your Hifdh list.';
   }
 
   @override
   String hifdhBulkSkippedMany(int count) {
-    return '$count entries were skipped — already in your hifdh list.';
+    return '$count items were skipped because they are already in your Hifdh list.';
   }
 
   @override
-  String get editorAddTitle => 'Add surah or ayat';
+  String get editorAddTitle => 'Add surah to Hifdh';
 
   @override
-  String get editorEditTitle => 'Edit entry';
+  String get editorEditTitle => 'Edit Hifdh';
 
   @override
   String get editorSurahLabel => 'Surah';
@@ -245,10 +246,11 @@ class SEn extends S {
   String get editorEntireSurah => 'Entire surah';
 
   @override
-  String get editorEntireSurahOn => 'The entire surah is on your hifdh list.';
+  String get editorEntireSurahOn => 'Include every ayah in this surah.';
 
   @override
-  String get editorEntireSurahOff => 'Only the ayat range below is included.';
+  String get editorEntireSurahOff =>
+      'Only the ayah range below will be included.';
 
   @override
   String editorAyatCount(int count) {
@@ -262,7 +264,7 @@ class SEn extends S {
   String get editorEndAyah => 'End ayah';
 
   @override
-  String get editorAddButton => 'Add to hifdh list';
+  String get editorAddButton => 'Add to Hifdh list';
 
   @override
   String get editorSaveButton => 'Save';
@@ -277,10 +279,10 @@ class SEn extends S {
   String get editorPickerNoResults => 'No results';
 
   @override
-  String get editorModeNormal => 'Normal';
+  String get editorModeNormal => '1 surah';
 
   @override
-  String get editorModeBulkByJuz => 'Bulk by Juz';
+  String get editorModeBulkByJuz => 'Bulk add by Juz';
 
   @override
   String get editorJuzLabel => 'Juz';
@@ -295,8 +297,8 @@ class SEn extends S {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Add $count to hifdh list',
-      one: 'Add 1 to hifdh list',
+      other: 'Add $count to Hifdh list',
+      one: 'Add 1 to Hifdh list',
     );
     return '$_temp0';
   }
@@ -311,21 +313,21 @@ class SEn extends S {
   String get editorDeselectAll => 'Deselect all';
 
   @override
-  String get emptyPoolTooSmallTitle => 'Need more for a plan';
+  String get emptyPoolTooSmallTitle => 'No active Hifdh yet';
 
   @override
   String get emptyPoolTooSmallSubtitle =>
-      'Include at least two surahs or ayat ranges in your hifdh list (with the switch on), then generate a plan.';
+      'Add some surahs to start building a prayer plan. After that, you can easily create a plan for the month ahead.';
 
   @override
   String get emptyPoolTooSmallAction => 'Open Hifdh';
 
   @override
-  String get emptyHifdhListTitle => 'Start your hifdh list';
+  String get emptyHifdhListTitle => 'No Hifdh yet';
 
   @override
   String get emptyHifdhListSubtitle =>
-      'Add full surahs or ayat ranges you are memorizing. Your monthly plan will draw from this list.';
+      'Add a full surah or an ayah range that you want to read during prayer. Your monthly plan will be created from this list.';
 
   @override
   String get emptyHifdhListAction => 'Add surah or ayat';
@@ -361,7 +363,7 @@ class SEn extends S {
   String get slotUnlockedSnackbar => 'Slot unlocked';
 
   @override
-  String get monthClearAllLocks => 'Clear all locks';
+  String get monthClearAllLocks => 'Unlock all';
 
   @override
   String get monthNoLocksToClear => 'No locks to clear for this month.';
@@ -371,8 +373,8 @@ class SEn extends S {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Cleared $count locks',
-      one: 'Cleared 1 lock',
+      other: '$count locks unlocked',
+      one: '1 lock unlocked',
     );
     return '$_temp0';
   }
@@ -395,7 +397,7 @@ class SEn extends S {
 
   @override
   String homePrayerUntilNext(String duration) {
-    return 'IN $duration UNTIL NEXT';
+    return '$duration UNTIL NEXT';
   }
 
   @override
@@ -406,7 +408,7 @@ class SEn extends S {
 
   @override
   String get readerSourceAttribution =>
-      'Quran text and translation source: quran.com';
+      'Source of Quran text and translation: quran.com';
 
   @override
   String get settingsTitle => 'Settings';
@@ -419,14 +421,14 @@ class SEn extends S {
 
   @override
   String get settingsSurahsPerPrayerSubtitle =>
-      'Number of surahs per prayer slot. Regenerate to apply.';
+      'Number of surahs per prayer slot. Regenerate the plan to apply changes.';
 
   @override
-  String get settingsLockPastPrayers => 'Lock past prayers';
+  String get settingsLockPastPrayers => 'Lock past prayer slots';
 
   @override
   String get settingsLockPastPrayersSubtitle =>
-      'Preserve prayer slots from days before today when regenerating.';
+      'Plans for previous days will not change when you regenerate the plan.';
 
   @override
   String get settingsLanguage => 'Language';
@@ -453,18 +455,18 @@ class SEn extends S {
 
   @override
   String get aboutBodyParagraph1 =>
-      '<b>Ayatura</b> helps you spread your <b>memorized surahs</b> across the <b>five daily prayers</b> in a steady, balanced way. Enter your hifdh list, and <b>Ayatura</b> builds a <b>daily reading plan</b> so every surah gets recited often instead of cycling through the same few.';
+      '<b>Ayatura</b> helps you spread your <b>memorized surahs</b> across the <b>five daily prayers</b> in a steady, balanced way. Enter your Hifdh list, and <b>Ayatura</b> will build a <b>daily reading plan</b> so everything you have memorized is recited regularly instead of cycling through the same few surahs.';
 
   @override
   String get aboutBodyParagraph2 =>
-      'Many people with <b>a lot of hifdhs</b> are unsure which surah to read in <b>prayer</b>. Some surahs are then read rarely and slowly fade. <b>Ayatura</b> helps keep your <b>hifdh alive</b> through a reading pattern that is <b>consistent every day</b>.';
+      'Many people with <b>many memorized surahs</b> often struggle to choose which surah to read during <b>prayer</b>. As a result, some surahs are rarely read and may slowly be forgotten. <b>Ayatura</b> helps keep your <b>Hifdh alive</b> through a <b>more balanced daily reading pattern</b>.';
 
   @override
   String get aboutPrivacyPolicy => 'Privacy Policy';
 
   @override
   String get aboutPrivacyBody =>
-      'Ayatura keeps your plan and settings data on this device. It does not require an account, and your Quran planning data is not sent to a server by the app.';
+      'Ayatura stores all data and settings on this device. This app does not require an account, and your data is not sent to a server.';
 
   @override
   String get aboutCopyright => 'Copyright 2026 Ayatura. All rights reserved.';
@@ -477,7 +479,7 @@ class SEn extends S {
       'Hifdh frequency counter across all saved monthly plans.';
 
   @override
-  String get insightEmpty => 'No active hifdh entries yet.';
+  String get insightEmpty => 'No active Hifdh yet.';
 
   @override
   String insightAssignmentCount(int count) {
@@ -509,13 +511,13 @@ class SEn extends S {
   String get backTooltip => 'Back';
 
   @override
-  String get dismissTooltip => 'Dismiss';
+  String get dismissTooltip => 'Close';
 
   @override
   String get widgetDescription => 'Ayatura prayer plan widget';
 
   @override
-  String get widgetEmptyNoPlanTitle => 'No plan generated yet';
+  String get widgetEmptyNoPlanTitle => 'No plan yet';
 
   @override
   String get widgetEmptyNoPlanSubtitle => 'Open the app to get started';

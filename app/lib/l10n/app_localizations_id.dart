@@ -198,7 +198,7 @@ class SId extends S {
 
   @override
   String hifdhRemoveDialogContent(String label) {
-    return '$label akan dihapus dari daftar hafalan kamu. Rencana bulan ini akan dihapus sampai kamu membuat yang baru.';
+    return '$label akan dihapus dari daftar hafalan namun tidak akan mempengaruhi rencana bulanan kamu.';
   }
 
   @override
@@ -232,20 +232,19 @@ class SId extends S {
   }
 
   @override
-  String get editorAddTitle => 'Tambah surah atau ayat';
+  String get editorAddTitle => 'Tambah hafalan surah';
 
   @override
-  String get editorEditTitle => 'Edit entri';
+  String get editorEditTitle => 'Edit hafalan';
 
   @override
   String get editorSurahLabel => 'Surah';
 
   @override
-  String get editorEntireSurah => 'Seluruh surah';
+  String get editorEntireSurah => 'Seluruh ayat';
 
   @override
-  String get editorEntireSurahOn =>
-      'Seluruh surah ada dalam daftar hafalan kamu.';
+  String get editorEntireSurahOn => 'Masukan seluruh ayat dari surah ini.';
 
   @override
   String get editorEntireSurahOff =>
@@ -281,7 +280,7 @@ class SId extends S {
   String get editorModeNormal => '1 Surah';
 
   @override
-  String get editorModeBulkByJuz => 'Bayak Surah (per Juz)';
+  String get editorModeBulkByJuz => 'Sekaligus (per Juz)';
 
   @override
   String get editorJuzLabel => 'Juz';
@@ -321,11 +320,11 @@ class SId extends S {
   String get emptyPoolTooSmallAction => 'Buka Hafalan';
 
   @override
-  String get emptyHifdhListTitle => 'Mulai daftar hafalan';
+  String get emptyHifdhListTitle => 'Belum ada hafalan';
 
   @override
   String get emptyHifdhListSubtitle =>
-      'Tambahkan surah lengkap atau rentang ayat yang sedang kamu hafal. Rencana bulanan kamu akan diambil dari daftar ini.';
+      'Tambahkan surah lengkap atau rentang ayat yang akan kamu baca didalam shalat. Rencana bulanan kamu akan diambil dari daftar ini.';
 
   @override
   String get emptyHifdhListAction => 'Tambah surah atau ayat';
@@ -423,11 +422,11 @@ class SId extends S {
       'Jumlah surah per slot shalat. Buat ulang rencana untuk menerapkan.';
 
   @override
-  String get settingsLockPastPrayers => 'Kunci shalat yang sudah lewat';
+  String get settingsLockPastPrayers => 'Kunci slot shalat yang sudah lewat';
 
   @override
   String get settingsLockPastPrayersSubtitle =>
-      'Pertahankan slot shalat sebelum hari ini saat membuat ulang rencana.';
+      'Rencana hari sebelumnya tidak akan berubah saat membuat ulang rencana.';
 
   @override
   String get settingsLanguage => 'Bahasa';
@@ -465,7 +464,7 @@ class SId extends S {
 
   @override
   String get aboutPrivacyBody =>
-      'Ayatura menyimpan data rencana dan pengaturan di perangkat ini. Aplikasi ini tidak membutuhkan akun, dan data perencanaan Quranmu tidak dikirim ke server oleh aplikasi.';
+      'Ayatura menyimpan semua data dan pengaturan di perangkat ini. Aplikasi ini tidak membutuhkan akun dan datamu tidak dikirim ke server.';
 
   @override
   String get aboutCopyright => 'Copyright 2026 Ayatura. Semua hak dilindungi.';
