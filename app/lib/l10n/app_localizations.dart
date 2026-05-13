@@ -142,7 +142,7 @@ abstract class S {
   /// No description provided for @appBarSubtitleChaptersPool.
   ///
   /// In en, this message translates to:
-  /// **'{chapters} surahs · {pool} in hifdh list'**
+  /// **'{chapters} surahs · {pool} in Hifdh list'**
   String appBarSubtitleChaptersPool(int chapters, int pool);
 
   /// No description provided for @appBarSubtitleChaptersLoading.
@@ -160,7 +160,7 @@ abstract class S {
   /// No description provided for @noSurahsLoaded.
   ///
   /// In en, this message translates to:
-  /// **'No surahs loaded'**
+  /// **'Surahs are not available'**
   String get noSurahsLoaded;
 
   /// No description provided for @dayLabel.
@@ -184,7 +184,7 @@ abstract class S {
   /// No description provided for @snackbarNeedTwoSegments.
   ///
   /// In en, this message translates to:
-  /// **'Need at least two items turned on in your hifdh list.'**
+  /// **'You need at least two active surahs in your Hifdh list.'**
   String get snackbarNeedTwoSegments;
 
   /// No description provided for @monthScreenTitle.
@@ -202,7 +202,7 @@ abstract class S {
   /// No description provided for @monthScreenSubtitlePool.
   ///
   /// In en, this message translates to:
-  /// **'{monthYear} · {count} in hifdh list'**
+  /// **'{monthYear} · {count} in Hifdh list'**
   String monthScreenSubtitlePool(String monthYear, int count);
 
   /// No description provided for @monthNavYearDays.
@@ -232,25 +232,25 @@ abstract class S {
   /// No description provided for @monthNoPlanTitle.
   ///
   /// In en, this message translates to:
-  /// **'No plan for {monthYear}'**
+  /// **'No plan yet for {monthYear}'**
   String monthNoPlanTitle(String monthYear);
 
   /// No description provided for @monthNoPlanSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Tap button below to create one.'**
+  /// **'Start planning your Quran reading for this month. Ayatura helps you spread your Hifdh evenly across the five daily prayers, so everything you have memorized stays fresh and is read regularly.'**
   String get monthNoPlanSubtitle;
 
   /// No description provided for @monthNoPlanPastSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Plans can only be generated for the current or a future month.'**
+  /// **'Plans can only be created for this month or a future month.'**
   String get monthNoPlanPastSubtitle;
 
   /// No description provided for @monthRegeneratePlanFor.
   ///
   /// In en, this message translates to:
-  /// **'Generate Plan for {monthYear}'**
+  /// **'Create plan for {monthYear}'**
   String monthRegeneratePlanFor(String monthYear);
 
   /// No description provided for @homeNoPlanTitle.
@@ -262,7 +262,7 @@ abstract class S {
   /// No description provided for @homeNoPlanHeroSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'You don\'t have a daily surah plan yet. Let\'s create one to build a consistent Quran reading habit.'**
+  /// **'You do not have a daily surah plan yet. Tap the button below to create one automatically for this month.'**
   String get homeNoPlanHeroSubtitle;
 
   /// No description provided for @homeNoPlanCreateThisMonth.
@@ -352,19 +352,19 @@ abstract class S {
   /// No description provided for @hifdhSubtitleEmpty.
   ///
   /// In en, this message translates to:
-  /// **'Nothing listed yet'**
+  /// **'Nothing added yet'**
   String get hifdhSubtitleEmpty;
 
   /// No description provided for @hifdhSubtitleCount.
   ///
   /// In en, this message translates to:
-  /// **'{enabled} active of {total} total in hifdh list'**
+  /// **'{enabled} active of {total} total in Hifdh list'**
   String hifdhSubtitleCount(int enabled, int total);
 
   /// No description provided for @hifdhIntroBanner.
   ///
   /// In en, this message translates to:
-  /// **'Hifdh is Quran memorization. What you list here is used when you build your monthly plan.'**
+  /// **'Surahs you add here will be used to create your monthly plan.'**
   String get hifdhIntroBanner;
 
   /// No description provided for @hifdhFabAdd.
@@ -388,13 +388,13 @@ abstract class S {
   /// No description provided for @hifdhRemoveDialogTitle.
   ///
   /// In en, this message translates to:
-  /// **'Remove from hifdh list?'**
+  /// **'Remove from Hifdh list?'**
   String get hifdhRemoveDialogTitle;
 
   /// No description provided for @hifdhRemoveDialogContent.
   ///
   /// In en, this message translates to:
-  /// **'{label} will be removed from your hifdh list. Your current month plan will be cleared until you generate a new one.'**
+  /// **'{label} will be removed from your Hifdh list, but this will not affect your existing monthly plan.'**
   String hifdhRemoveDialogContent(String label);
 
   /// No description provided for @hifdhRemoveErrorSnackbar.
@@ -412,37 +412,37 @@ abstract class S {
   /// No description provided for @hifdhToggleErrorSnackbar.
   ///
   /// In en, this message translates to:
-  /// **'Failed to save: {error}'**
+  /// **'Could not save: {error}'**
   String hifdhToggleErrorSnackbar(String error);
 
   /// No description provided for @hifdhDuplicateError.
   ///
   /// In en, this message translates to:
-  /// **'{label} is already in your hifdh list'**
+  /// **'{label} is already in your Hifdh list'**
   String hifdhDuplicateError(String label);
 
   /// No description provided for @hifdhBulkSkippedOne.
   ///
   /// In en, this message translates to:
-  /// **'1 entry was skipped — {label} is already in your hifdh list.'**
+  /// **'1 item was skipped because {label} is already in your Hifdh list.'**
   String hifdhBulkSkippedOne(String label);
 
   /// No description provided for @hifdhBulkSkippedMany.
   ///
   /// In en, this message translates to:
-  /// **'{count} entries were skipped — already in your hifdh list.'**
+  /// **'{count} items were skipped because they are already in your Hifdh list.'**
   String hifdhBulkSkippedMany(int count);
 
   /// No description provided for @editorAddTitle.
   ///
   /// In en, this message translates to:
-  /// **'Add surah or ayat'**
+  /// **'Add surah to Hifdh'**
   String get editorAddTitle;
 
   /// No description provided for @editorEditTitle.
   ///
   /// In en, this message translates to:
-  /// **'Edit entry'**
+  /// **'Edit Hifdh'**
   String get editorEditTitle;
 
   /// No description provided for @editorSurahLabel.
@@ -460,13 +460,13 @@ abstract class S {
   /// No description provided for @editorEntireSurahOn.
   ///
   /// In en, this message translates to:
-  /// **'The entire surah is on your hifdh list.'**
+  /// **'Include every ayah in this surah.'**
   String get editorEntireSurahOn;
 
   /// No description provided for @editorEntireSurahOff.
   ///
   /// In en, this message translates to:
-  /// **'Only the ayat range below is included.'**
+  /// **'Only the ayah range below will be included.'**
   String get editorEntireSurahOff;
 
   /// No description provided for @editorAyatCount.
@@ -490,7 +490,7 @@ abstract class S {
   /// No description provided for @editorAddButton.
   ///
   /// In en, this message translates to:
-  /// **'Add to hifdh list'**
+  /// **'Add to Hifdh list'**
   String get editorAddButton;
 
   /// No description provided for @editorSaveButton.
@@ -520,13 +520,13 @@ abstract class S {
   /// No description provided for @editorModeNormal.
   ///
   /// In en, this message translates to:
-  /// **'Normal'**
+  /// **'1 surah'**
   String get editorModeNormal;
 
   /// No description provided for @editorModeBulkByJuz.
   ///
   /// In en, this message translates to:
-  /// **'Bulk by Juz'**
+  /// **'Bulk add by Juz'**
   String get editorModeBulkByJuz;
 
   /// No description provided for @editorJuzLabel.
@@ -544,7 +544,7 @@ abstract class S {
   /// No description provided for @editorBulkAddButton.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, one{Add 1 to hifdh list} other{Add {count} to hifdh list}}'**
+  /// **'{count, plural, one{Add 1 to Hifdh list} other{Add {count} to Hifdh list}}'**
   String editorBulkAddButton(int count);
 
   /// No description provided for @editorAlreadyAdded.
@@ -568,13 +568,13 @@ abstract class S {
   /// No description provided for @emptyPoolTooSmallTitle.
   ///
   /// In en, this message translates to:
-  /// **'Need more for a plan'**
+  /// **'No active Hifdh yet'**
   String get emptyPoolTooSmallTitle;
 
   /// No description provided for @emptyPoolTooSmallSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Include at least two surahs or ayat ranges in your hifdh list (with the switch on), then generate a plan.'**
+  /// **'Add some surahs to start building a prayer plan. After that, you can easily create a plan for the month ahead.'**
   String get emptyPoolTooSmallSubtitle;
 
   /// No description provided for @emptyPoolTooSmallAction.
@@ -586,13 +586,13 @@ abstract class S {
   /// No description provided for @emptyHifdhListTitle.
   ///
   /// In en, this message translates to:
-  /// **'Start your hifdh list'**
+  /// **'No Hifdh yet'**
   String get emptyHifdhListTitle;
 
   /// No description provided for @emptyHifdhListSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Add full surahs or ayat ranges you are memorizing. Your monthly plan will draw from this list.'**
+  /// **'Add a full surah or an ayah range that you want to read during prayer. Your monthly plan will be created from this list.'**
   String get emptyHifdhListSubtitle;
 
   /// No description provided for @emptyHifdhListAction.
@@ -664,7 +664,7 @@ abstract class S {
   /// No description provided for @monthClearAllLocks.
   ///
   /// In en, this message translates to:
-  /// **'Clear all locks'**
+  /// **'Unlock all'**
   String get monthClearAllLocks;
 
   /// No description provided for @monthNoLocksToClear.
@@ -676,7 +676,7 @@ abstract class S {
   /// No description provided for @monthClearedLocksSnackbar.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, one{Cleared 1 lock} other{Cleared {count} locks}}'**
+  /// **'{count, plural, one{1 lock unlocked} other{{count} locks unlocked}}'**
   String monthClearedLocksSnackbar(int count);
 
   /// No description provided for @prayerAyatCount.
@@ -706,7 +706,7 @@ abstract class S {
   /// No description provided for @homePrayerUntilNext.
   ///
   /// In en, this message translates to:
-  /// **'IN {duration} UNTIL NEXT'**
+  /// **'{duration} UNTIL NEXT'**
   String homePrayerUntilNext(String duration);
 
   /// No description provided for @readerNoVerses.
@@ -724,7 +724,7 @@ abstract class S {
   /// No description provided for @readerSourceAttribution.
   ///
   /// In en, this message translates to:
-  /// **'Quran text and translation source: quran.com'**
+  /// **'Source of Quran text and translation: quran.com'**
   String get readerSourceAttribution;
 
   /// No description provided for @settingsTitle.
@@ -748,19 +748,19 @@ abstract class S {
   /// No description provided for @settingsSurahsPerPrayerSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Number of surahs per prayer slot. Regenerate to apply.'**
+  /// **'Number of surahs per prayer slot. Regenerate the plan to apply changes.'**
   String get settingsSurahsPerPrayerSubtitle;
 
   /// No description provided for @settingsLockPastPrayers.
   ///
   /// In en, this message translates to:
-  /// **'Lock past prayers'**
+  /// **'Lock past prayer slots'**
   String get settingsLockPastPrayers;
 
   /// No description provided for @settingsLockPastPrayersSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Preserve prayer slots from days before today when regenerating.'**
+  /// **'Plans for previous days will not change when you regenerate the plan.'**
   String get settingsLockPastPrayersSubtitle;
 
   /// No description provided for @settingsLanguage.
@@ -808,13 +808,13 @@ abstract class S {
   /// About screen paragraph. Optional inline tags: <b></b> bold, <i></i> or <em></em> italic, <u></u> underline, <s></s> or <strike></strike> or <del></del> strikethrough. Tags may nest; keep pairs balanced.
   ///
   /// In en, this message translates to:
-  /// **'<b>Ayatura</b> helps you spread your <b>memorized surahs</b> across the <b>five daily prayers</b> in a steady, balanced way. Enter your hifdh list, and <b>Ayatura</b> builds a <b>daily reading plan</b> so every surah gets recited often instead of cycling through the same few.'**
+  /// **'<b>Ayatura</b> helps you spread your <b>memorized surahs</b> across the <b>five daily prayers</b> in a steady, balanced way. Enter your Hifdh list, and <b>Ayatura</b> will build a <b>daily reading plan</b> so everything you have memorized is recited regularly instead of cycling through the same few surahs.'**
   String get aboutBodyParagraph1;
 
   /// About screen paragraph. Optional inline tags: <b></b> bold, <i></i> or <em></em> italic, <u></u> underline, <s></s> or <strike></strike> or <del></del> strikethrough. Tags may nest; keep pairs balanced.
   ///
   /// In en, this message translates to:
-  /// **'Many people with <b>a lot of hifdhs</b> are unsure which surah to read in <b>prayer</b>. Some surahs are then read rarely and slowly fade. <b>Ayatura</b> helps keep your <b>hifdh alive</b> through a reading pattern that is <b>consistent every day</b>.'**
+  /// **'Many people with <b>many memorized surahs</b> often struggle to choose which surah to read during <b>prayer</b>. As a result, some surahs are rarely read and may slowly be forgotten. <b>Ayatura</b> helps keep your <b>Hifdh alive</b> through a <b>more balanced daily reading pattern</b>.'**
   String get aboutBodyParagraph2;
 
   /// No description provided for @aboutPrivacyPolicy.
@@ -826,7 +826,7 @@ abstract class S {
   /// No description provided for @aboutPrivacyBody.
   ///
   /// In en, this message translates to:
-  /// **'Ayatura keeps your plan and settings data on this device. It does not require an account, and your Quran planning data is not sent to a server by the app.'**
+  /// **'Ayatura stores all data and settings on this device. This app does not require an account, and your data is not sent to a server.'**
   String get aboutPrivacyBody;
 
   /// No description provided for @aboutCopyright.
@@ -850,7 +850,7 @@ abstract class S {
   /// No description provided for @insightEmpty.
   ///
   /// In en, this message translates to:
-  /// **'No active hifdh entries yet.'**
+  /// **'No active Hifdh yet.'**
   String get insightEmpty;
 
   /// No description provided for @insightAssignmentCount.
@@ -898,7 +898,7 @@ abstract class S {
   /// No description provided for @dismissTooltip.
   ///
   /// In en, this message translates to:
-  /// **'Dismiss'**
+  /// **'Close'**
   String get dismissTooltip;
 
   /// No description provided for @widgetDescription.
@@ -910,7 +910,7 @@ abstract class S {
   /// No description provided for @widgetEmptyNoPlanTitle.
   ///
   /// In en, this message translates to:
-  /// **'No plan generated yet'**
+  /// **'No plan yet'**
   String get widgetEmptyNoPlanTitle;
 
   /// No description provided for @widgetEmptyNoPlanSubtitle.

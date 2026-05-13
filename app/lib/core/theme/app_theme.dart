@@ -69,6 +69,8 @@ abstract final class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.white,
+        // Avoid single-line ellipsis on narrow fields (e.g. side-by-side ayah inputs).
+        errorMaxLines: 5,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 14,
           vertical: 12,
