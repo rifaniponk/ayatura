@@ -444,6 +444,17 @@ class SId extends S {
   String get settingsAboutTileSubtitle => 'Versi dan privasi';
 
   @override
+  String get settingsFeedbackTileTitle => 'Umpan balik';
+
+  @override
+  String get settingsFeedbackTileSubtitle =>
+      'Bantu kami meningkatkan Ayatura lewat formulir singkat';
+
+  @override
+  String get settingsFeedbackLaunchFailed =>
+      'Tidak bisa membuka formulir. Periksa koneksi internet Anda lalu coba lagi.';
+
+  @override
   String get aboutTitle => 'Tentang';
 
   @override

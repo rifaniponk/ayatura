@@ -793,6 +793,24 @@ abstract class S {
   /// **'Version and privacy'**
   String get settingsAboutTileSubtitle;
 
+  /// No description provided for @settingsFeedbackTileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send feedback'**
+  String get settingsFeedbackTileTitle;
+
+  /// No description provided for @settingsFeedbackTileSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share thoughts or report issues in a short form'**
+  String get settingsFeedbackTileSubtitle;
+
+  /// No description provided for @settingsFeedbackLaunchFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the feedback form. Check your connection and try again.'**
+  String get settingsFeedbackLaunchFailed;
+
   /// No description provided for @aboutTitle.
   ///
   /// In en, this message translates to:

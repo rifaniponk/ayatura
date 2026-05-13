@@ -446,6 +446,17 @@ class SEn extends S {
   String get settingsAboutTileSubtitle => 'Version and privacy';
 
   @override
+  String get settingsFeedbackTileTitle => 'Send feedback';
+
+  @override
+  String get settingsFeedbackTileSubtitle =>
+      'Share thoughts or report issues in a short form';
+
+  @override
+  String get settingsFeedbackLaunchFailed =>
+      'Could not open the feedback form. Check your connection and try again.';
+
+  @override
   String get aboutTitle => 'About';
 
   @override
