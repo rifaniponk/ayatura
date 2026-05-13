@@ -8,12 +8,13 @@ final localeProvider = NotifierProvider<LocaleNotifier, Locale>(
 );
 
 class LocaleNotifier extends Notifier<Locale> {
-  static const _key = 'locale_language_code';
+  static const languageCodePreferenceKey = 'locale_language_code';
+  static const localeInitializedKey = 'locale_initialised';
 
   @override
   Locale build() {
     final prefs = ref.read(sharedPreferencesProvider);
-    final code = prefs.getString(_key);
+    final code = prefs.getString(languageCodePreferenceKey);
     return _normalize(code);
   }
 
@@ -21,7 +22,8 @@ class LocaleNotifier extends Notifier<Locale> {
     final normalized = _normalize(locale.languageCode);
     state = normalized;
     final prefs = ref.read(sharedPreferencesProvider);
-    await prefs.setString(_key, normalized.languageCode);
+    await prefs.setString(languageCodePreferenceKey, normalized.languageCode);
+    await prefs.setBool(localeInitializedKey, true);
   }
 
   static Locale _normalize(String? code) {
