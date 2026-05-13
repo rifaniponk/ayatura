@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../providers/core/nav_provider.dart';
 import '../providers/home/home_empty_for_nav_provider.dart';
 import '../providers/plan/month_empty_hero_for_nav_provider.dart';
+import '../providers/pool/pool_empty_hero_for_nav_provider.dart';
 import '../providers/prayer/prayer_times_provider.dart';
 import '../widgets/navigation/bottom_nav_bar.dart';
 import '../widgets/navigation/nav_item.dart';
@@ -48,8 +49,11 @@ class AppShell extends ConsumerWidget {
     final navIndex = ref.watch(navIndexProvider).clamp(0, tabs.length - 1);
     final homeEmptyHero = ref.watch(homeEmptyHeroForNavProvider);
     final monthEmptyHero = ref.watch(monthEmptyHeroForNavProvider);
+    final poolEmptyHero = ref.watch(poolEmptyHeroForNavProvider);
     final navBarMatchesBody =
-        (homeEmptyHero && navIndex == 0) || (monthEmptyHero && navIndex == 1);
+        (homeEmptyHero && navIndex == 0) ||
+        (monthEmptyHero && navIndex == 1) ||
+        (poolEmptyHero && navIndex == 2);
 
     return Scaffold(
       body: SafeArea(

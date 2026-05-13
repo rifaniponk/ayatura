@@ -10,7 +10,7 @@ import '../providers/providers.dart';
 import '../widgets/common/app_alert_dialog.dart';
 import '../widgets/common/app_popup_menu_button.dart';
 import '../widgets/common/app_toggle.dart';
-import '../widgets/common/empty_state.dart';
+import '../widgets/pool/hifdh_empty_hero_layout.dart';
 import '../widgets/pool/dismissible_intro_tip.dart';
 import '../widgets/pool/pool_segment_editor_sheet.dart';
 
