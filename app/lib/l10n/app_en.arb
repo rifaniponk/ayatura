@@ -326,6 +326,9 @@
   "settingsAbout": "About",
   "settingsAboutTileTitle": "About Ayatura",
   "settingsAboutTileSubtitle": "Version and privacy",
+  "settingsFeedbackTileTitle": "Send feedback",
+  "settingsFeedbackTileSubtitle": "Share thoughts or report issues in a short form",
+  "settingsFeedbackLaunchFailed": "Could not open the feedback form. Check your connection and try again.",
   "aboutTitle": "About",
   "aboutVersionBuild": "Version {version} ({buildNumber})",
   "@aboutVersionBuild": {

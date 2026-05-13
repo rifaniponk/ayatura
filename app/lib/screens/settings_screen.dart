@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../core/feedback_form_urls.dart';
 import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/core/locale_provider.dart';
@@ -8,7 +10,7 @@ import '../providers/core/settings_provider.dart';
 import '../widgets/common/app_dropdown_button.dart';
 import 'about_screen.dart';
 
-/// Preferences and data actions — placeholders until wired to persistence.
+/// Preferences and data actions, placeholders until wired to persistence.
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
@@ -17,6 +19,28 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  Future<void> _openFeedbackForm(BuildContext context, Locale locale) async {
+    final s = S.of(context)!;
+    final url = locale.languageCode == 'id'
+        ? FeedbackFormUrls.indonesian
+        : FeedbackFormUrls.english;
+    final uri = Uri.parse(url);
+    try {
+      final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!context.mounted) return;
+      if (!ok) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(s.settingsFeedbackLaunchFailed)));
+      }
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(s.settingsFeedbackLaunchFailed)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = S.of(context)!;
@@ -113,6 +137,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 }
               },
             ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: ListTile(
+            title: Text(
+              s.settingsFeedbackTileTitle,
+              style: AppTextStyles.cardLabel,
+            ),
+            subtitle: Text(
+              s.settingsFeedbackTileSubtitle,
+              style: AppTextStyles.meta,
+            ),
+            trailing: const Icon(Icons.open_in_new_rounded),
+            onTap: () => _openFeedbackForm(context, locale),
           ),
         ),
         const SizedBox(height: 12),
