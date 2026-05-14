@@ -48,132 +48,135 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final surahsPerPrayer = ref.watch(surahsPerPrayerProvider);
     final lockPastPrayers = ref.watch(lockPastPrayersProvider);
 
-    return ListView(
-      padding: const EdgeInsets.all(18),
-      children: [
-        Text(s.settingsPreferences, style: AppTextStyles.sectionHeadingSerif),
-        const SizedBox(height: 12),
-        Card(
-          child: SwitchListTile(
-            title: Text(
-              s.settingsLockPastPrayers,
-              style: AppTextStyles.cardLabel,
+    return ListTileTheme(
+      data: ListTileTheme.of(context).copyWith(minTileHeight: 0),
+      child: ListView(
+        padding: const EdgeInsets.all(18),
+        children: [
+          Text(s.settingsPreferences, style: AppTextStyles.sectionHeadingSerif),
+          const SizedBox(height: 12),
+          Card(
+            child: SwitchListTile(
+              title: Text(
+                s.settingsLockPastPrayers,
+                style: AppTextStyles.cardLabel,
+              ),
+              subtitle: Text(
+                s.settingsLockPastPrayersSubtitle,
+                style: AppTextStyles.meta,
+              ),
+              value: lockPastPrayers,
+              onChanged: (value) =>
+                  ref.read(lockPastPrayersProvider.notifier).set(value),
             ),
-            subtitle: Text(
-              s.settingsLockPastPrayersSubtitle,
-              style: AppTextStyles.meta,
-            ),
-            value: lockPastPrayers,
-            onChanged: (value) =>
-                ref.read(lockPastPrayersProvider.notifier).set(value),
           ),
-        ),
-        const SizedBox(height: 12),
-        Card(
-          child: ListTile(
-            title: Text(
-              s.settingsSurahsPerPrayer,
-              style: AppTextStyles.cardLabel,
-            ),
-            subtitle: Text(
-              s.settingsSurahsPerPrayerSubtitle,
-              style: AppTextStyles.meta,
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.remove_rounded),
-                  onPressed: surahsPerPrayer > surahsPerPrayerMin
-                      ? () => ref
-                            .read(surahsPerPrayerProvider.notifier)
-                            .set(surahsPerPrayer - 1)
-                      : null,
-                ),
-                SizedBox(
-                  width: 28,
-                  child: Text(
-                    '$surahsPerPrayer',
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.cardLabel,
+          const SizedBox(height: 12),
+          Card(
+            child: ListTile(
+              title: Text(
+                s.settingsSurahsPerPrayer,
+                style: AppTextStyles.cardLabel,
+              ),
+              subtitle: Text(
+                s.settingsSurahsPerPrayerSubtitle,
+                style: AppTextStyles.meta,
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove_rounded),
+                    onPressed: surahsPerPrayer > surahsPerPrayerMin
+                        ? () => ref
+                              .read(surahsPerPrayerProvider.notifier)
+                              .set(surahsPerPrayer - 1)
+                        : null,
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add_rounded),
-                  onPressed: surahsPerPrayer < surahsPerPrayerMax
-                      ? () => ref
-                            .read(surahsPerPrayerProvider.notifier)
-                            .set(surahsPerPrayer + 1)
-                      : null,
-                ),
-              ],
+                  SizedBox(
+                    width: 28,
+                    child: Text(
+                      '$surahsPerPrayer',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.cardLabel,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add_rounded),
+                    onPressed: surahsPerPrayer < surahsPerPrayerMax
+                        ? () => ref
+                              .read(surahsPerPrayerProvider.notifier)
+                              .set(surahsPerPrayer + 1)
+                        : null,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 12),
-        Card(
-          child: ListTile(
-            title: Text(s.settingsLanguage, style: AppTextStyles.cardLabel),
-            subtitle: Text(
-              s.settingsLanguageSubtitle,
-              style: AppTextStyles.meta,
+          const SizedBox(height: 12),
+          Card(
+            child: ListTile(
+              title: Text(s.settingsLanguage, style: AppTextStyles.cardLabel),
+              subtitle: Text(
+                s.settingsLanguageSubtitle,
+                style: AppTextStyles.meta,
+              ),
+              trailing: AppDropdownButton<Locale>(
+                value: locale,
+                isDense: true,
+                items: [
+                  DropdownMenuItem(
+                    value: const Locale('en'),
+                    child: Text(s.langEnglish),
+                  ),
+                  DropdownMenuItem(
+                    value: const Locale('id'),
+                    child: Text(s.langIndonesian),
+                  ),
+                ],
+                onChanged: (value) {
+                  if (value != null) {
+                    ref.read(localeProvider.notifier).setLocale(value);
+                  }
+                },
+              ),
             ),
-            trailing: AppDropdownButton<Locale>(
-              value: locale,
-              isDense: true,
-              items: [
-                DropdownMenuItem(
-                  value: const Locale('en'),
-                  child: Text(s.langEnglish),
-                ),
-                DropdownMenuItem(
-                  value: const Locale('id'),
-                  child: Text(s.langIndonesian),
-                ),
-              ],
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(localeProvider.notifier).setLocale(value);
-                }
+          ),
+          const SizedBox(height: 12),
+          Card(
+            child: ListTile(
+              title: Text(
+                s.settingsFeedbackTileTitle,
+                style: AppTextStyles.cardLabel,
+              ),
+              subtitle: Text(
+                s.settingsFeedbackTileSubtitle,
+                style: AppTextStyles.meta,
+              ),
+              trailing: const Icon(Icons.open_in_new_rounded),
+              onTap: () => _openFeedbackForm(context, locale),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(
+            child: ListTile(
+              title: Text(
+                s.settingsAboutTileTitle,
+                style: AppTextStyles.cardLabel,
+              ),
+              subtitle: Text(
+                s.settingsAboutTileSubtitle,
+                style: AppTextStyles.meta,
+              ),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(builder: (_) => const AboutScreen()),
+                );
               },
             ),
           ),
-        ),
-        const SizedBox(height: 12),
-        Card(
-          child: ListTile(
-            title: Text(
-              s.settingsFeedbackTileTitle,
-              style: AppTextStyles.cardLabel,
-            ),
-            subtitle: Text(
-              s.settingsFeedbackTileSubtitle,
-              style: AppTextStyles.meta,
-            ),
-            trailing: const Icon(Icons.open_in_new_rounded),
-            onTap: () => _openFeedbackForm(context, locale),
-          ),
-        ),
-        const SizedBox(height: 12),
-        Card(
-          child: ListTile(
-            title: Text(
-              s.settingsAboutTileTitle,
-              style: AppTextStyles.cardLabel,
-            ),
-            subtitle: Text(
-              s.settingsAboutTileSubtitle,
-              style: AppTextStyles.meta,
-            ),
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const AboutScreen()),
-              );
-            },
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
