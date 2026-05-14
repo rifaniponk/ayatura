@@ -5,21 +5,33 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
   static const double _dayTileGap = 14;
   static const Duration _countdownRefreshInterval = Duration(seconds: 20);
 
+  /// Five consecutive plan days shown on Home, anchored to calendar [now] when
+  /// viewing that same year and month (today centered when month bounds allow).
+  static List<int> homeWeekStripFiveDays({
+    required int year,
+    required int month,
+    required int daysInMonth,
+    required DateTime now,
+  }) {
+    if (daysInMonth <= 0) return const [];
+    if (daysInMonth <= 5) {
+      return List.generate(daysInMonth, (i) => i + 1);
+    }
+    if (year == now.year && month == now.month) {
+      final td = now.day.clamp(1, daysInMonth);
+      final start = (td - 2).clamp(1, daysInMonth - 4);
+      return [for (var i = 0; i < 5; i++) start + i];
+    }
+    return [1, 2, 3, 4, 5];
+  }
+
   late Map<int, Surah> _masterById;
-  final ScrollController _weekStripController = ScrollController();
   final ScrollController _listController = ScrollController();
   final Map<Prayer, GlobalKey> _prayerKeys = {
     for (final prayer in Prayer.values) prayer: GlobalKey(),
   };
   late DateTime _clockNow;
   Timer? _clockTimer;
-  int? _visibleWeekStripYear;
-  int? _visibleWeekStripMonth;
-  int? _visibleWeekStripDay;
-  int? _lastCenteredWeekStripYear;
-  int? _lastCenteredWeekStripMonth;
-  int? _lastCenteredWeekStripDay;
-  bool _shouldScrollSelectedDay = true;
   bool _shouldScrollToCurrentPrayer = true;
 
   @override
@@ -46,44 +58,8 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
   @override
   void dispose() {
     _clockTimer?.cancel();
-    _weekStripController.dispose();
     _listController.dispose();
     super.dispose();
-  }
-
-  void _scheduleSelectedDayScroll({
-    required int year,
-    required int month,
-    required int day,
-  }) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || !_weekStripController.hasClients) return;
-      final itemExtent = _dayTileWidth + _dayTileGap;
-      final targetCenter = (day - 1) * itemExtent + (_dayTileWidth / 2);
-      final viewportCenter =
-          _weekStripController.position.viewportDimension / 2;
-      final rawOffset = targetCenter - viewportCenter;
-      final maxOffset = _weekStripController.position.maxScrollExtent;
-      final nextOffset = rawOffset.clamp(0.0, maxOffset);
-      if ((_weekStripController.offset - nextOffset).abs() < 1) return;
-      _weekStripController.animateTo(
-        nextOffset,
-        duration: const Duration(milliseconds: 220),
-        curve: Curves.easeOutCubic,
-      );
-    });
-    _lastCenteredWeekStripYear = year;
-    _lastCenteredWeekStripMonth = month;
-    _lastCenteredWeekStripDay = day;
-    _shouldScrollSelectedDay = false;
-  }
-
-  void _restoreVisibleSelectedDay() {
-    final year = _visibleWeekStripYear;
-    final month = _visibleWeekStripMonth;
-    final day = _visibleWeekStripDay;
-    if (year == null || month == null || day == null) return;
-    _scheduleSelectedDayScroll(year: year, month: month, day: day);
   }
 
   Future<void> _toggleLock({
@@ -116,7 +92,6 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
     if (mounted) {
       setState(() {
         _clockNow = DateTime.now();
-        _shouldScrollSelectedDay = true;
         _shouldScrollToCurrentPrayer = true;
       });
     }
@@ -150,7 +125,19 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
     final daysInMonth = effective != null
         ? DateTime(effective.year, effective.month + 1, 0).day
         : DateTime(now.year, now.month + 1, 0).day;
-    final clampedDay = selectedDay.clamp(1, daysInMonth);
+    final viewingCurrentCalendarMonth =
+        effective != null &&
+        effective.year == now.year &&
+        effective.month == now.month;
+    final pickMin = viewingCurrentCalendarMonth
+        ? (now.day - 2).clamp(1, daysInMonth)
+        : 1;
+    final pickMax = viewingCurrentCalendarMonth
+        ? (now.day + 2).clamp(1, daysInMonth)
+        : daysInMonth;
+    final clampedDay = viewingCurrentCalendarMonth
+        ? selectedDay.clamp(1, daysInMonth).clamp(pickMin, pickMax)
+        : selectedDay.clamp(1, daysInMonth);
     final availableDays = effective == null
         ? <int>{}
         : effective.days
@@ -159,18 +146,37 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
               )
               .map((d) => d.day)
               .toSet();
-    final resolvedDay = availableDays.isEmpty
-        ? clampedDay
-        : (availableDays.contains(clampedDay)
-              ? clampedDay
-              : (() {
-                  final sorted = availableDays.toList()..sort();
-                  for (final day in sorted) {
-                    if (day >= clampedDay) return day;
-                  }
-                  return sorted.first;
-                })());
-    if (resolvedDay != clampedDay) {
+    final resolveCandidates = viewingCurrentCalendarMonth
+        ? availableDays.where((d) => d >= pickMin && d <= pickMax).toSet()
+        : availableDays;
+    final tapEnabledDays = resolveCandidates;
+    final int resolvedDay;
+    if (resolveCandidates.isNotEmpty) {
+      resolvedDay = resolveCandidates.contains(clampedDay)
+          ? clampedDay
+          : (() {
+              final sorted = resolveCandidates.toList()..sort();
+              for (final day in sorted) {
+                if (day >= clampedDay) return day;
+              }
+              return sorted.first;
+            })();
+    } else if (viewingCurrentCalendarMonth) {
+      resolvedDay = clampedDay;
+    } else if (availableDays.isEmpty) {
+      resolvedDay = clampedDay;
+    } else {
+      resolvedDay = availableDays.contains(clampedDay)
+          ? clampedDay
+          : (() {
+              final sorted = availableDays.toList()..sort();
+              for (final day in sorted) {
+                if (day >= clampedDay) return day;
+              }
+              return sorted.first;
+            })();
+    }
+    if (resolvedDay != selectedDay) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         ref.read(selectedPlanDayProvider.notifier).setDay(resolvedDay);
@@ -179,22 +185,6 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
     final selectedDate = effective != null
         ? DateTime(effective.year, effective.month, resolvedDay)
         : DateTime(now.year, now.month, resolvedDay);
-    if (effective != null) {
-      _visibleWeekStripYear = effective.year;
-      _visibleWeekStripMonth = effective.month;
-      _visibleWeekStripDay = resolvedDay;
-      final selectedDayChanged =
-          _lastCenteredWeekStripYear != effective.year ||
-          _lastCenteredWeekStripMonth != effective.month ||
-          _lastCenteredWeekStripDay != resolvedDay;
-      if (_shouldScrollSelectedDay || selectedDayChanged) {
-        _scheduleSelectedDayScroll(
-          year: effective.year,
-          month: effective.month,
-          day: resolvedDay,
-        );
-      }
-    }
     final localeTag = Localizations.localeOf(context).toLanguageTag();
     final titleDate = DateFormat(
       'EEEE, d MMMM',
@@ -245,7 +235,6 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
 
     ref.listen(navIndexProvider, (previous, next) {
       if (next == 0) {
-        _restoreVisibleSelectedDay();
         _shouldScrollToCurrentPrayer = true;
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!mounted || !_shouldScrollToCurrentPrayer) return;
@@ -271,13 +260,17 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
             children: [
               if (effective != null) ...[
                 _WeekStrip(
-                  controller: _weekStripController,
                   year: effective.year,
                   month: effective.month,
+                  stripDays: _HomeBodyState.homeWeekStripFiveDays(
+                    year: effective.year,
+                    month: effective.month,
+                    daysInMonth: daysInMonth,
+                    now: now,
+                  ),
                   selectedDay: resolvedDay,
-                  daysInMonth: daysInMonth,
                   today: now,
-                  availableDays: availableDays,
+                  tapEnabledDays: tapEnabledDays,
                   onChanged: (d) =>
                       ref.read(selectedPlanDayProvider.notifier).setDay(d),
                 ),
