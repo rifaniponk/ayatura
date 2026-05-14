@@ -256,7 +256,7 @@ List<Map<String, dynamic>> _surahsJson(
 
 String _ayatRange(PlanSurah planSurah, Surah master) {
   if (planSurah.isFullSurah) {
-    return '1 - ${master.ayatCount}';
+    return '';
   }
   final start = planSurah.startAyah;
   final end = planSurah.endAyah;
