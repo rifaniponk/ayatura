@@ -20,8 +20,21 @@ import '../local/app_database.dart';
 const widgetPayloadKey = 'widget_payload';
 
 const _widgetDayWindow = 7;
-const _androidWidgetQualifiedName =
-    'com.ayatura.app.widget.SurahPlannerWidgetReceiver';
+const _androidWidget2x2QualifiedName =
+    'com.ayatura.app.widget.SurahPlannerWidget2x2Receiver';
+const _androidWidget4x2QualifiedName =
+    'com.ayatura.app.widget.SurahPlannerWidget4x2Receiver';
+
+Future<void> _updateHomeWidgets() async {
+  await HomeWidget.updateWidget(
+    iOSName: 'SurahPlannerWidget',
+    qualifiedAndroidName: _androidWidget2x2QualifiedName,
+  );
+  await HomeWidget.updateWidget(
+    iOSName: 'SurahPlannerWidget',
+    qualifiedAndroidName: _androidWidget4x2QualifiedName,
+  );
+}
 
 abstract final class WidgetSyncService {
   static Future<void> syncFromWidgetRef(WidgetRef ref) async {
@@ -32,10 +45,7 @@ abstract final class WidgetSyncService {
         widgetPayloadKey,
         jsonEncode(payload),
       );
-      await HomeWidget.updateWidget(
-        iOSName: 'SurahPlannerWidget',
-        qualifiedAndroidName: _androidWidgetQualifiedName,
-      );
+      await _updateHomeWidgets();
     } catch (error, stackTrace) {
       // Widget sync must never crash user flows.
       debugPrint(
@@ -52,10 +62,7 @@ abstract final class WidgetSyncService {
         widgetPayloadKey,
         jsonEncode(payload),
       );
-      await HomeWidget.updateWidget(
-        iOSName: 'SurahPlannerWidget',
-        qualifiedAndroidName: _androidWidgetQualifiedName,
-      );
+      await _updateHomeWidgets();
     } catch (error, stackTrace) {
       // Widget sync must never crash user flows.
       debugPrint('WidgetSyncService.sync failed: $error\n$stackTrace');

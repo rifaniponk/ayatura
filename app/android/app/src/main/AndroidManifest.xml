@@ -41,15 +41,29 @@
             android:value="2" />
 
         <receiver
-            android:name=".widget.SurahPlannerWidgetReceiver"
-            android:exported="true">
+            android:name=".widget.SurahPlannerWidget2x2Receiver"
+            android:exported="true"
+            android:label="@string/app_widget_name_2x2">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.ayatura.app.widget.ACTION_REFRESH" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/ayatura_widget_info" />
+                android:resource="@xml/ayatura_widget_info_2x2" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.SurahPlannerWidget4x2Receiver"
+            android:exported="true"
+            android:label="@string/app_widget_name_4x2">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.ayatura.app.widget.ACTION_REFRESH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/ayatura_widget_info_4x2" />
         </receiver>
 
         <receiver

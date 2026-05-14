@@ -43,7 +43,10 @@ private val widgetNextRowIds =
         R.id.widget_next_row_4,
     )
 
-class SurahPlannerWidgetReceiver : AppWidgetProvider() {
+abstract class SurahPlannerWidgetProviderBase : AppWidgetProvider() {
+    /** When true, always uses the wide two column layout (4x2 widget entry). */
+    protected abstract val preferWideLayout: Boolean
+
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
@@ -58,9 +61,7 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
         super.onReceive(context, intent)
         if (intent.action == ACTION_REFRESH) {
             val manager = AppWidgetManager.getInstance(context)
-            val ids = manager.getAppWidgetIds(
-                ComponentName(context, SurahPlannerWidgetReceiver::class.java),
-            )
+            val ids = manager.getAppWidgetIds(ComponentName(context, javaClass))
             onUpdate(context, manager, ids)
         }
     }
@@ -73,11 +74,12 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
     private fun updateOne(context: Context, manager: AppWidgetManager, appWidgetId: Int) {
         val options = manager.getAppWidgetOptions(appWidgetId)
         val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
-        val layoutId = if (minWidth >= 250) {
-            R.layout.surah_planner_widget_medium
-        } else {
-            R.layout.surah_planner_widget_small
-        }
+        val layoutId =
+            if (preferWideLayout || minWidth >= 250) {
+                R.layout.surah_planner_widget_medium
+            } else {
+                R.layout.surah_planner_widget_small
+            }
         val views = RemoteViews(context.packageName, layoutId)
         val payload = readPayload(context)
         val status = payload?.optString("status") ?: "no_plan"
@@ -153,7 +155,7 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
      *
      * When there is no active current prayer (before Fajr, or after sunrise until
      * the next salat), the top slot still shows **Fajr** readings with the muted
-     * palette; only the Fajr–sunrise window uses the gold “current” styling.
+     * palette; only the Fajr to sunrise window uses the gold "current" styling.
      */
     private fun resolvePrayerSlotsFromDays(
         days: JSONObject,
@@ -556,15 +558,23 @@ class SurahPlannerWidgetReceiver : AppWidgetProvider() {
         private val PRAYER_ORDER = listOf("fajr", "dhuhr", "asr", "maghrib", "isha")
 
         fun requestRefresh(context: Context) {
-            val intent = Intent(context, SurahPlannerWidgetReceiver::class.java).apply {
-                action = ACTION_REFRESH
+            for (receiverClass in widgetReceiverClasses) {
+                val refreshIntent = Intent(context, receiverClass).apply {
+                    action = ACTION_REFRESH
+                }
+                context.sendBroadcast(refreshIntent)
             }
-            context.sendBroadcast(intent)
         }
+
+        private val widgetReceiverClasses: Array<Class<out SurahPlannerWidgetProviderBase>> =
+            arrayOf(
+                SurahPlannerWidget2x2Receiver::class.java,
+                SurahPlannerWidget4x2Receiver::class.java,
+            )
     }
 }
 
-data class Slot(
+private data class Slot(
     val title: String,
     val time: String,
     val rows: List<String>,
