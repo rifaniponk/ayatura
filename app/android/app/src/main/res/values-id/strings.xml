@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Ayatura</string>
-    <string name="app_widget_description">Widget rencana shalat Ayatura</string>
+    <string name="app_widget_name_2x2">Ayatura 2x2</string>
+    <string name="app_widget_name_4x2">Ayatura 4x2</string>
+    <string name="app_widget_description_2x2">Rencana shalat ringkas (lebar dua sel)</string>
+    <string name="app_widget_description_4x2">Rencana shalat lebar (lebar empat sel)</string>
     <string name="widget_empty_no_plan_title">Belum ada rencana</string>
     <string name="widget_empty_no_plan_subtitle">Buka aplikasi untuk memulai</string>
     <string name="widget_empty_plan_expired_title">Rencana kedaluwarsa</string>

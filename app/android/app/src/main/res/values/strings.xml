@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Ayatura</string>
-    <string name="app_widget_description">Ayatura prayer plan widget</string>
+    <string name="app_widget_name_2x2">Ayatura 2x2</string>
+    <string name="app_widget_name_4x2">Ayatura 4x2</string>
+    <string name="app_widget_description_2x2">Compact prayer plan (two cells wide)</string>
+    <string name="app_widget_description_4x2">Wide prayer plan (four cells wide)</string>
     <string name="widget_empty_no_plan_title">No plan generated yet</string>
     <string name="widget_empty_no_plan_subtitle">Open the app to get started</string>
     <string name="widget_empty_plan_expired_title">Plan expired</string>

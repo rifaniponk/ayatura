@@ -6,6 +6,6 @@ import android.content.Intent
 
 class SurahPlannerWidgetAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        SurahPlannerWidgetReceiver.requestRefresh(context)
+        SurahPlannerWidgetProviderBase.requestRefresh(context)
     }
 }
