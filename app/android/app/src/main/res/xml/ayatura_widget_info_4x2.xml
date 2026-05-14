@@ -3,7 +3,7 @@
     android:description="@string/app_widget_description_4x2"
     android:initialLayout="@layout/surah_planner_widget_medium"
     android:minWidth="250dp"
-    android:minHeight="110dp"
+    android:minHeight="104dp"
     android:previewLayout="@layout/surah_planner_widget_preview_4x2"
     android:resizeMode="none"
     android:targetCellWidth="4"
