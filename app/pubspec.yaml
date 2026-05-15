@@ -1,7 +1,7 @@
 name: ayatura
 description: "Ayatura — Daily Surah Planner: assign Quran surahs to each prayer across the month."
 publish_to: "none"
-version: 1.0.0+1
+version: 0.7.0+1
 
 environment:
   sdk: ^3.11.5
