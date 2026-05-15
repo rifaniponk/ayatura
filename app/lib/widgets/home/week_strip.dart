@@ -2,19 +2,19 @@ part of '../../screens/home_screen.dart';
 
 class _WeekStrip extends StatelessWidget {
   const _WeekStrip({
-    required this.year,
-    required this.month,
-    required this.stripDays,
-    required this.selectedDay,
+    required this.planYear,
+    required this.planMonth,
+    required this.stripDates,
+    required this.selectedDate,
     required this.today,
     required this.tapEnabledDays,
     required this.onChanged,
   });
 
-  final int year;
-  final int month;
-  final List<int> stripDays;
-  final int selectedDay;
+  final int planYear;
+  final int planMonth;
+  final List<DateTime> stripDates;
+  final DateTime selectedDate;
   final DateTime today;
   final Set<int> tapEnabledDays;
   final ValueChanged<int> onChanged;
@@ -26,7 +26,7 @@ class _WeekStrip extends StatelessWidget {
       height: 66,
       child: Row(
         children: [
-          for (var i = 0; i < stripDays.length; i++) ...[
+          for (var i = 0; i < stripDates.length; i++) ...[
             if (i > 0) const SizedBox(width: _HomeBodyState._dayTileGap),
             Expanded(
               child: Center(
@@ -34,10 +34,10 @@ class _WeekStrip extends StatelessWidget {
                   width: _HomeBodyState._dayTileWidth,
                   child: _weekDayTile(
                     localeTag: localeTag,
-                    year: year,
-                    month: month,
-                    day: stripDays[i],
-                    selectedDay: selectedDay,
+                    date: stripDates[i],
+                    planYear: planYear,
+                    planMonth: planMonth,
+                    selectedDate: selectedDate,
                     today: today,
                     tapEnabledDays: tapEnabledDays,
                     onChanged: onChanged,
@@ -53,18 +53,21 @@ class _WeekStrip extends StatelessWidget {
 
   static Widget _weekDayTile({
     required String localeTag,
-    required int year,
-    required int month,
-    required int day,
-    required int selectedDay,
+    required DateTime date,
+    required int planYear,
+    required int planMonth,
+    required DateTime selectedDate,
     required DateTime today,
     required Set<int> tapEnabledDays,
     required ValueChanged<int> onChanged,
   }) {
-    final date = DateTime(year, month, day);
     final weekday = DateFormat('EEE', localeTag).format(date).toUpperCase();
-    final selected = day == selectedDay;
-    final isTappable = tapEnabledDays.contains(day);
+    final selected =
+        date.year == selectedDate.year &&
+        date.month == selectedDate.month &&
+        date.day == selectedDate.day;
+    final inPlanMonth = date.year == planYear && date.month == planMonth;
+    final isTappable = inPlanMonth && tapEnabledDays.contains(date.day);
     final isToday =
         date.year == today.year &&
         date.month == today.month &&
@@ -74,7 +77,7 @@ class _WeekStrip extends StatelessWidget {
       width: _HomeBodyState._dayTileWidth,
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
-        onTap: isTappable ? () => onChanged(day) : null,
+        onTap: isTappable ? () => onChanged(date.day) : null,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.fromLTRB(6, 6, 6, 5),
@@ -102,7 +105,7 @@ class _WeekStrip extends StatelessWidget {
               ),
               const SizedBox(height: 3),
               Text(
-                '$day',
+                '${date.day}',
                 style: AppTextStyles.cardLabel.copyWith(
                   color: selected
                       ? AppColors.white

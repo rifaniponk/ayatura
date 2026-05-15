@@ -1,9 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/app_clock.dart';
+
 /// Current calendar day highlighted on Home (1–31).
 class SelectedPlanDayNotifier extends Notifier<int> {
   @override
-  int build() => DateTime.now().day;
+  int build() => appClockNow().day;
 
   void setDay(int value) => state = value;
 }
