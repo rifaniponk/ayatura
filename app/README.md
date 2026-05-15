@@ -49,8 +49,10 @@ flutter analyze
 ### Build
 
 ```bash
-flutter build apk -t lib/main_prod.dart     # Android (prod)
+flutter build apk -t lib/main_prod.dart        # Android (prod)
+flutter build appbundle -t lib/main_prod.dart  # Android App Bundle for Google Play (prod)
 flutter build ios -t lib/main_prod.dart     # iOS (macOS only, prod)
+flutter build ipa -t lib/main_prod.dart     # iOS IPA for App Store Connect (macOS only, prod)
 flutter build macos -t lib/main_prod.dart   # macOS desktop (prod)
 ```
 
