@@ -52,3 +52,7 @@ landing/node_modules/
 landing/.next/
 landing/dist/
 landing/.output/
+
+# release keys
+*.jks
+key.properties
