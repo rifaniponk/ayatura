@@ -372,7 +372,7 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
                       ),
                       onTap: slot.surahs.isEmpty
                           ? null
-                          : () => showQuranReaderSheet(
+                          : () => showQuranReaderForPrayerSlot(
                               context,
                               prayer: prayer,
                               slot: slot,

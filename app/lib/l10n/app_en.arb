@@ -159,6 +159,7 @@
   "hifdhIntroBanner": "Surahs you add here will be used to create your monthly plan.",
   "hifdhFabAdd": "Add",
   "hifdhMenuEdit": "Edit",
+  "hifdhMenuRead": "Read",
   "hifdhMenuRemove": "Remove",
   "hifdhRemoveDialogTitle": "Remove from Hifdh list?",
   "hifdhRemoveDialogContent": "{label} will be removed from your Hifdh list, but this will not affect your existing monthly plan.",

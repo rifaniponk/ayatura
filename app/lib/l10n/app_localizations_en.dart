@@ -193,6 +193,9 @@ class SEn extends S {
   String get hifdhMenuEdit => 'Edit';
 
   @override
+  String get hifdhMenuRead => 'Read';
+
+  @override
   String get hifdhMenuRemove => 'Remove';
 
   @override

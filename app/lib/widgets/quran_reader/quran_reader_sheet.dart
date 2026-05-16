@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../data/models/plan.dart';
 import '../../data/models/plan_surah.dart';
 import '../../data/models/prayer.dart';
+import '../../data/models/prayer_slot.dart';
+import '../../data/models/surah_pool_entry.dart';
 import '../../data/models/quran_verse.dart';
 import '../../data/models/surah.dart';
 import '../../l10n/app_localizations.dart';
@@ -16,12 +17,21 @@ part 'reader/reader_header.dart';
 part 'reader/reader_tabs.dart';
 part 'reader/verses_tab.dart';
 
+String localizedPrayerName(S s, Prayer prayer) => switch (prayer) {
+  Prayer.fajr => s.prayerFajr,
+  Prayer.dhuhr => s.prayerDhuhr,
+  Prayer.asr => s.prayerAsr,
+  Prayer.maghrib => s.prayerMaghrib,
+  Prayer.isha => s.prayerIsha,
+};
+
 Future<void> showQuranReaderSheet(
   BuildContext context, {
-  required Prayer prayer,
-  required PrayerSlot slot,
+  required String headerLabel,
+  required List<PlanSurah> surahs,
   required Map<int, Surah> masterById,
 }) {
+  if (surahs.isEmpty) return Future.value();
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -30,23 +40,52 @@ Future<void> showQuranReaderSheet(
     builder: (_) => FractionallySizedBox(
       heightFactor: 0.92,
       child: _QuranReaderSheet(
-        prayer: prayer,
-        slot: slot,
+        headerLabel: headerLabel,
+        surahs: surahs,
         masterById: masterById,
       ),
     ),
   );
 }
 
+Future<void> showQuranReaderForPrayerSlot(
+  BuildContext context, {
+  required Prayer prayer,
+  required PrayerSlot slot,
+  required Map<int, Surah> masterById,
+}) {
+  final s = S.of(context)!;
+  return showQuranReaderSheet(
+    context,
+    headerLabel: localizedPrayerName(s, prayer),
+    surahs: slot.surahs,
+    masterById: masterById,
+  );
+}
+
+Future<void> showQuranReaderForPoolEntry(
+  BuildContext context, {
+  required SurahPoolEntry entry,
+  required Map<int, Surah> masterById,
+}) {
+  final s = S.of(context)!;
+  return showQuranReaderSheet(
+    context,
+    headerLabel: s.hifdhScreenTitle,
+    surahs: [PlanSurah.fromSurahPoolEntry(entry)],
+    masterById: masterById,
+  );
+}
+
 class _QuranReaderSheet extends ConsumerStatefulWidget {
   const _QuranReaderSheet({
-    required this.prayer,
-    required this.slot,
+    required this.headerLabel,
+    required this.surahs,
     required this.masterById,
   });
 
-  final Prayer prayer;
-  final PrayerSlot slot;
+  final String headerLabel;
+  final List<PlanSurah> surahs;
   final Map<int, Surah> masterById;
 
   @override
@@ -64,14 +103,13 @@ class _QuranReaderSheetState extends ConsumerState<_QuranReaderSheet>
   @override
   void initState() {
     super.initState();
-    _tabController =
-        TabController(length: widget.slot.surahs.length, vsync: this)
-          ..addListener(() {
-            if (_tabController.indexIsChanging) return;
-            if (_currentTab != _tabController.index) {
-              setState(() => _currentTab = _tabController.index);
-            }
-          });
+    _tabController = TabController(length: widget.surahs.length, vsync: this)
+      ..addListener(() {
+        if (_tabController.indexIsChanging) return;
+        if (_currentTab != _tabController.index) {
+          setState(() => _currentTab = _tabController.index);
+        }
+      });
   }
 
   @override
@@ -84,8 +122,8 @@ class _QuranReaderSheetState extends ConsumerState<_QuranReaderSheet>
   Widget build(BuildContext context) {
     final s = S.of(context)!;
     final languageCode = ref.watch(localeProvider).languageCode;
-    final slot = widget.slot;
-    final currentPlanSurah = slot.surahs[_currentTab];
+    final surahs = widget.surahs;
+    final currentPlanSurah = surahs[_currentTab];
 
     return DecoratedBox(
       decoration: const BoxDecoration(
@@ -105,16 +143,16 @@ class _QuranReaderSheetState extends ConsumerState<_QuranReaderSheet>
           ),
           const SizedBox(height: 12),
           _ReaderHeader(
-            prayer: widget.prayer,
+            headerLabel: widget.headerLabel,
             planSurah: currentPlanSurah,
             master: widget.masterById[currentPlanSurah.surahId],
             languageCode: languageCode,
           ),
-          if (slot.surahs.length > 1) ...[
+          if (surahs.length > 1) ...[
             const SizedBox(height: 8),
             _ReaderTabs(
               tabController: _tabController,
-              surahs: slot.surahs,
+              surahs: surahs,
               masterById: widget.masterById,
               languageCode: languageCode,
             ),
@@ -123,7 +161,7 @@ class _QuranReaderSheetState extends ConsumerState<_QuranReaderSheet>
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: slot.surahs
+              children: surahs
                   .map(
                     (planSurah) => _VersesTab(
                       request: QuranVerseRequest(

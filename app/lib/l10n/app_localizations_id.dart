@@ -191,6 +191,9 @@ class SId extends S {
   String get hifdhMenuEdit => 'Edit';
 
   @override
+  String get hifdhMenuRead => 'Baca';
+
+  @override
   String get hifdhMenuRemove => 'Hapus';
 
   @override

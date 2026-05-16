@@ -13,6 +13,7 @@ import '../widgets/common/app_toggle.dart';
 import '../widgets/pool/hifdh_empty_hero_layout.dart';
 import '../widgets/pool/dismissible_intro_tip.dart';
 import '../widgets/pool/pool_segment_editor_sheet.dart';
+import '../widgets/quran_reader/quran_reader_sheet.dart';
 
 part '../widgets/pool/bulk_skip_banner.dart';
 part '../widgets/pool/pool_body.dart';

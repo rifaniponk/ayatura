@@ -379,6 +379,12 @@ abstract class S {
   /// **'Edit'**
   String get hifdhMenuEdit;
 
+  /// No description provided for @hifdhMenuRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get hifdhMenuRead;
+
   /// No description provided for @hifdhMenuRemove.
   ///
   /// In en, this message translates to:

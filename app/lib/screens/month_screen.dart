@@ -227,7 +227,7 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
               onTapPrayer: (prayer) {
                 final slot = d.slotFor(prayer);
                 if (slot.surahs.isEmpty) return;
-                showQuranReaderSheet(
+                showQuranReaderForPrayerSlot(
                   context,
                   prayer: prayer,
                   slot: slot,

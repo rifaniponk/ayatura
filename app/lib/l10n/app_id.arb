@@ -47,6 +47,7 @@
   "hifdhIntroBanner": "Hafalan yang kamu daftarkan di sini akan digunakan saat membuat rencana bulanan.",
   "hifdhFabAdd": "Tambah",
   "hifdhMenuEdit": "Edit",
+  "hifdhMenuRead": "Baca",
   "hifdhMenuRemove": "Hapus",
   "hifdhRemoveDialogTitle": "Hapus dari daftar hafalan?",
   "hifdhRemoveDialogContent": "{label} akan dihapus dari daftar hafalan namun tidak akan mempengaruhi rencana bulanan kamu.",
