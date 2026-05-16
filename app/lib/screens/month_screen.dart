@@ -10,6 +10,7 @@ import '../data/models/surah.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/providers.dart';
 import '../widgets/common/compact_gradient_button.dart';
+import '../widgets/common/compact_outlined_button.dart';
 import '../widgets/month/day_plan_card.dart';
 import '../widgets/month/month_empty_hero_layout.dart';
 import '../widgets/quran_reader/quran_reader_sheet.dart';
@@ -227,7 +228,7 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
               onTapPrayer: (prayer) {
                 final slot = d.slotFor(prayer);
                 if (slot.surahs.isEmpty) return;
-                showQuranReaderSheet(
+                showQuranReaderForPrayerSlot(
                   context,
                   prayer: prayer,
                   slot: slot,
@@ -298,6 +299,7 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
                     child: Wrap(
                       spacing: 8,
                       runSpacing: 6,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         if (canRegenerateForViewedMonth)
                           CompactGradientButton(
@@ -305,28 +307,10 @@ class _MonthScreenState extends ConsumerState<MonthScreen> {
                             icon: Icons.refresh_rounded,
                             onPressed: busy ? null : _onRegenerate,
                           ),
-                        OutlinedButton.icon(
+                        CompactOutlinedButton(
+                          label: s.monthClearAllLocks,
+                          icon: Icons.lock_open_rounded,
                           onPressed: busy ? null : _onClearAllLocks,
-                          icon: const Icon(
-                            Icons.lock_open_rounded,
-                            size: 18,
-                            color: AppColors.green,
-                          ),
-                          label: Text(
-                            s.monthClearAllLocks,
-                            style: AppTextStyles.smallLabel.copyWith(
-                              color: AppColors.green,
-                            ),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.green,
-                            side: const BorderSide(color: AppColors.green2),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            visualDensity: VisualDensity.compact,
-                          ),
                         ),
                       ],
                     ),
