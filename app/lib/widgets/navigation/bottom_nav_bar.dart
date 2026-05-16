@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
@@ -28,8 +30,12 @@ class AppBottomNavBar extends StatelessWidget {
         ? AppColors.background
         : AppColors.white;
 
+    final bottomInset = math.max(
+      MediaQuery.paddingOf(context).bottom,
+      MediaQuery.viewPaddingOf(context).bottom,
+    );
+
     return Container(
-      height: 72,
       decoration: BoxDecoration(
         color: barColor,
         border: backgroundMatchesBody
@@ -50,20 +56,24 @@ class AppBottomNavBar extends StatelessWidget {
                 ),
               ],
       ),
-      child: Row(
-        children: List.generate(items.length, (i) {
-          final isActive = i == currentIndex;
-          return Expanded(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () => onTap(i),
-                customBorder: const RoundedRectangleBorder(),
-                child: NavItemWidget(item: items[i], isActive: isActive),
+      padding: EdgeInsets.only(bottom: bottomInset),
+      child: SizedBox(
+        height: 72,
+        child: Row(
+          children: List.generate(items.length, (i) {
+            final isActive = i == currentIndex;
+            return Expanded(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => onTap(i),
+                  customBorder: const RoundedRectangleBorder(),
+                  child: NavItemWidget(item: items[i], isActive: isActive),
+                ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       ),
     );
   }
