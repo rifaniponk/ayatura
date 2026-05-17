@@ -19,13 +19,19 @@ import { I18N, SHOTS } from "./i18n.js";
       const key = el.getAttribute("data-i18n");
       if (dict[key] != null) el.innerHTML = dict[key];
     });
+    document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-aria");
+      if (dict[key] != null) el.setAttribute("aria-label", dict[key]);
+    });
     const shots = SHOTS[lang] || SHOTS.en;
     Object.keys(shots).forEach((id) => {
       const img = document.getElementById(id);
       if (img) img.src = shots[id];
     });
     document.querySelectorAll(".lang-switch button").forEach((b) => {
-      b.classList.toggle("active", b.getAttribute("data-lang") === lang);
+      const on = b.getAttribute("data-lang") === lang;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
     });
     try {
       localStorage.setItem("ayatura_lang", lang);
@@ -44,6 +50,51 @@ import { I18N, SHOTS } from "./i18n.js";
 
   document.querySelectorAll(".lang-switch button").forEach((b) => {
     b.addEventListener("click", () => setLang(b.getAttribute("data-lang")));
+  });
+
+  const drawer = document.getElementById("nav-drawer");
+  const menuBtn = document.getElementById("nav-menu-btn");
+  const drawerClose = document.getElementById("nav-drawer-close");
+  const backdrop = drawer?.querySelector(".nav-backdrop");
+
+  function openNavDrawer() {
+    if (!drawer || !menuBtn) return;
+    drawer.classList.add("is-open");
+    drawer.setAttribute("aria-hidden", "false");
+    menuBtn.setAttribute("aria-expanded", "true");
+    document.body.classList.add("nav-open");
+    drawerClose?.focus();
+  }
+
+  function closeNavDrawer() {
+    if (!drawer || !menuBtn) return;
+    drawer.classList.remove("is-open");
+    drawer.setAttribute("aria-hidden", "true");
+    menuBtn.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("nav-open");
+  }
+
+  menuBtn?.addEventListener("click", () => {
+    if (drawer?.classList.contains("is-open")) {
+      closeNavDrawer();
+      menuBtn.focus();
+    } else {
+      openNavDrawer();
+    }
+  });
+  drawerClose?.addEventListener("click", () => {
+    closeNavDrawer();
+    menuBtn?.focus();
+  });
+  backdrop?.addEventListener("click", closeNavDrawer);
+  drawer?.querySelectorAll(".nav-drawer-links a").forEach((link) => {
+    link.addEventListener("click", closeNavDrawer);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && drawer?.classList.contains("is-open")) {
+      closeNavDrawer();
+      menuBtn?.focus();
+    }
   });
 
   document.querySelectorAll(".faq-item").forEach((item) => {

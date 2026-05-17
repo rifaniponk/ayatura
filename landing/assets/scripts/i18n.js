@@ -3,6 +3,8 @@ export const I18N = {
     en: {
       brand_tag: "For Every Prayer",
       nav_how: "How it works", nav_features: "Features", nav_widget: "Widget", nav_faq: "FAQ",
+      nav_menu_open: "Open menu", nav_menu_close: "Close menu",
+      nav_drawer_label: "Site navigation", nav_lang_label: "Language",
 
       hero_h1_a: "Recite every surah",
       hero_h1_b: "you've ever",
@@ -98,6 +100,8 @@ export const I18N = {
     id: {
       brand_tag: "Untuk Setiap Shalat",
       nav_how: "Cara kerja", nav_features: "Fitur", nav_widget: "Widget", nav_faq: "Tanya jawab",
+      nav_menu_open: "Buka menu", nav_menu_close: "Tutup menu",
+      nav_drawer_label: "Navigasi situs", nav_lang_label: "Bahasa",
 
       hero_h1_a: "Lafalkan setiap surah",
       hero_h1_b: "yang pernah kamu",
