@@ -1,4 +1,6 @@
 /* Ayatura landing: language, FAQ, scroll animations */
+import { I18N, SHOTS } from "./i18n.js";
+
 (function () {
   function detectLang() {
     try {

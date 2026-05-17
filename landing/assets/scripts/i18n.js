@@ -1,5 +1,5 @@
 /* Ayatura landing: copy and screenshot paths per locale */
-const I18N = {
+export const I18N = {
     en: {
       brand_tag: "For Every Prayer",
       nav_how: "How it works", nav_features: "Features", nav_widget: "Widget", nav_faq: "FAQ",
@@ -192,7 +192,7 @@ const I18N = {
     }
   };
 
-const SHOTS = {
+export const SHOTS = {
     en: {
       "hero-shot": "assets/images/en-home.png",
       "step-1": "assets/images/en-hifdh.png",

@@ -3,9 +3,13 @@
   "private": true,
   "scripts": {
     "dev": "serve . --listen 3000 --no-clipboard",
-    "start": "serve . --listen 3000"
+    "start": "serve . --listen 3000",
+    "build": "node scripts/build.mjs",
+    "preview": "npm run build && serve dist --listen 3000 --no-clipboard"
   },
   "devDependencies": {
+    "esbuild": "^0.25.0",
+    "html-minifier-terser": "^7.2.0",
     "serve": "^14.2.4"
   }
 }
