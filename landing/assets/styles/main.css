@@ -4,14 +4,14 @@
     --green-2:#1F7A6B;
     --green-deep:#0a2a20;
     --gold:#D4AF37;
-    --gold-soft:#b8932b;
+    --gold-soft:#8a6d14;
     --cream:#F6F1E6;
     --cream-2:#FBF7EE;
     --cream-3:#EDE5D2;
     --paper:#FFFDF8;
     --ink:#1c1c1c;
     --ink-2:#4a4a4a;
-    --ink-3:#857f73;
+    --ink-3:#6a645c;
     --line:rgba(15,61,46,0.12);
     --serif:'Playfair Display', Georgia, serif;
     --sans:'DM Sans', system-ui, sans-serif;
@@ -428,7 +428,7 @@
   .ss-card .tag::before, .ss-card .tag::after{
     content:"";height:1px;width:14px;background:currentColor;opacity:0.5;
   }
-  .ss-card h4{
+  .ss-card h3{
     font-family:var(--serif);font-size:22px;color:var(--green-deep);
     margin-bottom:8px;font-weight:600;
   }
@@ -447,7 +447,7 @@
     background:radial-gradient(circle, rgba(212,175,55,0.25), transparent 70%);
   }
   .ss-feature .tag{color:var(--gold)}
-  .ss-feature h4{color:var(--cream);font-size:26px;margin-bottom:10px}
+  .ss-feature h3{color:var(--cream);font-size:26px;margin-bottom:10px}
   .ss-feature p{color:rgba(255,253,248,0.72);max-width:280px;font-size:14.5px}
   .ss-feature .phone-inner{width:260px}
 
@@ -544,7 +544,7 @@
     border:1px solid rgba(212,175,55,0.22);
   }
   .pillar .glyph svg{width:26px;height:26px}
-  .pillar h4{
+  .pillar h3{
     font-family:var(--serif);color:var(--cream);font-size:22px;
     margin-bottom:8px;font-weight:600;
   }
