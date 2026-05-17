@@ -298,6 +298,7 @@
     z-index:0;
     pointer-events:none;
   }
+  .hero-arch img,
   .hero-arch svg{
     width:78%;max-width:480px;height:auto;
     opacity:0.13;
@@ -319,6 +320,9 @@
   .phone{
     position:relative;
     z-index:2;
+    display:inline-block;
+    width:fit-content;
+    max-width:100%;
     border-radius:48px;
     background:#0a0a0a;
     padding:10px;
@@ -331,10 +335,24 @@
     overflow:hidden;
     background:var(--cream);
     width:300px;
+    line-height:0;
   }
-  .phone-inner img{width:100%;height:auto;display:block}
-  .hero-phone{width:340px;transform:rotate(-1.2deg)}
-  .hero-phone .phone-inner{width:320px}
+  .phone-inner img{
+    width:100%;
+    height:auto;
+    display:block;
+    vertical-align:top;
+  }
+  .hero-phone{
+    --hero-screen:min(360px, calc(100vw - 72px));
+    padding:7px;
+    border-radius:44px;
+    transform:rotate(-1.2deg);
+  }
+  .hero-phone .phone-inner{
+    width:var(--hero-screen);
+    border-radius:36px;
+  }
 
   .hero-quote{
     position:absolute;
@@ -378,7 +396,10 @@
     .hero{padding:60px 0 40px}
     .hero-grid{grid-template-columns:1fr;gap:40px}
     .hero-stage{min-height:560px}
-    .hero-phone{width:280px;transform:none}
+    .hero-phone{
+      --hero-screen:min(340px, calc(100vw - 56px));
+      transform:none;
+    }
     .hero-stamp{left:0;top:30px}
     .hero-quote{right:0;bottom:30px}
   }
