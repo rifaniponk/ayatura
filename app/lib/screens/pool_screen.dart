@@ -9,6 +9,7 @@ import '../data/models/surah_pool_entry.dart';
 import '../providers/providers.dart';
 import '../widgets/common/app_alert_dialog.dart';
 import '../widgets/common/app_popup_menu_button.dart';
+import '../widgets/common/app_text_form_field.dart';
 import '../widgets/common/app_toggle.dart';
 import '../widgets/pool/hifdh_empty_hero_layout.dart';
 import '../widgets/pool/dismissible_intro_tip.dart';
@@ -17,6 +18,21 @@ import '../widgets/quran_reader/quran_reader_sheet.dart';
 
 part '../widgets/pool/bulk_skip_banner.dart';
 part '../widgets/pool/pool_body.dart';
+
+bool _poolEntryMatchesQuery(
+  SurahPoolEntry entry,
+  Surah? master,
+  String lang,
+  String query,
+) {
+  if (query.isEmpty) return true;
+  if ('${entry.surahId}'.contains(query)) return true;
+  if (master == null) return false;
+  return master.name.toLowerCase().contains(query) ||
+      master.nameId.toLowerCase().contains(query) ||
+      master.localizedName(lang).toLowerCase().contains(query) ||
+      master.arabicName.contains(query);
+}
 
 /// Ayah span for partial-surah pool rows (compact, for trailing list label).
 String? _compactAyahRange(SurahPoolEntry e) {

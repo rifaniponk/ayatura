@@ -19,12 +19,19 @@ class _PoolBody extends ConsumerStatefulWidget {
 
 class _PoolBodyState extends ConsumerState<_PoolBody> {
   final Set<int> _busyIds = {};
+  final TextEditingController _searchCtl = TextEditingController();
   late Map<int, Surah> _masterById;
 
   @override
   void initState() {
     super.initState();
     _masterById = {for (final s in widget.surahs) s.id: s};
+  }
+
+  @override
+  void dispose() {
+    _searchCtl.dispose();
+    super.dispose();
   }
 
   @override
@@ -103,6 +110,8 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = S.of(context)!;
+    final lang = Localizations.localeOf(context).languageCode;
     final pool = [...widget.pool]
       ..sort((a, b) {
         final bySurahId = a.surahId.compareTo(b.surahId);
@@ -112,10 +121,9 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
     final surahs = widget.surahs;
 
     if (surahs.isEmpty) {
-      return Center(child: Text(S.of(context)!.noSurahsLoaded));
+      return Center(child: Text(loc.noSurahsLoaded));
     }
     if (pool.isEmpty) {
-      final loc = S.of(context)!;
       return HifdhEmptyHeroLayout(
         semanticLabel: loc.emptyHifdhListTitle,
         title: loc.emptyHifdhListTitle,
@@ -125,170 +133,241 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
       );
     }
 
-    final scheme = Theme.of(context).colorScheme;
-    return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(
-        18,
-        12,
-        18,
-        kFloatingActionButtonMargin * 2 + 56,
-      ),
-      itemCount: pool.length,
-      separatorBuilder: (_, _) => const SizedBox(height: 10),
-      itemBuilder: (context, i) {
-        final entry = pool[i];
-        final master = _masterById[entry.surahId];
-        final lang = Localizations.localeOf(context).languageCode;
-        final latinName =
-            master?.localizedName(lang) ?? 'Surah ${entry.surahId}';
-        final ayahRange = _compactAyahRange(entry);
-        final busy = _busyIds.contains(entry.id);
-        final paused = !entry.enabled;
-
-        final nameAlpha = paused ? 0.52 : 1.0;
-        final parenAlpha = paused ? 0.38 : 0.42;
-        final arabicAlpha = paused ? 0.55 : 0.88;
-        final ayahAlpha = paused ? 0.38 : 0.52;
-
-        return Card(
-          clipBehavior: Clip.antiAlias,
-          color: paused
-              ? Color.lerp(AppColors.white, AppColors.ink3, 0.11)!
-              : AppColors.white,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(14, 8, 0, 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                AppToggle(
-                  value: entry.enabled,
-                  onChanged: busy ? null : (v) => _toggle(entry, v),
+    final query = _searchCtl.text.trim().toLowerCase();
+    final filtered = query.isEmpty
+        ? pool
+        : pool
+              .where(
+                (entry) => _poolEntryMatchesQuery(
+                  entry,
+                  _masterById[entry.surahId],
+                  lang,
+                  query,
                 ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: busy ? null : () => _openReader(entry),
-                      borderRadius: BorderRadius.circular(8),
+              )
+              .toList();
+
+    final scheme = Theme.of(context).colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(18, 12, 18, 0),
+          child: AppTextFormField(
+            controller: _searchCtl,
+            textInputAction: TextInputAction.search,
+            decoration: InputDecoration(
+              hintText: loc.editorPickerSearchHint,
+              isDense: true,
+              suffixIcon: _searchCtl.text.isEmpty
+                  ? const Icon(Icons.search_rounded)
+                  : IconButton(
+                      tooltip: loc.dismissTooltip,
+                      icon: const Icon(Icons.clear_rounded),
+                      onPressed: () {
+                        _searchCtl.clear();
+                        setState(() {});
+                      },
+                    ),
+            ),
+            onChanged: (_) => setState(() {}),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: filtered.isEmpty
+              ? Center(
+                  child: Text(
+                    loc.editorPickerNoResults,
+                    style: AppTextStyles.body,
+                  ),
+                )
+              : ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(
+                    18,
+                    0,
+                    18,
+                    kFloatingActionButtonMargin * 2 + 56,
+                  ),
+                  itemCount: filtered.length,
+                  separatorBuilder: (_, _) => const SizedBox(height: 10),
+                  itemBuilder: (context, i) {
+                    final entry = filtered[i];
+                    final master = _masterById[entry.surahId];
+                    final latinName =
+                        master?.localizedName(lang) ?? 'Surah ${entry.surahId}';
+                    final ayahRange = _compactAyahRange(entry);
+                    final busy = _busyIds.contains(entry.id);
+                    final paused = !entry.enabled;
+
+                    final nameAlpha = paused ? 0.52 : 1.0;
+                    final parenAlpha = paused ? 0.38 : 0.42;
+                    final arabicAlpha = paused ? 0.55 : 0.88;
+                    final ayahAlpha = paused ? 0.38 : 0.52;
+
+                    return Card(
+                      clipBehavior: Clip.antiAlias,
+                      color: paused
+                          ? Color.lerp(AppColors.white, AppColors.ink3, 0.11)!
+                          : AppColors.white,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 6,
-                        ),
+                        padding: const EdgeInsets.fromLTRB(14, 8, 0, 8),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Expanded(
-                              child: Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: '#${entry.surahId}',
-                                      style: AppTextStyles.cardLabel.copyWith(
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.ink3,
-                                      ),
-                                    ),
-                                    const TextSpan(text: '  '),
-                                    TextSpan(
-                                      text: latinName,
-                                      style: AppTextStyles.cardLabel.copyWith(
-                                        color: scheme.onSurface.withValues(
-                                          alpha: nameAlpha,
-                                        ),
-                                      ),
-                                    ),
-                                    if (master != null) ...[
-                                      TextSpan(
-                                        text: ' (',
-                                        style: AppTextStyles.cardLabel.copyWith(
-                                          color: scheme.onSurface.withValues(
-                                            alpha: parenAlpha,
-                                          ),
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: master.arabicName,
-                                        style: AppTextStyles.arabicSecondary
-                                            .copyWith(
-                                              fontSize: 15,
-                                              height: 1.25,
-                                              color: scheme.onSurface
-                                                  .withValues(
-                                                    alpha: arabicAlpha,
-                                                  ),
-                                            ),
-                                      ),
-                                      TextSpan(
-                                        text: ')',
-                                        style: AppTextStyles.cardLabel.copyWith(
-                                          color: scheme.onSurface.withValues(
-                                            alpha: parenAlpha,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                            AppToggle(
+                              value: entry.enabled,
+                              onChanged: busy ? null : (v) => _toggle(entry, v),
                             ),
-                            if (ayahRange != null) ...[
-                              const SizedBox(width: 14),
-                              Text(
-                                ayahRange,
-                                style: AppTextStyles.smallLabel.copyWith(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.3,
-                                  fontFeatures: const [
-                                    FontFeature.tabularFigures(),
-                                  ],
-                                  color: scheme.onSurface.withValues(
-                                    alpha: ayahAlpha,
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: busy ? null : () => _openReader(entry),
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 4,
+                                      vertical: 6,
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Text.rich(
+                                            TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                  text: '#${entry.surahId}',
+                                                  style: AppTextStyles.cardLabel
+                                                      .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: AppColors.ink3,
+                                                      ),
+                                                ),
+                                                const TextSpan(text: '  '),
+                                                TextSpan(
+                                                  text: latinName,
+                                                  style: AppTextStyles.cardLabel
+                                                      .copyWith(
+                                                        color: scheme.onSurface
+                                                            .withValues(
+                                                              alpha: nameAlpha,
+                                                            ),
+                                                      ),
+                                                ),
+                                                if (master != null) ...[
+                                                  TextSpan(
+                                                    text: ' (',
+                                                    style: AppTextStyles
+                                                        .cardLabel
+                                                        .copyWith(
+                                                          color: scheme
+                                                              .onSurface
+                                                              .withValues(
+                                                                alpha:
+                                                                    parenAlpha,
+                                                              ),
+                                                        ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: master.arabicName,
+                                                    style: AppTextStyles
+                                                        .arabicSecondary
+                                                        .copyWith(
+                                                          fontSize: 15,
+                                                          height: 1.25,
+                                                          color: scheme
+                                                              .onSurface
+                                                              .withValues(
+                                                                alpha:
+                                                                    arabicAlpha,
+                                                              ),
+                                                        ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: ')',
+                                                    style: AppTextStyles
+                                                        .cardLabel
+                                                        .copyWith(
+                                                          color: scheme
+                                                              .onSurface
+                                                              .withValues(
+                                                                alpha:
+                                                                    parenAlpha,
+                                                              ),
+                                                        ),
+                                                  ),
+                                                ],
+                                              ],
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        if (ayahRange != null) ...[
+                                          const SizedBox(width: 14),
+                                          Text(
+                                            ayahRange,
+                                            style: AppTextStyles.smallLabel
+                                                .copyWith(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                  letterSpacing: 0.3,
+                                                  fontFeatures: const [
+                                                    FontFeature.tabularFigures(),
+                                                  ],
+                                                  color: scheme.onSurface
+                                                      .withValues(
+                                                        alpha: ayahAlpha,
+                                                      ),
+                                                ),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ],
+                            ),
+                            AppPopupMenuButton<String>(
+                              enabled: !busy,
+                              onSelected: (value) {
+                                if (value == 'read') _openReader(entry);
+                                if (value == 'edit')
+                                  widget.onEditSegment(entry);
+                                if (value == 'delete') _confirmRemove(entry);
+                              },
+                              itemBuilder: (ctx) {
+                                final loc = S.of(ctx)!;
+                                return [
+                                  AppPopupMenuItem(
+                                    value: 'read',
+                                    child: Text(loc.hifdhMenuRead),
+                                  ),
+                                  AppPopupMenuItem(
+                                    value: 'edit',
+                                    child: Text(loc.hifdhMenuEdit),
+                                  ),
+                                  AppPopupMenuItem(
+                                    value: 'delete',
+                                    destructive: true,
+                                    child: Text(loc.hifdhMenuRemove),
+                                  ),
+                                ];
+                              },
+                            ),
                           ],
                         ),
                       ),
-                    ),
-                  ),
-                ),
-                AppPopupMenuButton<String>(
-                  enabled: !busy,
-                  onSelected: (value) {
-                    if (value == 'read') _openReader(entry);
-                    if (value == 'edit') widget.onEditSegment(entry);
-                    if (value == 'delete') _confirmRemove(entry);
-                  },
-                  itemBuilder: (ctx) {
-                    final loc = S.of(ctx)!;
-                    return [
-                      AppPopupMenuItem(
-                        value: 'read',
-                        child: Text(loc.hifdhMenuRead),
-                      ),
-                      AppPopupMenuItem(
-                        value: 'edit',
-                        child: Text(loc.hifdhMenuEdit),
-                      ),
-                      AppPopupMenuItem(
-                        value: 'delete',
-                        destructive: true,
-                        child: Text(loc.hifdhMenuRemove),
-                      ),
-                    ];
+                    );
                   },
                 ),
-              ],
-            ),
-          ),
-        );
-      },
+        ),
+      ],
     );
   }
 }
