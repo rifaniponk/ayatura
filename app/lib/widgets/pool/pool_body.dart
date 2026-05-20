@@ -336,10 +336,15 @@ class _PoolBodyState extends ConsumerState<_PoolBody> {
                             AppPopupMenuButton<String>(
                               enabled: !busy,
                               onSelected: (value) {
-                                if (value == 'read') _openReader(entry);
-                                if (value == 'edit')
+                                if (value == 'read') {
+                                  _openReader(entry);
+                                }
+                                if (value == 'edit') {
                                   widget.onEditSegment(entry);
-                                if (value == 'delete') _confirmRemove(entry);
+                                }
+                                if (value == 'delete') {
+                                  _confirmRemove(entry);
+                                }
                               },
                               itemBuilder: (ctx) {
                                 final loc = S.of(ctx)!;
