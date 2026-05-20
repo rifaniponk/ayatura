@@ -8,6 +8,8 @@ class SelectedPlanDayNotifier extends Notifier<int> {
   int build() => appClockNow().day;
 
   void setDay(int value) => state = value;
+
+  void resetToToday() => state = appClockNow().day;
 }
 
 final selectedPlanDayProvider = NotifierProvider<SelectedPlanDayNotifier, int>(
