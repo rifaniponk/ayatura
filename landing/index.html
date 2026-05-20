@@ -1,473 +1,494 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ayatura — Daily Surah Planner</title>
-    <meta
-      name="description"
-      content="A planner for Muslims memorizing the Quran. Spread your daily Surah recitation across every prayer. Coming soon on Android & iOS."
-    />
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ayatura · A calmer way to recite what you've memorized</title>
+<meta name="description" content="Ayatura rotates the surahs you've memorized across your five daily prayers, so none are ever forgotten." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" href="assets/styles/main.css" as="style" />
+<link rel="stylesheet" href="assets/styles/main.css" />
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=Amiri:wght@400;700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=Amiri:wght@400;700&display=swap" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=Amiri:wght@400;700&display=swap" /></noscript>
+</head>
+<body>
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="Ayatura — Daily Surah Planner" />
-    <meta
-      property="og:description"
-      content="A planner for Muslims memorizing the Quran. Coming soon on Android & iOS."
-    />
-    <meta property="og:type" content="website" />
-
-    <style>
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      :root {
-        --green: #0f3d2e;
-        --green2: #1f7a6b;
-        --green-dark: #071d13;
-        --gold: #d4af37;
-        --gold-dim: rgba(212, 175, 55, 0.15);
-        --white: #ffffff;
-        --text: rgba(255, 255, 255, 0.92);
-        --text-muted: rgba(255, 255, 255, 0.5);
-        --surface: rgba(255, 255, 255, 0.06);
-        --border: rgba(255, 255, 255, 0.1);
-      }
-
-      html,
-      body {
-        height: 100%;
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-        background-color: var(--green-dark);
-        color: var(--text);
-        -webkit-font-smoothing: antialiased;
-      }
-
-      body {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem 1.25rem;
-        position: relative;
-        overflow: hidden;
-      }
-
-      /* ── Background ── */
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background:
-          radial-gradient(
-            ellipse 80% 60% at 50% -10%,
-            rgba(31, 122, 107, 0.35) 0%,
-            transparent 70%
-          ),
-          radial-gradient(
-            ellipse 60% 40% at 80% 100%,
-            rgba(15, 61, 46, 0.4) 0%,
-            transparent 70%
-          );
-        pointer-events: none;
-      }
-
-      .arabic-bg {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: clamp(280px, 40vw, 520px);
-        line-height: 1;
-        color: rgba(212, 175, 55, 0.04);
-        pointer-events: none;
-        user-select: none;
-        font-family: "Amiri", "Traditional Arabic", serif;
-      }
-
-      /* ── Layout ── */
-      main {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-        max-width: 560px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2.5rem;
-        text-align: center;
-      }
-
-      /* ── Brand ── */
-      .brand {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .brand-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.3rem 0.85rem;
-        border-radius: 100px;
-        background: var(--gold-dim);
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        font-size: 0.7rem;
-        font-weight: 600;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--gold);
-      }
-
-      .brand-pill::before {
-        content: "";
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--gold);
-        animation: pulse 2s ease-in-out infinite;
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-          transform: scale(1);
-        }
-        50% {
-          opacity: 0.4;
-          transform: scale(0.7);
-        }
-      }
-
-      .brand-name {
-        font-size: clamp(2.6rem, 8vw, 3.75rem);
-        font-weight: 700;
-        letter-spacing: -0.03em;
-        background: linear-gradient(
-          135deg,
-          #ffffff 0%,
-          rgba(255, 255, 255, 0.75) 100%
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        line-height: 1.1;
-      }
-
-      .brand-sub {
-        font-size: 0.9rem;
-        font-weight: 400;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--text-muted);
-      }
-
-      /* ── Hero ── */
-      .hero h1 {
-        font-size: clamp(1.15rem, 3.5vw, 1.4rem);
-        font-weight: 400;
-        line-height: 1.65;
-        color: var(--text-muted);
-        max-width: 420px;
-      }
-
-      .hero h1 strong {
-        color: var(--text);
-        font-weight: 500;
-      }
-
-      /* ── Form ── */
-      .notify-section {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-      }
-
-      .notify-label {
-        font-size: 0.85rem;
-        color: var(--text-muted);
-      }
-
-      .form-row {
-        display: flex;
-        width: 100%;
-        gap: 0.5rem;
-      }
-
-      .form-row input[type="email"] {
-        flex: 1;
-        padding: 0.75rem 1rem;
-        border-radius: 10px;
-        border: 1px solid var(--border);
-        background: var(--surface);
-        color: var(--text);
-        font-size: 0.9rem;
-        outline: none;
-        transition: border-color 0.2s;
-        -webkit-backdrop-filter: blur(8px);
-        backdrop-filter: blur(8px);
-      }
-
-      .form-row input[type="email"]::placeholder {
-        color: var(--text-muted);
-      }
-      .form-row input[type="email"]:focus {
-        border-color: rgba(212, 175, 55, 0.5);
-      }
-
-      .form-row button {
-        padding: 0.75rem 1.25rem;
-        border-radius: 10px;
-        border: none;
-        background: linear-gradient(
-          135deg,
-          var(--green2) 0%,
-          var(--green) 100%
-        );
-        color: var(--white);
-        font-size: 0.875rem;
-        font-weight: 600;
-        cursor: pointer;
-        white-space: nowrap;
-        transition:
-          opacity 0.2s,
-          transform 0.1s;
-      }
-
-      .form-row button:hover {
-        opacity: 0.88;
-      }
-      .form-row button:active {
-        transform: scale(0.97);
-      }
-
-      .success-msg {
-        display: none;
-        font-size: 0.85rem;
-        color: var(--gold);
-      }
-
-      /* ── Divider ── */
-      .divider {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-      }
-
-      .divider::before,
-      .divider::after {
-        content: "";
-        flex: 1;
-        height: 1px;
-        background: var(--border);
-      }
-
-      .divider span {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        letter-spacing: 0.05em;
-      }
-
-      /* ── Store badges ── */
-      .store-badges {
-        display: flex;
-        gap: 0.75rem;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .store-badge {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        padding: 0.6rem 1rem;
-        border-radius: 10px;
-        border: 1px solid var(--border);
-        background: var(--surface);
-        opacity: 0.5;
-        cursor: default;
-        -webkit-backdrop-filter: blur(8px);
-        backdrop-filter: blur(8px);
-      }
-
-      .store-badge svg {
-        width: 20px;
-        height: 20px;
-        fill: var(--text);
-      }
-
-      .store-badge-text {
-        text-align: left;
-      }
-
-      .store-badge-label {
-        display: block;
-        font-size: 0.6rem;
-        color: var(--text-muted);
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-      }
-
-      .store-badge-name {
-        display: block;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--text);
-      }
-
-      /* ── Footer ── */
-      footer {
-        position: relative;
-        z-index: 1;
-        margin-top: 3rem;
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        text-align: center;
-      }
-
-      /* ── Responsive ── */
-      @media (max-width: 400px) {
-        .form-row {
-          flex-direction: column;
-        }
-        .form-row button {
-          width: 100%;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="arabic-bg" aria-hidden="true">أياتورا</div>
-
-    <main>
-      <div class="brand">
-        <span class="brand-pill">Coming Soon</span>
-        <h1 class="brand-name">Ayatura</h1>
-        <p class="brand-sub">Daily Surah Planner</p>
+<!-- ──────────── NAV ──────────── -->
+<nav class="top">
+  <div class="nav-row">
+    <a href="#top" class="brand">
+      <img src="assets/images/logo.png" alt="Ayatura logo" />
+      <div>
+        <div class="brand-name">Ayatura</div>
+        <div class="brand-tag" data-i18n="brand_tag">For Every Prayer</div>
       </div>
+    </a>
+    <div class="nav-links">
+      <a href="#how" data-i18n="nav_how">How it works</a>
+      <a href="#features" data-i18n="nav_features">Features</a>
+      <a href="#widget" data-i18n="nav_widget">Widget</a>
+      <a href="#faq" data-i18n="nav_faq">FAQ</a>
+    </div>
+    <div class="nav-end">
+      <div class="lang-switch lang-switch-header" role="tablist" aria-label="Language">
+        <button data-lang="en" class="active" role="tab">EN</button>
+        <button data-lang="id" role="tab">ID</button>
+      </div>
+      <button
+        type="button"
+        class="nav-menu-btn"
+        id="nav-menu-btn"
+        aria-expanded="false"
+        aria-controls="nav-drawer"
+        data-i18n-aria="nav_menu_open"
+        aria-label="Open menu"
+      >
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="4" y1="7" x2="20" y2="7" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="17" x2="20" y2="17" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
 
-      <div class="hero">
+<aside id="nav-drawer" class="nav-drawer" aria-hidden="true" data-i18n-aria="nav_drawer_label" aria-label="Site navigation">
+  <div class="nav-backdrop" tabindex="-1"></div>
+  <div class="nav-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="nav-drawer-title">
+    <div class="nav-drawer-head">
+      <div class="nav-drawer-brand" id="nav-drawer-title">
+        <img src="assets/images/logo.png" alt="" />
+        <span class="brand-name">Ayatura</span>
+      </div>
+      <button
+        type="button"
+        class="nav-drawer-close"
+        id="nav-drawer-close"
+        data-i18n-aria="nav_menu_close"
+        aria-label="Close menu"
+      >
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="6" y1="6" x2="18" y2="18" />
+          <line x1="18" y1="6" x2="6" y2="18" />
+        </svg>
+      </button>
+    </div>
+    <nav class="nav-drawer-links">
+      <a href="#how" data-i18n="nav_how">How it works</a>
+      <a href="#features" data-i18n="nav_features">Features</a>
+      <a href="#widget" data-i18n="nav_widget">Widget</a>
+      <a href="#faq" data-i18n="nav_faq">FAQ</a>
+    </nav>
+    <div class="nav-drawer-foot">
+      <div class="nav-drawer-lang">
+        <span class="nav-drawer-lang-label" data-i18n="nav_lang_label">Language</span>
+        <div class="lang-switch lang-switch-drawer" role="tablist" aria-label="Language">
+          <button type="button" data-lang="en" class="active" role="tab" aria-selected="true">EN</button>
+          <button type="button" data-lang="id" role="tab" aria-selected="false">ID</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ──────────── HERO ──────────── -->
+<main id="top">
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="hero-bismillah">بِسْمِ ٱللَّٰهِ</div>
         <h1>
-          A planner for Muslims <strong>memorizing the Quran.</strong>
-          Add your Surahs, get a daily plan spread across every prayer. Fajr,
-          Dhuhr, Asr, Maghrib, Isha.
+          <span data-i18n="hero_h1_a">Recite every surah</span><br/>
+          <span data-i18n="hero_h1_b">you've ever</span>
+          <span class="accent" data-i18n="hero_h1_c">memorized</span>
+          <span class="gold-dot"></span>
         </h1>
-      </div>
-
-      <div class="notify-section">
-        <p class="notify-label">Be the first to know when we launch.</p>
-        <form
-          class="form-row"
-          name="notify"
-          method="POST"
-          data-netlify="true"
-          netlify-honeypot="bot-field"
-          onsubmit="handleSubmit(event)"
-        >
-          <input type="hidden" name="form-name" value="notify" />
-          <input type="hidden" name="bot-field" />
-          <input
-            type="email"
-            name="email"
-            placeholder="your@email.com"
-            required
-            autocomplete="email"
-          />
-          <button type="submit">Notify me</button>
-        </form>
-        <p class="success-msg" id="success">
-          You're on the list. We'll let you know when Ayatura launches. ✦
+        <p class="hero-lede" data-i18n="hero_lede">
+          Ayatura rotates the surahs you've committed to memory across your five daily prayers, so none are overused, and none are slowly forgotten.
         </p>
+        <div class="hero-cta">
+          <a class="store-badge" href="#">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M16.365 1.43c0 1.14-.41 2.21-1.22 3.05-.87.9-2.04 1.44-3.18 1.32-.14-1.16.4-2.34 1.16-3.18.85-.95 2.27-1.66 3.24-1.19zm3.86 17.18c-.51 1.18-.75 1.7-1.4 2.74-.92 1.45-2.22 3.26-3.83 3.27-1.43.02-1.8-.93-3.74-.92-1.94.01-2.34.94-3.78.92-1.61-.03-2.84-1.66-3.76-3.11-2.58-4.06-2.85-8.83-1.26-11.37 1.12-1.79 2.9-2.83 4.57-2.83 1.69 0 2.76.93 4.16.93 1.36 0 2.19-.93 4.15-.93 1.48 0 3.05.81 4.17 2.2-3.67 2.01-3.07 7.24.72 9.1z"/></svg>
+            <span class="sb-stack">
+              <span class="sb-eyebrow" data-i18n="store_appstore_eb">Download on the</span>
+              <span class="sb-name">App Store</span>
+            </span>
+          </a>
+          <a class="store-badge" href="#">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="#D4AF37" d="M3.6 1.4c-.4.4-.6.9-.6 1.6v18c0 .7.2 1.2.6 1.6l11-11-11-10.2z"/><path fill="#D4AF37" opacity=".75" d="M17.7 9 14.6 12l3.1 3 4-2.3c1-.6 1-2.1 0-2.7L17.7 9z"/><path fill="#D4AF37" opacity=".55" d="M3.6 1.4 14.6 12l3.1-3L4.9.8c-.5-.3-1-.1-1.3.6z"/><path fill="#D4AF37" opacity=".4" d="M3.6 22.6c.3.7.8.9 1.3.6l12.8-7.2-3.1-3-11 9.6z"/></svg>
+            <span class="sb-stack">
+              <span class="sb-eyebrow" data-i18n="store_play_eb">Get it on</span>
+              <span class="sb-name">Google Play</span>
+            </span>
+          </a>
+        </div>
+        <div class="hero-meta">
+          <span><span class="dot"></span><span data-i18n="meta_offline">Offline-first</span></span>
+          <span><span class="dot"></span><span data-i18n="meta_nologin">No login, no ads</span></span>
+          <span><span class="dot"></span><span data-i18n="meta_free">Free forever</span></span>
+        </div>
       </div>
+      <div class="hero-stage">
+        <div class="hero-arch" aria-hidden="true">
+          <img src="assets/images/logo.png" alt="" loading="lazy" decoding="async" />
+        </div>
+        <div class="hero-orbit" aria-hidden="true"></div>
 
-      <div class="divider"><span>Available soon on</span></div>
+        <div class="hero-stamp">
+          <div class="stamp-eyebrow" data-i18n="stamp_eyebrow">Today's plan</div>
+          <div class="stamp-title" data-i18n="stamp_title">Saturday, 16 May</div>
+          <div class="stamp-row" data-i18n="stamp_row1">Dhuhr · Al-Inshiqaq · Al-Buruj</div>
+          <div class="stamp-row" data-i18n="stamp_row2">Asr · At-Tariq · Al-A'la</div>
+        </div>
 
-      <div class="store-badges">
-        <div class="store-badge" aria-label="App Store — Coming Soon">
-          <!-- Apple logo -->
-          <svg
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            <path
-              d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"
-            />
-          </svg>
-          <div class="store-badge-text">
-            <span class="store-badge-label">Coming soon on</span>
-            <span class="store-badge-name">App Store</span>
+        <div class="phone hero-phone">
+          <div class="phone-inner">
+            <img id="hero-shot" src="assets/images/en-home.png" alt="Ayatura home screen" width="360" height="780" fetchpriority="high" decoding="async" />
           </div>
         </div>
 
-        <div class="store-badge" aria-label="Google Play — Coming Soon">
-          <!-- Google Play logo -->
-          <svg
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            <path
-              d="M3 20.5v-17c0-.83.94-1.3 1.6-.8l14 8.5c.6.37.6 1.23 0 1.6l-14 8.5c-.66.5-1.6.03-1.6-.8zM5 6.77v10.46l7.14-5.23L5 6.77z"
-            />
-            <path
-              d="M5 6.77l7.14 5.23 2.04-1.5-7.54-4.58A1 1 0 005 6.77zM5 17.23l7.14-5.23 2.04 1.5-7.54 4.58A1 1 0 015 17.23zM14.18 12l3.47-2.55c.45-.33.45-.97 0-1.3L14.18 6.6l-2.04 1.5L14.53 12l-2.39 1.9 2.04 1.5z"
-            />
-          </svg>
-          <div class="store-badge-text">
-            <span class="store-badge-label">Coming soon on</span>
-            <span class="store-badge-name">Google Play</span>
+        <div class="hero-quote">
+          <span class="q-cap" data-i18n="q_cap">A daily rotation</span>
+          <span data-i18n="q_body">"Every surah I memorized gets its turn, not just the short ones."</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────── REFRAME / PROBLEM ──────────── -->
+<section class="reframe">
+  <div class="wrap">
+    <img class="arch-mark" src="assets/images/logo.png" alt="" loading="lazy" decoding="async" />
+    <p class="lament" data-i18n="lament">
+      We memorize dozens of surahs over many years.<br/>
+      Yet in prayer, we tend to recite the same <strong>handful</strong>, and<br/>
+      the rest slowly slip away.
+    </p>
+    <div class="answer">
+      <span data-i18n="answer_a">Ayatura gives each one of them its</span> <span class="accent" data-i18n="answer_b">turn.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────── HOW IT WORKS ──────────── -->
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="how-head">
+      <div class="eyebrow" data-i18n="how_eyebrow">How it works</div>
+      <h2 data-i18n="how_h2">Three quiet steps to a balanced month.</h2>
+      <p class="sub" data-i18n="how_sub">No accounts. No setup wizard. You're praying with a rotation by the end of your next prayer.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-mini">
+          <div class="phone">
+            <div class="phone-inner">
+              <img id="step-1" src="assets/images/en-hifdh.png" alt="" loading="lazy" decoding="async" />
+            </div>
+          </div>
+        </div>
+        <div class="step-numeral">i.</div>
+        <h3 data-i18n="step1_h">Tell us what you know</h3>
+        <p data-i18n="step1_p">Toggle on the surahs you've memorized, by Juz, by range, one at a time. Edit any time.</p>
+        <span class="step-connector"></span>
+      </div>
+
+      <div class="step">
+        <div class="step-mini">
+          <div class="phone">
+            <div class="phone-inner">
+              <img id="step-2" src="assets/images/en-month.png" alt="" loading="lazy" decoding="async" />
+            </div>
+          </div>
+        </div>
+        <div class="step-numeral">ii.</div>
+        <h3 data-i18n="step2_h">We balance the month</h3>
+        <p data-i18n="step2_p">Ayatura distributes them randomly but fairly across 5 prayers × 30 days, so each surah returns.</p>
+        <span class="step-connector"></span>
+      </div>
+
+      <div class="step">
+        <div class="step-mini">
+          <div class="phone">
+            <div class="phone-inner">
+              <img id="step-3" src="assets/images/en-home.png" alt="" loading="lazy" decoding="async" />
+            </div>
+          </div>
+        </div>
+        <div class="step-numeral">iii.</div>
+        <h3 data-i18n="step3_h">Open it when you pray</h3>
+        <p data-i18n="step3_p">A glance shows the two surahs for your current prayer. Nothing more, nothing less.</p>
+        <span class="step-connector"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────── SHOWCASE ──────────── -->
+<section id="features" class="showcase">
+  <div class="wrap">
+    <div class="showcase-head">
+      <div class="lead">
+        <div class="eyebrow left" data-i18n="ss_eyebrow">A closer look</div>
+        <h2 data-i18n="ss_h2">Designed for the moment between adhan and iqamah.</h2>
+      </div>
+      <div class="right">
+        <p data-i18n="ss_sub">Every screen earns its place. Nothing competes for your attention while you prepare to stand before your Lord.</p>
+      </div>
+    </div>
+
+    <div class="showcase-grid">
+      <div class="ss-col offset-down">
+        <div class="ss-card">
+          <div class="phone"><div class="phone-inner"><img loading="lazy" decoding="async" id="ss-1" src="assets/images/en-hifdh.png" alt="" /></div></div>
+          <div class="tag" data-i18n="ss1_tag">Your library</div>
+          <h3 data-i18n="ss1_h">A pool you can shape</h3>
+          <p data-i18n="ss1_p">Add by single surah or pull in a whole Juz at once. The plan only ever uses what you've added.</p>
+        </div>
+        <div class="ss-card">
+          <div class="phone"><div class="phone-inner"><img loading="lazy" decoding="async" id="ss-2" src="assets/images/en-bulk.png" alt="" /></div></div>
+          <div class="tag" data-i18n="ss2_tag">Bulk add</div>
+          <h3 data-i18n="ss2_h">Whole Juz, one tap</h3>
+          <p data-i18n="ss2_p">Just finished Juz 'Amma? Add all 37 surahs at once and start rotating tonight.</p>
+        </div>
+      </div>
+
+      <div class="ss-col">
+        <div class="ss-feature">
+          <div class="phone"><div class="phone-inner"><img loading="lazy" decoding="async" id="ss-3" src="assets/images/en-home.png" alt="" /></div></div>
+          <div class="tag" data-i18n="ss3_tag">The home screen</div>
+          <h3 data-i18n="ss3_h">Today, at a glance</h3>
+          <p data-i18n="ss3_p">Your current prayer rises to the top. Past prayers fade. Future ones wait patiently, locked until their time.</p>
+        </div>
+      </div>
+
+      <div class="ss-col offset-up">
+        <div class="ss-card">
+          <div class="phone"><div class="phone-inner"><img loading="lazy" decoding="async" id="ss-4" src="assets/images/en-month.png" alt="" /></div></div>
+          <div class="tag" data-i18n="ss4_tag">The month</div>
+          <h3 data-i18n="ss4_h">31 days, planned</h3>
+          <p data-i18n="ss4_p">Scroll the whole month. Regenerate if you want a fresh shuffle. Lock anything you'd like to keep.</p>
+        </div>
+        <div class="ss-card">
+          <div class="phone"><div class="phone-inner"><img loading="lazy" decoding="async" id="ss-5" src="assets/images/en-home.png" alt="" /></div></div>
+          <div class="tag" data-i18n="ss5_tag">Live prayer card</div>
+          <h3 data-i18n="ss5_h">Knows where you are</h3>
+          <p data-i18n="ss5_p">Tied to local prayer times, your "now praying" card moves with the day, on its own.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────── READ QURAN ──────────── -->
+<section id="read" class="read-section">
+  <div class="wrap">
+    <div class="read-grid">
+      <div class="read-stage">
+        <div class="read-glow" aria-hidden="true"></div>
+        <div class="phone">
+          <div class="phone-inner">
+            <img id="read-shot" src="assets/images/en-read.png" alt="Read the surah inside Ayatura" loading="lazy" decoding="async" />
+          </div>
+        </div>
+        <div class="read-arabic-mark" lang="ar" aria-hidden="true">وَٱلسَّمَآءِ</div>
+      </div>
+      <div class="read-copy">
+        <div class="eyebrow" data-i18n="read_eyebrow">Read before you stand</div>
+        <h2 data-i18n="read_h2">A quick refresher, right inside the prayer card.</h2>
+        <p class="read-lede" data-i18n="read_lede">Tap any surah in today's plan to open it ayah-by-ayah with translation, perfect for refreshing your memory in the minutes before salah.</p>
+        <div class="read-points">
+          <div class="read-point">
+            <div class="rp-glyph">✦</div>
+            <div class="rp-txt"><strong data-i18n="read_p1_s">Both surahs in one sheet.</strong> <span data-i18n="read_p1_t">Swipe between the two surahs for your current prayer.</span></div>
+          </div>
+          <div class="read-point">
+            <div class="rp-glyph">✦</div>
+            <div class="rp-txt"><strong data-i18n="read_p2_s">Arabic + your language.</strong> <span data-i18n="read_p2_t">Clean Uthmani script with translation underneath every ayah.</span></div>
+          </div>
+          <div class="read-point">
+            <div class="rp-glyph">✦</div>
+            <div class="rp-txt"><strong data-i18n="read_p3_s">Powered by quran.com.</strong> <span data-i18n="read_p3_t">An internet connection is needed only for this view. The rest of Ayatura works offline.</span></div>
           </div>
         </div>
       </div>
-    </main>
+    </div>
+  </div>
+</section>
 
-    <footer>
-      <p>© 2026 Ayatura. Made with care for the Muslim community.</p>
-      <p style="margin-top: 0.5rem">
-        <a
-          href="/privacy-policy"
-          style="
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.75rem;
-          "
-          >Privacy Policy</a
-        >
-      </p>
-    </footer>
+<!-- ──────────── WIDGET ──────────── -->
+<section id="widget" class="widget-section">
+  <div class="wrap">
+    <div class="widget-grid">
+      <div>
+        <div class="eyebrow" data-i18n="w_eyebrow">Home-screen widget</div>
+        <h2 data-i18n="w_h2">Your rotation, before you even open the app.</h2>
+        <p class="lede" data-i18n="w_lede">A glance at your home screen and you know what to recite. No taps. No unlocks. Especially helpful for the moments right before salah.</p>
+        <div class="widget-points">
+          <div class="widget-point">
+            <div class="num">1</div>
+            <div class="txt"><strong data-i18n="w_p1_s">Two sizes.</strong> <span data-i18n="w_p1_t">Compact (current prayer) or split (current + next).</span></div>
+          </div>
+          <div class="widget-point">
+            <div class="num">2</div>
+            <div class="txt"><strong data-i18n="w_p2_s">Live updates.</strong> <span data-i18n="w_p2_t">Refreshes automatically as prayer times move through the day.</span></div>
+          </div>
+          <div class="widget-point">
+            <div class="num">3</div>
+            <div class="txt"><strong data-i18n="w_p3_s">Calm by default.</strong> <span data-i18n="w_p3_t">Deep green, gold accents, no badges or notifications.</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="widget-stage">
+        <div class="phone">
+          <div class="phone-inner">
+            <img id="widget-shot" src="assets/images/en-widget.png" alt="Ayatura widget on home screen" loading="lazy" decoding="async" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script>
-      function handleSubmit(e) {
-        e.preventDefault();
-        const form = e.target;
-        const body = new URLSearchParams(new FormData(form)).toString();
-        fetch("/", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body,
-        })
-          .then((res) => {
-            if (!res.ok) throw new Error(res.status);
-            form.style.display = "none";
-            document.querySelector(".notify-label").style.display = "none";
-            document.getElementById("success").style.display = "block";
-          })
-          .catch(() => form.submit());
-      }
-    </script>
-  </body>
+<!-- ──────────── PILLARS ──────────── -->
+<section class="pillars">
+  <div class="wrap">
+    <div class="pillars-grid">
+      <div class="pillar">
+        <div class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.4"/><path d="M10 6h4"/><circle cx="12" cy="17.5" r="0.9" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <h3 data-i18n="pillar1_h">Offline-first</h3>
+        <p data-i18n="pillar1_p">Plans, hifdh and the widget all run without a network.</p>
+      </div>
+      <div class="pillar">
+        <div class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9.5" rx="1.8"/><path d="M8 11V7.2a4 4 0 0 1 7.7-1.4"/></svg>
+        </div>
+        <h3 data-i18n="pillar2_h">No login</h3>
+        <p data-i18n="pillar2_p">Open the app, you're already in. No accounts, no email.</p>
+      </div>
+      <div class="pillar">
+        <div class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5a2 2 0 0 1 2-2h4l3-2.5v14L10 16.5H6a2 2 0 0 1-2-2z"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+        </div>
+        <h3 data-i18n="pillar3_h">No ads</h3>
+        <p data-i18n="pillar3_p">Nothing flashing. Nothing tracking. Just your plan.</p>
+      </div>
+      <div class="pillar">
+        <div class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 12.2a6 6 0 0 0-8.5-8.5L5 10.4V19h8.6z"/><line x1="16" y1="8" x2="3" y2="21"/><line x1="16.6" y1="15" x2="9.5" y2="15"/></svg>
+        </div>
+        <h3 data-i18n="pillar4_h">Free, lightweight</h3>
+        <p data-i18n="pillar4_p">Small download. No subscription. Made as sadaqah jariyah.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────── REFLECTION ──────────── -->
+<section class="reflection">
+  <div class="wrap">
+    <img class="crescent" src="assets/images/logo.png" alt="" loading="lazy" decoding="async" />
+    <div class="arabic" lang="ar">۞ خَيْرُ الْأَعْمَالِ أَدْوَمُهَا وَإِنْ قَلَّ ۞</div>
+    <p class="translation" data-i18n="refl_t">
+      "The most beloved deeds to Allah are those done consistently, even if they are few."
+    </p>
+    <div class="cite">﻿Ḥadīth · Bukhārī &amp; Muslim</div>
+  </div>
+</section>
+
+<!-- ──────────── FAQ ──────────── -->
+<section id="faq" class="faq">
+  <div class="wrap">
+    <div class="faq-head">
+      <div class="eyebrow" style="margin-bottom:14px" data-i18n="faq_eyebrow">Questions</div>
+      <h2 data-i18n="faq_h2">Quietly answered.</h2>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary class="faq-q"><span data-i18n="faq1_q">Do I have to memorize the whole Quran to use Ayatura?</span><span class="icon">+</span></summary>
+        <div class="faq-a" data-i18n="faq1_a">Not at all. Ayatura works with whatever you've memorized, five surahs or five hundred. The rotation balances across exactly what you've added.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q"><span data-i18n="faq2_q">Does it work without internet?</span><span class="icon">+</span></summary>
+        <div class="faq-a" data-i18n="faq2_a">Yes, your surah pool, monthly plan, prayer times and widget are all computed and stored on your device. The only feature that needs internet is the in-app Quran reader, which pulls text and translations from quran.com.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q"><span data-i18n="faq3_q">What if a surah is too long for one prayer?</span><span class="icon">+</span></summary>
+        <div class="faq-a" data-i18n="faq3_a">You can add a specific ayat range for any surah (e.g. Al-Baqarah 1–6). The plan treats that range as one rotating unit.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q"><span data-i18n="faq4_q">Can I lock or change a day's plan?</span><span class="icon">+</span></summary>
+        <div class="faq-a" data-i18n="faq4_a">Yes. Any day or prayer can be locked so a regenerate won't touch it. You can also shuffle a single prayer.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q"><span data-i18n="faq5_q">Where does the Quran text come from?</span><span class="icon">+</span></summary>
+        <div class="faq-a" data-i18n="faq5_a">Ayah text and translations are fetched live from quran.com when you open the in-app reader. We don't modify the text. You're reading the same Uthmani source millions of Muslims use every day.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q"><span data-i18n="faq6_q">How much does Ayatura cost?</span><span class="icon">+</span></summary>
+        <div class="faq-a" data-i18n="faq6_a">Nothing. Ayatura is free, with no subscriptions and no in-app purchases. It's offered as sadaqah jariyah.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────── FINAL CTA ──────────── -->
+<section id="download" class="final">
+  <div class="wrap">
+    <div class="final-card">
+      <div class="eyebrow" data-i18n="final_eyebrow">Available now</div>
+      <h2 data-i18n="final_h2">A calmer rhythm for the surahs you've already learned.</h2>
+      <p data-i18n="final_p">Free on iOS and Android. No accounts, no ads, just open it before your next prayer.</p>
+      <div class="final-cta">
+        <a class="store-badge store-badge-final" href="#">
+          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M16.365 1.43c0 1.14-.41 2.21-1.22 3.05-.87.9-2.04 1.44-3.18 1.32-.14-1.16.4-2.34 1.16-3.18.85-.95 2.27-1.66 3.24-1.19zm3.86 17.18c-.51 1.18-.75 1.7-1.4 2.74-.92 1.45-2.22 3.26-3.83 3.27-1.43.02-1.8-.93-3.74-.92-1.94.01-2.34.94-3.78.92-1.61-.03-2.84-1.66-3.76-3.11-2.58-4.06-2.85-8.83-1.26-11.37 1.12-1.79 2.9-2.83 4.57-2.83 1.69 0 2.76.93 4.16.93 1.36 0 2.19-.93 4.15-.93 1.48 0 3.05.81 4.17 2.2-3.67 2.01-3.07 7.24.72 9.1z"/></svg>
+          <span class="sb-stack">
+            <span class="sb-eyebrow" data-i18n="store_appstore_eb">Download on the</span>
+            <span class="sb-name">App Store</span>
+          </span>
+        </a>
+        <a class="store-badge store-badge-final" href="#">
+          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="#0F3D2E" d="M3.6 1.4c-.4.4-.6.9-.6 1.6v18c0 .7.2 1.2.6 1.6l11-11-11-10.2z"/><path fill="#0F3D2E" opacity=".75" d="M17.7 9 14.6 12l3.1 3 4-2.3c1-.6 1-2.1 0-2.7L17.7 9z"/><path fill="#0F3D2E" opacity=".55" d="M3.6 1.4 14.6 12l3.1-3L4.9.8c-.5-.3-1-.1-1.3.6z"/><path fill="#0F3D2E" opacity=".4" d="M3.6 22.6c.3.7.8.9 1.3.6l12.8-7.2-3.1-3-11 9.6z"/></svg>
+          <span class="sb-stack">
+            <span class="sb-eyebrow" data-i18n="store_play_eb">Get it on</span>
+            <span class="sb-name">Google Play</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ──────────── FOOTER ──────────── -->
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <div class="foot-brand">
+        <img src="assets/images/logo.png" alt="" loading="lazy" decoding="async" />
+        <span>Ayatura</span>
+      </div>
+      <div class="foot-links">
+        <a href="#how" data-i18n="foot_how">How it works</a>
+        <a href="#features" data-i18n="foot_features">Features</a>
+        <a href="#faq" data-i18n="foot_faq">FAQ</a>
+        <a href="mailto:hello@ayatura.app" data-i18n="foot_contact">Contact</a>
+      </div>
+      <div data-i18n="foot_rights">© 2026 Ayatura · Made with calm intentions</div>
+    </div>
+    <div class="foot-bismillah">جَزَاكُمُ ٱللَّٰهُ خَيْرًا</div>
+  </div>
+</footer>
+
+<script type="module" src="assets/scripts/main.js"></script>
+</body>
 </html>
