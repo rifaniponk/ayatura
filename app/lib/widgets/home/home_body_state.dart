@@ -1,6 +1,7 @@
 part of '../../screens/home_screen.dart';
 
-class _HomeBodyState extends ConsumerState<_HomeBody> {
+class _HomeBodyState extends ConsumerState<_HomeBody>
+    with WidgetsBindingObserver {
   static const double _dayTileWidth = 50;
   static const double _dayTileGap = 14;
   static const Duration _countdownRefreshInterval = Duration(seconds: 20);
@@ -43,9 +44,15 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
   Timer? _clockTimer;
   bool _shouldScrollToCurrentPrayer = true;
 
+  void _resetSelectedDayToToday() {
+    ref.read(selectedPlanDayProvider.notifier).resetToToday();
+    _shouldScrollToCurrentPrayer = true;
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _masterById = {for (final s in widget.surahs) s.id: s};
     _clockNow = appClockNow();
     _clockTimer = Timer.periodic(_countdownRefreshInterval, (_) {
@@ -66,9 +73,20 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _clockTimer?.cancel();
     _listController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (mounted) {
+        setState(() => _clockNow = appClockNow());
+      }
+      _resetSelectedDayToToday();
+    }
   }
 
   Future<void> _toggleLock({
@@ -244,8 +262,8 @@ class _HomeBodyState extends ConsumerState<_HomeBody> {
     });
 
     ref.listen(navIndexProvider, (previous, next) {
-      if (next == 0) {
-        _shouldScrollToCurrentPrayer = true;
+      if (next == 0 && previous != 0) {
+        _resetSelectedDayToToday();
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!mounted || !_shouldScrollToCurrentPrayer) return;
           _shouldScrollToCurrentPrayer = false;
