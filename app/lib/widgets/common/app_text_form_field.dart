@@ -84,6 +84,7 @@ class AppTextFormField extends StatelessWidget {
     this.maxLengthEnforcement,
     this.onChanged,
     this.onTap,
+    this.onTapOutside,
     this.onEditingComplete,
     this.onFieldSubmitted,
     this.inputFormatters,
@@ -138,6 +139,7 @@ class AppTextFormField extends StatelessWidget {
   final MaxLengthEnforcement? maxLengthEnforcement;
   final ValueChanged<String>? onChanged;
   final GestureTapCallback? onTap;
+  final TapRegionCallback? onTapOutside;
   final VoidCallback? onEditingComplete;
   final ValueChanged<String>? onFieldSubmitted;
   final List<TextInputFormatter>? inputFormatters;
@@ -195,6 +197,7 @@ class AppTextFormField extends StatelessWidget {
       maxLengthEnforcement: maxLengthEnforcement,
       onChanged: onChanged,
       onTap: onTap,
+      onTapOutside: onTapOutside,
       onEditingComplete: onEditingComplete,
       onFieldSubmitted: onFieldSubmitted,
       inputFormatters: inputFormatters,
